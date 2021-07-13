@@ -1,0 +1,389 @@
+{
+	"info": {
+		"_postman_id": "7c43136d-8335-4925-8489-bdcca9581314",
+		"name": "RDP Deployment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get deploy token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "51dd92b0-3000-47dd-be2a-655d737d8e29",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Test that refresh_token exists",
+							"pm.test(\"Response contains refresh token\", function(){",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    var refresh_token = jsonData.refresh_token",
+							"    pm.expect(refresh_token).not.eql(null);",
+							"    pm.expect(refresh_token).not.eql(undefined);",
+							"    pm.environment.set(\"RefreshToken\", refresh_token);",
+							"    console.log(\"Refresh Token -> \"+pm.environment.get(\"RefreshToken\"));",
+							"});",
+							"",
+							"// Test that access_token exists",
+							"pm.test(\"Response contains access token\", function(){",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    var access_token = jsonData.access_token",
+							"    pm.expect(access_token).not.eql(null);",
+							"    pm.expect(access_token).not.eql(undefined);",
+							"    pm.environment.set(\"AccessToken\", access_token);",
+							"    console.log(\"Access Token -> \"+access_token);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "b0158a68625d4966b0e114028e838acfcf578b92",
+							"description": "The unique identifier of the API the native app wants access.",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "trapi.deployment.crud",
+							"description": "The scopes that you want to request authorization for. These must be separated by a space",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "GE-A-01103867-3-2861",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "AAA_Entitlements_12345",
+							"type": "text"
+						},
+						{
+							"key": "takeExclusiveSignOnControl",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "client_secret",
+							"value": "Secret123456!",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api.refinitiv.com/auth/oauth2/v1/token",
+					"protocol": "https",
+					"host": [
+						"api",
+						"refinitiv",
+						"com"
+					],
+					"path": [
+						"auth",
+						"oauth2",
+						"v1",
+						"token"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Password Grant Example (Preprod)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{ClientID}}",
+									"description": "The unique identifier of the API the native app wants to access.",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "{{Scope}}",
+									"description": "The scopes that you want to request authorization for. These must be separated by a space",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{Username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{Password}}",
+									"type": "text"
+								},
+								{
+									"key": "takeExclusiveSignOnControl",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{Secret}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://eds-sts-preprod.tr-fr-nonprod.aws-int.thomsonreuters.com/oauth2/v1/token",
+							"protocol": "https",
+							"host": [
+								"eds-sts-preprod",
+								"tr-fr-nonprod",
+								"aws-int",
+								"thomsonreuters",
+								"com"
+							],
+							"path": [
+								"oauth2",
+								"v1",
+								"token"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Thu, 29 Aug 2019 11:05:50 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json;charset=UTF-8"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "gunicorn/19.8.1"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-store"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "X-Amzn-Trace-Id",
+							"value": "Root=dummy"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlJreGJYVFpnR0c4WVlIS3d2SDNOWjFaRXV6LTNhV2xTejVLMDk5XzM5OHcifQ.eyJkYXRhIjoie1wiY2lwaGVydGV4dFwiOlwieHhQemtEWWMxbURoUVJBX0VsV01GTmdscWtnOUVDa1dwRGNNVFhtT1V3N3dpWG1VOUdrcXFiTVlMYm91UDlMZkZGWGpWOS1jTEJhc0t0THlXXzhoajloa1VoTFB2Q3dPam5HT3ZySThMUkQ1eHQwX3liSFNkb1J6MFZ4a0c0NzBsYmkyLXB4YmtYVkZzaE1PeU42a0o0YXB0SndNcy1EUlY4RlNhZnR0V2tfM1NnZGhxVktTMlZhNmJJUTFjV28tbmxwN1ZieEt1WEM5amkwSUJCdnpjN1hRaWRtcmlULXk0UVhRVGhFZEQ4S2NDdUdZZXhIM1NTTW1NUjB0dHAwenVIZGNKOW5yMHp1VTh2S0hnTXExcUd2a2N5RFBQemxrZnNiWDRyZW5VejQtV0twbXV5cEFnTVVZaFBSR3ZIUU1xbHVtem9zdjVla0hDOHpsT0IxajFrQ3RKRDNvRkxnU0V3dVFONm85QlhUWVJHVjZyNzd2b2Q1eW5wcnA3em1xQ0RVUVo0Y3JIN2g3cUhjOTd4TjdyZzVqMXZjWVhjUGxfd1wiLFwiaXZcIjpcIkFVY3Fpbms2ZkZYeDRxWFpcIixcInByb3RlY3RlZFwiOlwiZXlKaGJHY2lPaUpCVjFOZlJVNURYMU5FUzE5Qk1qVTJJaXdpWlc1aklqb2lRVEkxTmtkRFRTSXNJbnBwY0NJNklrUkZSaUo5XCIsXCJyZWNpcGllbnRzXCI6W3tcImVuY3J5cHRlZF9rZXlcIjpcIkFRSUJBSGdRZWJzUG5hb09GaE8zYVVqSWs1UnRjZkZBRlpveG00VlZBdW1oT3pDQnNnR0NsVmJzMzJ2UVByLTY2ZWhlT25VdkFBQUFmakI4QmdrcWhraUc5dzBCQndhZ2J6QnRBZ0VBTUdnR0NTcUdTSWIzRFFFSEFUQWVCZ2xnaGtnQlpRTUVBUzR3RVFRTWN6d21qa09VOTlzYV93OUlBZ0VRZ0R1ZzFQREd2Q01INmtTRGJsc1laRHVtRnZSSDlYRmZ0Qm15UjdXYVQ5ek9kVUhBUDF2aUprVS1jRkdpYXFMS01URk9aNkpDVWV0cGxiTFVJQVwiLFwiaGVhZGVyXCI6e1wia2lkXCI6XCJhcm46YXdzOmttczp1cy1lYXN0LTE6NjA4MDE0NTE1Mjg3OmtleS85ZTk0ZmNjYS03MjMwLTQ3OTktOWY0NS1hMmM5ZGE3Y2E3NzhcIn19LHtcImVuY3J5cHRlZF9rZXlcIjpcIkFRSUJBSGdRZWJzUG5hb09GaE8zYVVqSWs1UnRjZkZBRlpveG00VlZBdW1oT3pDQnNnR0NsVmJzMzJ2UVByLTY2ZWhlT25VdkFBQUFmakI4QmdrcWhraUc5dzBCQndhZ2J6QnRBZ0VBTUdnR0NTcUdTSWIzRFFFSEFUQWVCZ2xnaGtnQlpRTUVBUzR3RVFRTWN6d21qa09VOTlzYV93OUlBZ0VRZ0R1ZzFQREd2Q01INmtTRGJsc1laRHVtRnZSSDlYRmZ0Qm15UjdXYVQ5ek9kVUhBUDF2aUprVS1jRkdpYXFMS01URk9aNkpDVWV0cGxiTFVJQVwiLFwiaGVhZGVyXCI6e1wia2lkXCI6XCJhcm46YXdzOmttczp1cy1lYXN0LTE6NjA4MDE0NTE1Mjg3OmtleS85ZTk0ZmNjYS03MjMwLTQ3OTktOWY0NS1hMmM5ZGE3Y2E3NzhcIn19LHtcImVuY3J5cHRlZF9rZXlcIjpcIkFRSUNBSGpaVE9XQy1MRE93aDJucEVDSVRvcTdTUkFWeC1kVzJicmc5Z3htQXhLQlVnRXBzVDUyZ1RiVGVoQ2NZYlpkNkFQX0FBQUFmakI4QmdrcWhraUc5dzBCQndhZ2J6QnRBZ0VBTUdnR0NTcUdTSWIzRFFFSEFUQWVCZ2xnaGtnQlpRTUVBUzR3RVFRTTVwazdrNHVXd2paTXV3U2JBZ0VRZ0R1SHowcjRBUDBzRnk0UFhvOFZuYUNMc0JFZ3h4Nms5WTZmRFd6Zi1yME90bmx6ZHhqMFA4eUZXMDVaNnRxdGNXNzJMX0NLd0NmaGJZMDc5d1wiLFwiaGVhZGVyXCI6e1wia2lkXCI6XCJhcm46YXdzOmttczpldS13ZXN0LTE6NjA4MDE0NTE1Mjg3OmtleS80ODM5OTc0MS01Y2RkLTRhZWYtYjQzMy0wMTM3NzdmMmQyZTRcIn19XSxcInRhZ1wiOlwiUTV2dVZjV2JBN2Q5OHhEa2FSYkI5d1wifSIsInJzMSI6ImQ4NTQwZGU3Mjk5MDBlYTUxNjBlODllY2UwZjJhYmVhOTI0YmUzOGIiLCJhdWQiOiJiMDE1OGE2ODYyNWQ0OTY2YjBlMTE0MDI4ZTgzOGFjZmNmNTc4YjkyIiwiaXNzIjoiaHR0cHM6Ly9maW5hbmNpYWwudGhvbXNvbnJldXRlcnMuY29tL2FwaS9pZGVudGl0eS9zdHNfcHJlcHJvZCIsImV4cCI6MTU2NzA3NzA1MCwiaWF0IjoxNTY3MDc2NzUwfQ.tyjodXy7nsJYmOCgMycN6LaUGSDbtUUeH17zKc0NjJXjy_HGyepK8Q3b_JSM8fHG2WUSruIzeENnNTu1NgyYpYjwgg97srci5IDdcMy9n5qAmDzoZrkv7TEcCBR6bRrYCXcWO-k_SVK8SMRwUWjxhbHzHmOlt47aDM0LFqoSjVqdq0zAmMQ3Xsvg5kvvcwiUU_5i9c3FxDiHzcWxAkY1TpHr0BHbdfoT_nwLOuz0xHgUCgDBqVwehpGH-o2nsyMOem8ggHExXZUqGUvYLuGlmPWeK6B6lO6MBroAJS2glSe-fFEU6bSRNVXBBgPXkhg3uB_kT4YTnNNwQlB4z3Md6Q\",\n    \"expires_in\": 300,\n    \"token_type\": \"Bearer\",\n    \"scope\": \"trapi.data.esg.views-scores-standard.read\",\n    \"refresh_token\": \"a27e35c4-a941-4f6d-93e6-d04245c0713f\"\n}"
+				}
+			]
+		},
+		{
+			"name": "stage",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1ce03407-a946-4748-bd4a-fc803581b2ac",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains cutover\", function(){",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    console.log(\"Response -> \"+jsonData)",
+							"    console.log(\"Response -> \"+responseBody)",
+							"    var cutover = jsonData.cutoverid",
+							"    pm.expect(cutover).not.eql(null);",
+							"    pm.expect(cutover).not.eql(undefined);",
+							"    pm.environment.set(\"Cutover\", cutover);",
+							"    console.log(\"Cutover ID -> \"+cutover);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AccessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/octet-stream"
+					}
+				],
+				"body": {
+					"mode": "file",
+					"file": {
+						"src": "{{FileLocation}}"
+					}
+				},
+				"url": {
+					"raw": "https://api.refinitiv.com/admin/v1/api-deploy/stage?environment={{DeploymentEnvironment}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"refinitiv",
+						"com"
+					],
+					"path": [
+						"admin",
+						"v1",
+						"api-deploy",
+						"stage"
+					],
+					"query": [
+						{
+							"key": "environment",
+							"value": "{{DeploymentEnvironment}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cutover",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c5083698-a2ac-4a19-a115-f561f922e50d",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{AccessToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"disabled": true
+					},
+					{
+						"key": "cutoverid",
+						"value": "204891-eds-apideploy-us-east-1-dev|deploy/2018-06-19T19:39:20Z-Ole6YGS5Gw|zzDZUIx7PVOiapKtAPhQFAskMyDD1.4N",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://api.refinitiv.com/admin/v1/api-deploy/cutover?cutoverid={{Cutover}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"refinitiv",
+						"com"
+					],
+					"path": [
+						"admin",
+						"v1",
+						"api-deploy",
+						"cutover"
+					],
+					"query": [
+						{
+							"key": "cutoverid",
+							"value": "{{Cutover}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

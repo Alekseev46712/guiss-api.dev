@@ -1,0 +1,67 @@
+{
+	"info": {
+		"_postman_id": "e254f5ed-f7af-45dd-a01c-93ea503c60bd",
+		"name": "Guiss API Integration Tests",
+		"description": "Guiss API Integration Tests.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get All",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1746cf64-49bd-4b63-bf1b-2e16675903f8",
+						"exec": [
+							"pm.test(\"Status code is 200\", function (){",
+							"pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{TargetHostURL}}/api/Guiss",
+					"host": [
+						"{{TargetHostURL}}"
+					],
+					"path": [
+						"api",
+						"Guiss"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "7cf24374-f320-4a9b-9b17-37d3d757d777",
+				"type": "text/javascript",
+				"exec": [
+					"pm.request.headers.add({key: 'refinitivUuid', value: 'anyoldrubbishguid' });",
+					"pm.request.headers.add({key: 'refinitivNamespace', value: 'anyoldrubbishNamespace' });",
+					"pm.request.headers.add({key: 'X-Correlation-ID', value: 'anyoldrubbishCorrelation' });"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "9f73fc68-17f0-439f-a991-4cf5ba089ec3",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

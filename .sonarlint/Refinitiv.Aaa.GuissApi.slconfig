@@ -1,0 +1,12 @@
+{
+  "ServerUri": "https://sonarqube.refinitiv.com/",
+  "Organization": null,
+  "ProjectKey": "aaa-guiss-api",
+  "ProjectName": "aaa-guiss-api",
+  "Profiles": {
+    "CSharp": {
+      "ProfileKey": "AWpprJeDcFdIAHz3VdSJ",
+      "ProfileTimestamp": "2019-08-05T10:35:40+01:00"
+    }
+  }
+}
