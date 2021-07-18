@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "path": "/api/Guiss",
+      "method": "GET",
+      "demoview": "<style>table.demoview_table{border-spacing: 0;min-width: 100%;margin-top: 10px;}table.demoview_table > thead > tr > td {white-space: nowrap;background: #d2d5dc;padding: 8px;text-align: center;font-weight: 600;}table.demoview_table > tbody > tr > td {border-bottom: 1px solid #d5d8db;padding: 5px;text-align: center;}::-webkit-scrollbar {width: 9px;height: 9px;}::-webkit-scrollbar-button {background: #FFFFFF;height: 12px;width: 0;display: block;}::-webkit-scrollbar-corner {background: #FFFFFF;}::-webkit-scrollbar-thumb {background: #8A8A96;border-color: #FFFFFF;border-radius: 50px;border-width: 2px;border-style: solid;}::-webkit-scrollbar-track {background: #FFFFFF;}table, th, td { vertical-align: top;}</style><div> <table style='width:25%' class='demoview_table'> <tr> <th>totalGuisss</th> <th>PageIndex</th> <th>Guisss</th>  <tbody><tr><td>{{this.totalGuisss}}</td> <td>{{this.pageIndex}}</td> <td></td><td><table><th>id</th><th>name</th><th>version</th><th>timestamp</th><tbody> {{#each templates}}<tr><td>{{this.id}}</td> <td>{{{this.name}}}</td> <td>{{this.version}}</td> <td>{{this.timestamp}}</td> </tr> {{/each}}</tbody></table></td></tr></tbody></tr></table></div>"
+    },
+	{
+      "path": "/api/Guiss",
+      "method": "POST",
+      "demoview": "<style>table.demoview_table{border-spacing: 0;min-width: 100%;margin-top: 10px;}table.demoview_table > thead > tr > td {white-space: nowrap;background: #d2d5dc;padding: 8px;text-align: center;font-weight: 600;}table.demoview_table > tbody > tr > td {border-bottom: 1px solid #d5d8db;padding: 5px;text-align: center;}::-webkit-scrollbar {width: 9px;height: 9px;}::-webkit-scrollbar-button {background: #FFFFFF;height: 12px;width: 0;display: block;}::-webkit-scrollbar-corner {background: #FFFFFF;}::-webkit-scrollbar-thumb {background: #8A8A96;border-color: #FFFFFF;border-radius: 50px;border-width: 2px;border-style: solid;}::-webkit-scrollbar-track {background: #FFFFFF;}table, th, td { vertical-align: top;}</style><div> <table style='width:25%' class='demoview_table'> <tr> <th>id</th><th>name</th><th>version</th><th>timestamp</th><tbody><tr><td>{{this.id}}</td> <td>{{{this.name}}}</td> <td>{{this.version}}</td> <td>{{this.timestamp}}</td> </tr></tbody></tr></table></div>"
+    },
+	{
+      "path": "/api/Guiss/{id}",
+      "method": "GET",
+      "demoview": "<style>table.demoview_table{border-spacing: 0;min-width: 100%;margin-top: 10px;}table.demoview_table > thead > tr > td {white-space: nowrap;background: #d2d5dc;padding: 8px;text-align: center;font-weight: 600;}table.demoview_table > tbody > tr > td {border-bottom: 1px solid #d5d8db;padding: 5px;text-align: center;}::-webkit-scrollbar {width: 9px;height: 9px;}::-webkit-scrollbar-button {background: #FFFFFF;height: 12px;width: 0;display: block;}::-webkit-scrollbar-corner {background: #FFFFFF;}::-webkit-scrollbar-thumb {background: #8A8A96;border-color: #FFFFFF;border-radius: 50px;border-width: 2px;border-style: solid;}::-webkit-scrollbar-track {background: #FFFFFF;}table, th, td { vertical-align: top;}</style><div> <table style='width:25%' class='demoview_table'> <tr> <th>id</th><th>name</th><th>version</th><th>timestamp</th><tbody><tr><td>{{this.id}}</td> <td>{{{this.name}}}</td> <td>{{this.version}}</td> <td>{{this.timestamp}}</td> </tr></tbody></tr></table></div>"
+    },
+	{
+      "path": "/api/Guiss/{id}",
+      "method": "PUT",
+      "demoview": "<style>table.demoview_table{border-spacing: 0;min-width: 100%;margin-top: 10px;}table.demoview_table > thead > tr > td {white-space: nowrap;background: #d2d5dc;padding: 8px;text-align: center;font-weight: 600;}table.demoview_table > tbody > tr > td {border-bottom: 1px solid #d5d8db;padding: 5px;text-align: center;}::-webkit-scrollbar {width: 9px;height: 9px;}::-webkit-scrollbar-button {background: #FFFFFF;height: 12px;width: 0;display: block;}::-webkit-scrollbar-corner {background: #FFFFFF;}::-webkit-scrollbar-thumb {background: #8A8A96;border-color: #FFFFFF;border-radius: 50px;border-width: 2px;border-style: solid;}::-webkit-scrollbar-track {background: #FFFFFF;}table, th, td { vertical-align: top;}</style><div> <table style='width:25%' class='demoview_table'> <tr> <th>id</th><th>name</th><th>version</th><th>timestamp</th><tbody><tr><td>{{this.id}}</td> <td>{{{this.name}}}</td> <td>{{this.version}}</td> <td>{{this.timestamp}}</td> </tr></tbody></tr></table></div>"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  sqsemulator:
+    image: pafortin/goaws
+    ports:
+      - "4100:4100"
+
+  dynamodb:
+    image: amazon/dynamodb-local
+    ports:
+        - '8000:8000'
+    working_dir: /home/dynamodblocal
+    command: "-jar DynamoDBLocal.jar -sharedDb -inMemory"
+    
+  dynamotables:
+    build: ./DynamoTables
+    depends_on:
+      - dynamodb

@@ -1,0 +1,488 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: AAA Guiss API
+  description: API for performing operations on Guiss
+basePath: /iam/Guiss/v1
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions: 
+  sts_auth:
+    type: oauth2
+    tokenUrl: /auth/oauth2/v1/token
+    flow: password
+    scopes: 
+        trapi.platform.iam.Guiss: scope to access Guiss
+security:
+    - sts_auth: 
+        - trapi.platform.iam.Guiss
+paths:
+  '/api/Guiss':
+    x-summary: Manage Guiss.
+    get:
+      x-tr-integration:
+        limits:
+          - type: operationRate
+            rate: 1000
+            burst: 100
+          - type: userRate
+            rate: 900
+            burst: 90
+        type: http
+        httpMethod: POST
+        uri: <%.uri%>
+        passthroughBehaviour: WHEN_NO_TEMPLATE
+        requestParameters:
+          integration.request.header.Content-Type: "'application/json'"
+        requestGuiss:
+          application/json: |-
+            #set($parameter=$input.params())
+            #set($querystring=$util.parseJson($parameter.querystring))
+            #set($headers=$util.parseJson($parameter.header))
+            #set($kind= $querystring.Kind)
+            #set($namespace= $headers.refinitivNamespace)
+            #set($limit= $querystring.Limit)
+            #set($pagination= $querystring.Pagination)
+            {
+              "headers": {
+                "X-Correlation-ID": "$context.requestID",
+                "refinitivUuid": "$context.uuid",
+                "refinitivNamespace": "$namespace",
+                "content-type": "application/json"
+              },
+              "body": {
+              },
+              "query": {
+                #if($kind == "$kind")"Kind": "$kind",#end
+                #if($limit == "$limit")"Limit": "$limit",#end
+                #if($pagination == "$pagination")"Pagination": "$pagination"#end
+              },
+              "path": "api/Guiss",
+              "verb": { "method": "get"},
+              "resourceType": "Guiss",
+              "routeKey": "Guissapi"
+            }
+        responses:
+          200:
+            statusCode: 200   
+          400:
+            statusCode: 404
+          500:
+            statusCode: 500
+      tags:
+        - Guiss
+      summary: Gets all Guiss.
+      operationId: GetGuiss
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: refinitivNamespace
+          in: header
+          required: true
+          type: string
+        - name: Kind
+          in: query
+          required: false
+          type: string
+        - name: Limit
+          in: query
+          description: Gets or sets the Limit.
+          required: false
+          type: integer
+          format: int32
+          maximum: 2147483647
+          minimum: 1
+        - name: Pagination
+          in: query
+          description: Gets or sets the Pagination.
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Guiss
+          schema:
+            $ref: '#/definitions/GuissDetails'
+        '404':
+          description: Guiss does not exist
+        '500':
+          description: Internal Server Error
+    post:
+      x-tr-integration:
+        limits:
+          - type: operationRate
+            rate: 1000
+            burst: 100
+          - type: userRate
+            rate: 900
+            burst: 90
+        type: http
+        httpMethod: POST
+        uri: <%.uri%>
+        passthroughBehaviour: WHEN_NO_TEMPLATE
+        requestParameters:
+          integration.request.header.Content-Type: "'application/json'"
+        requestGuiss:
+          application/json: |-
+            #set($parameter=$input.params())
+            #set($querystring=$util.parseJson($parameter.querystring))
+            #set($headers=$util.parseJson($parameter.header))
+            #set($kind= $querystring.Kind)
+            #set($namespace= $headers.refinitivNamespace)
+            #set($limit= $querystring.Limit)
+            #set($pagination= $querystring.Pagination)
+            {
+              "headers": {
+                "X-Correlation-ID": "$context.requestID",
+                "refinitivUuid": "$context.uuid",
+                "refinitivNamespace": "$namespace",
+                "content-type": "application/json"
+              },
+              "body": $input.json('$'),
+              "path": "api/Guiss",
+              "verb": { "method": "post"},
+              "resourceType": "Guiss",
+              "routeKey": "Guissapi"
+            }
+        responses:
+          201:
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+              method.response.header.Access-Control-Allow-Headers: "'authorization,content-type,x-tr-correlationid'"
+            statusCode: 200
+          400:
+            statusCode: 400
+          412:
+            statusCode: 412
+      tags:
+        - Guiss
+      summary: Creates a new Guiss.
+      operationId: PostGuiss
+      parameters:
+        - name: refinitivNamespace
+          in: header
+          required: true
+          type: string
+        - name: newGuiss
+          in: body
+          description: Details of the Guiss to be created.
+          required: true
+          schema:
+            $ref: '#/definitions/NewGuiss'
+      responses:
+        '201':
+          description: Guiss created
+          schema:
+            $ref: '#/definitions/Guiss'
+        '400':
+          description: 'Bad Request, validation error'
+        '412':
+          description: Validation Error
+          schema:
+            $ref: '#/definitions/ValidationError'
+  '/api/Guiss/{id}':
+    x-summary: Manage Specific Guiss.
+    get:
+      x-tr-integration:
+        limits:
+          - type: operationRate
+            rate: 1000
+            burst: 100
+          - type: userRate
+            rate: 900
+            burst: 90
+        type: http
+        httpMethod: POST
+        uri: <%.uri%>
+        passthroughBehaviour: WHEN_NO_TEMPLATE
+        requestParameters:
+          integration.request.header.Content-Type: "'application/json'"
+        requestGuiss:
+          application/json: |-
+            #set($parameter=$input.params())
+            #set($paths=$util.parseJson($parameter.path))
+            #set($headers=$util.parseJson($parameter.header))
+            #set($namespace= $headers.refinitivNamespace)
+            {
+              "headers": {
+                "X-Correlation-ID": "$context.requestID",
+                "refinitivUuid": "$context.uuid",
+                "refinitivNamespace": "$namespace",
+                "content-type": "application/json"
+              },
+              "body": {
+              },
+              "Id": "$paths.id",
+              "path": "api/Guiss/$paths.id",
+              "verb": { "method": "get"},
+              "resourceType": "Guiss",
+              "routeKey": "Guissapi"
+            }
+        responses:
+          200:
+            statusCode: 200
+          404:
+            statusCode: 404
+          409:
+            statusCode: 409
+          412:
+            statusCode: 412
+      tags:
+        - Guiss
+      summary: Retrieves a Guiss with the specified ID.
+      operationId: GetGuissById
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: refinitivNamespace
+          in: header
+          required: true
+          type: string
+        - name: id
+          in: path
+          description: The ID of the Guiss to be retrieved.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: The Guiss
+          schema:
+            $ref: '#/definitions/Guiss'
+        '404':
+          description: Guiss with specified Id does not exist
+        '409':
+          description: Guiss has been updated by someone else
+        '412':
+          description: Validation Error
+          schema:
+            $ref: '#/definitions/ValidationError'
+    put:
+      x-tr-integration:
+        limits:
+          - type: operationRate
+            rate: 1000
+            burst: 100
+          - type: userRate
+            rate: 900
+            burst: 90
+        type: http
+        httpMethod: POST
+        uri: <%.uri%>
+        passthroughBehaviour: WHEN_NO_TEMPLATE
+        requestParameters:
+          integration.request.header.Content-Type: "'application/json'"
+        requestGuiss:
+          application/json: |-
+            #set($parameter=$input.params())
+            #set($paths=$util.parseJson($parameter.path))
+            #set($headers=$util.parseJson($parameter.header))
+            #set($namespace= $headers.refinitivNamespace)
+            {
+              "headers": {
+                "X-Correlation-ID": "$context.requestID",
+                "refinitivUuid": "$context.uuid",
+                "refinitivNamespace": "$namespace",
+                "content-type": "application/json"
+              },
+              "body": $input.json('$'),
+              "Id": "$paths.id",
+              "path": "api/Guiss/$paths.id",
+              "verb": { "method": "put"},
+              "resourceType": "Guiss",
+              "routeKey": "Guissapi"
+            }
+        responses:
+          200:
+            statusCode: 201
+          404:
+            statusCode: 404
+          409:
+            statusCode: 409
+          412:
+            ststusCode: 412
+      tags:
+        - Guiss
+      summary: Updates an existing Guiss.
+      operationId: PutGuiss
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: refinitivNamespace
+          in: header
+          required: true
+          type: string
+        - name: id
+          in: path
+          description: The Guiss ID to be updated.
+          required: true
+          type: string
+        - name: Guiss
+          in: body
+          description: The updated Guiss details.
+          required: false
+          schema:
+            $ref: '#/definitions/Guiss'
+      responses:
+        '201':
+          description: Guiss updated
+          schema:
+            $ref: '#/definitions/Guiss'
+        '400':
+          description: 'Bad Request, validation error'
+        '404':
+          description: Guiss with the specified ID does not exist
+        '409':
+          description: Guiss has been updated by someone else
+        '412':
+          description: Validation Error
+          schema:
+            $ref: '#/definitions/ValidationError'
+    delete:
+      x-tr-integration:
+        limits:
+          - type: operationRate
+            rate: 1000
+            burst: 100
+          - type: userRate
+            rate: 900
+            burst: 90
+        type: http
+        httpMethod: POST
+        uri: <%.uri%>
+        passthroughBehaviour: WHEN_NO_TEMPLATE
+        requestParameters:
+          integration.request.header.Content-Type: "'application/json'"
+        requestGuiss:
+          application/json: |-
+            #set($parameter=$input.params())
+            #set($headers=$util.parseJson($parameter.header))
+            #set($namespace= $headers.refinitivNamespace)
+            #set($paths=$util.parseJson($parameter.path))
+            {
+              "headers": {
+                "X-Correlation-ID": "$context.requestID",
+                "refinitivUuid": "$context.uuid",
+                "refinitivNamespace": "$namespace",
+                "content-type": "application/json"
+              },
+              "body": {
+              },
+              "query": {
+              },
+              "Id": "$paths.id",
+              "path": "api/Guiss/$paths.id",
+              "verb": { "method": "delete"},
+              "resourceType": "Guiss",
+              "routeKey": "Guissapi"
+            }
+        responses:
+          204:
+            statusCode: 204
+          404:
+            statusCode: 404
+          412:
+            statusCode: 412
+      tags:
+        - Guiss
+      summary: Deletes an existing Guiss.
+      operationId: DeleteGuiss
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: refinitivNamespace
+          in: header
+          type: string
+          required: true
+        - name: id
+          in: path
+          description: The Guiss Id to be deleted.
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Guiss deleted
+        '404':
+          description: Guiss with the specified ID does not exist
+        '412':
+          description: Validation Error
+          schema:
+            $ref: '#/definitions/ValidationError'
+  '/api/Guiss/{id}/members':
+    x-summary: Manage Guiss memberships.
+definitions:
+  GuissDetails:
+    description: Representation of GuissDetails.
+    type: object
+    properties:
+      previous:
+        format: string
+        description: Gets or sets the previous pagination token.
+        type: string
+      next:
+        format: string
+        description: Gets or sets the next pagination token.
+        type: string
+      limit:
+        format: int32
+        description: Gets or sets the limit.
+        type: integer
+      Guiss:
+        description: "List of returned Guiss\r\nGets the list of returned Guiss."
+        uniqueItems: false
+        type: array
+        items:
+          $ref: '#/definitions/Guiss'
+        readOnly: true
+  Guiss:
+    description: Representation of a Guiss.
+    required:
+      - name
+    type: object
+    properties:
+      id:
+        description: Gets or sets the Guiss Id.
+        type: string
+      name:
+        description: Gets or sets the Guiss name.
+        type: string
+      version:
+        format: int64
+        description: Gets or sets the version number of the database record.
+        type: integer
+      timestamp:
+        format: date-time
+        description: Gets or sets the date and time when the Guiss was last modified.
+        type: string
+      lastModifiedByUUID:
+        type: string
+  NewGuiss:
+    description: Viewmodel for the request body that is used to create a new Guiss.
+    required:
+      - name
+    type: object
+    properties:
+      name:
+        description: Gets or sets the name of the Guiss.
+        type: string
+  IdResult:
+    type: object
+    properties:
+      id:
+        type: string
+        readOnly: true
+  ValidationError:
+    description : List of validation errors
+    type: object
+    additionalProperties:
+      type: array
+      items: 
+          type: string
+      
+tags: []

@@ -1,0 +1,71 @@
+{
+	"items": [
+		{
+			"path": "/api/Guiss",
+			"method": "GET",
+			"examples": [
+				{
+					"name": "Gets all templates.",
+					"url": "/api/Guiss",
+					"description": "Will return all templates with default limit."
+				},
+				{
+					"name": "Gets all templates.",
+					"url": "/api/Guiss?Kind=123456",
+					"description": "Will return all templates with default limit that have the given kind."
+				},
+				{
+					"name": "Gets all templates.",
+					"url": "/api/Guiss?limit=2&pagination=3",
+					"description": "Will return all templates with limit 2 and a pagination token."
+				}
+			]
+		},
+		{
+			"path": "/api/Guiss",
+			"method": "POST",
+			"examples": [
+				{
+					"name": "Creates a new template.",
+					"url": "/api/Guiss",
+					"description": "Create a new template with the given name.",
+					"body": "{\"name\":\"NewGuissName\"}"
+				}
+			]
+		},
+		{
+			"path": "/api/Guiss/{id}",
+			"method": "GET",
+			"examples": [
+				{
+					"name": "Get a specific template by ID.",
+					"url": "/api/Guiss/123456",
+					"description": "Returns the template with ID 123456."
+				}
+			]
+		},
+		{
+			"path": "/api/Guiss/{id}",
+			"method": "PUT",
+			"examples": [
+				{
+					"name": "Update a template.",
+					"url": "/api/Guiss/123456",
+					"description": "Changes the name of template 123456 to newGuissname.",
+					"body": "{\"name\":\"newGuissName\",\"id\":\"123456\",\"version\": 2, \"timestamp\": \"2019-10-29T16:14:28+00:00\", \"lastModifiedByUUID\": null}"
+				}
+			]
+		},
+		{
+			"path": "/api/Guiss/{id}",
+			"method": "DELETE",
+			"examples": [
+				{
+					"name": "Delete a template.",
+					"url": "/api/Guiss/123456",
+					"description": "Delete template 123456."
+				}
+			]
+		}
+	]
+}

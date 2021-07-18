@@ -1,0 +1,88 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{30D668C4-D5C8-44A2-8D99-5C1916C271CF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit Tests", "Unit Tests", "{B00A4052-2E33-4FBE-A480-24F04DE98FFF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Refinitiv.Aaa.GuissApi", "Refinitiv.Aaa.GuissApi\Refinitiv.Aaa.GuissApi.csproj", "{947F5DFA-510A-411F-8ECB-E522CA96AA8C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Refinitiv.Aaa.GuissApi.Facade.Tests", "Refinitiv.Aaa.GuissApi.Facade.Tests\Refinitiv.Aaa.GuissApi.Facade.Tests.csproj", "{D3E6ABA9-0BDF-4AF1-BEAA-5D365E539EB1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Refinitiv.Aaa.GuissApi.Facade", "Refinitiv.Aaa.GuissApi.Facade\Refinitiv.Aaa.GuissApi.Facade.csproj", "{15076D02-F59D-4718-BBEB-AA6CE971E3BF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Refinitiv.Aaa.GuissApi.Data", "Refinitiv.Aaa.GuissApi.Data\Refinitiv.Aaa.GuissApi.Data.csproj", "{42C57537-5F59-42BA-A96A-130AED680FDC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Refinitiv.Aaa.GuissApi.Data.Tests", "Refinitiv.Aaa.GuissApi.Data.Tests\Refinitiv.Aaa.GuissApi.Data.Tests.csproj", "{F3A20ABF-C357-48F6-8262-FC6CC1EC9D75}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{5B10C74B-14EE-42D6-8A3B-8E9A9BF8EAAB}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DynamoDB", "DynamoDB", "{6760149E-1E19-4FA3-A9DE-B60057C89B19}"
+	ProjectSection(SolutionItems) = preProject
+		DynamoTables\Dockerfile = DynamoTables\Dockerfile
+		DynamoTables\template-table.tf = DynamoTables\template-table.tf
+		DynamoTables\replay-table.tf = DynamoTables\replay-table.tf
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Refinitiv.Aaa.GuissApi.Tests", "Refinitiv.Aaa.GuissApi.Tests\Refinitiv.Aaa.GuissApi.Tests.csproj", "{7811713A-9251-4C85-898A-FB0CB195F5A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Refinitiv.Aaa.GuissApi.Interfaces", "Refinitiv.Aaa.GuissApi.Interfaces\Refinitiv.Aaa.GuissApi.Interfaces.csproj", "{90779811-EEC2-4384-A6E9-E19C74075574}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{947F5DFA-510A-411F-8ECB-E522CA96AA8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{947F5DFA-510A-411F-8ECB-E522CA96AA8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{947F5DFA-510A-411F-8ECB-E522CA96AA8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{947F5DFA-510A-411F-8ECB-E522CA96AA8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3E6ABA9-0BDF-4AF1-BEAA-5D365E539EB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3E6ABA9-0BDF-4AF1-BEAA-5D365E539EB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3E6ABA9-0BDF-4AF1-BEAA-5D365E539EB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3E6ABA9-0BDF-4AF1-BEAA-5D365E539EB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15076D02-F59D-4718-BBEB-AA6CE971E3BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15076D02-F59D-4718-BBEB-AA6CE971E3BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15076D02-F59D-4718-BBEB-AA6CE971E3BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15076D02-F59D-4718-BBEB-AA6CE971E3BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42C57537-5F59-42BA-A96A-130AED680FDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42C57537-5F59-42BA-A96A-130AED680FDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42C57537-5F59-42BA-A96A-130AED680FDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42C57537-5F59-42BA-A96A-130AED680FDC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3A20ABF-C357-48F6-8262-FC6CC1EC9D75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3A20ABF-C357-48F6-8262-FC6CC1EC9D75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3A20ABF-C357-48F6-8262-FC6CC1EC9D75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3A20ABF-C357-48F6-8262-FC6CC1EC9D75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7811713A-9251-4C85-898A-FB0CB195F5A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7811713A-9251-4C85-898A-FB0CB195F5A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7811713A-9251-4C85-898A-FB0CB195F5A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7811713A-9251-4C85-898A-FB0CB195F5A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90779811-EEC2-4384-A6E9-E19C74075574}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90779811-EEC2-4384-A6E9-E19C74075574}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90779811-EEC2-4384-A6E9-E19C74075574}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90779811-EEC2-4384-A6E9-E19C74075574}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{947F5DFA-510A-411F-8ECB-E522CA96AA8C} = {30D668C4-D5C8-44A2-8D99-5C1916C271CF}
+		{D3E6ABA9-0BDF-4AF1-BEAA-5D365E539EB1} = {B00A4052-2E33-4FBE-A480-24F04DE98FFF}
+		{15076D02-F59D-4718-BBEB-AA6CE971E3BF} = {30D668C4-D5C8-44A2-8D99-5C1916C271CF}
+		{42C57537-5F59-42BA-A96A-130AED680FDC} = {30D668C4-D5C8-44A2-8D99-5C1916C271CF}
+		{F3A20ABF-C357-48F6-8262-FC6CC1EC9D75} = {B00A4052-2E33-4FBE-A480-24F04DE98FFF}
+		{6760149E-1E19-4FA3-A9DE-B60057C89B19} = {5B10C74B-14EE-42D6-8A3B-8E9A9BF8EAAB}
+		{7811713A-9251-4C85-898A-FB0CB195F5A5} = {B00A4052-2E33-4FBE-A480-24F04DE98FFF}
+		{90779811-EEC2-4384-A6E9-E19C74075574} = {30D668C4-D5C8-44A2-8D99-5C1916C271CF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DE1B56AF-1480-435D-B9FF-95D03F779E2E}
+	EndGlobalSection
+EndGlobal

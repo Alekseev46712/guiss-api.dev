@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="SonarQube - aaa-api-template AAA.Engineering" ToolsVersion="16.0">
+  <Include Path="..\.sonarlint\aaa-api-templatecsharp.ruleset" Action="Default" />
+</RuleSet>

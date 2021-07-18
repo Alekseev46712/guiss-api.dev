@@ -1,0 +1,117 @@
+version: 0.2
+
+#env:
+  #variables:
+     # key: "value"
+  #parameter-store:
+     # key: "value"
+     # key: "value"
+  #git-credential-helper: yes
+
+phases:
+  install:
+    #If you use the Ubuntu standard image 2.0 or later, you must specify runtime-versions.
+    #If you specify runtime-versions and use an image other than Ubuntu standard image 2.0, the build fails.
+    runtime-versions:
+        dotnet: 2.2
+      # name: version
+    commands:
+       - echo "Entering install phase.."
+  pre_build:
+    commands:
+      - echo "Entering build phase.."
+      - terraform -version
+      - aws --version
+      - echo $VERSION
+      - echo $FIRST_DEPLOYMENT
+      - echo $REDEPLOY
+      - echo $ENV
+      - echo $REGION
+      - | # Test multiline yaml support
+        if expr "${ENV}" == "development" >/dev/null; then
+          export LAMBDA_ENV="dev"
+        fi
+        if expr "${ENV}" == "development2" >/dev/null; then
+          export LAMBDA_ENV="dev-2"
+        fi
+        if expr "${ENV}" == "qa" >/dev/null; then
+          export LAMBDA_ENV="qa"
+        fi
+      - echo $LAMBDA_ENV
+      - pwd
+      - ls -al
+  build:
+    run-as: root
+    commands:
+      - echo "Entering build phase.."
+      - aws s3 cp s3://a206104-aaa-deployment-artifacts/services/apis/template-api/template-api-deployment-$VERSION template-api-deployment-$VERSION --recursive --quiet
+      - ls -al
+      - creds=`aws sts assume-role --role-arn "arn:aws:iam::653551970210:role/human-role/a206104-Developer" --role-session-name a206104-cicd-deployment | jq -r '.Credentials'`
+      - export AWS_ACCESS_KEY_ID=`echo $creds | jq -r '.AccessKeyId'` && export AWS_SECRET_ACCESS_KEY=`echo $creds | jq -r '.SecretAccessKey'` && export AWS_SESSION_TOKEN=`echo $creds | jq -r '.SessionToken'`
+      - aws s3 cp template-api-deployment-$VERSION s3://a206104-aaa-sdlc-apis-notts/services/apis/template-api/template-api-deployment-$VERSION --recursive --quiet
+      - | # Test multiline yaml support
+        if expr "${FIRST_DEPLOYMENT}" == "TRUE" >/dev/null; then
+          echo "first deployment"
+        else
+          old_vers=`aws lambda get-function --function-name a206104-aaa-template-api-${LAMBDA_ENV} --qualifier current_version`
+          export OLD_VERSION=`echo $old_vers | jq -r '.Configuration.Environment.Variables.Version'`
+          aws s3 cp s3://a206104-aaa-sdlc-apis-notts/services/apis/template-api/template-api-deployment-$OLD_VERSION template-api-deployment-$OLD_VERSION --recursive --quiet
+        fi
+      - echo $OLD_VERSION
+      - pwd
+      - ls -al
+      - cd template-api-deployment-$VERSION
+      - ls -al
+      - cd terraform/template-api-sdlc
+      - ls -al
+      - terraform init -backend-config="../environments/${ENV}/region/${REGION}/infra-backend.tfvars"
+      - terraform plan -var-file="../environments/${ENV}/region/${REGION}/infra-env.tfvars" -var app_version_number=$VERSION
+      - terraform apply -auto-approve -var-file="../environments/${ENV}/region/${REGION}/infra-env.tfvars" -var app_version_number=$VERSION
+      - terraform output
+      - terraform output $BASE_URL_ENVVAR
+      - export POSTMAN_BASE_URL=`terraform output $BASE_URL_ENVVAR`
+      - echo $POSTMAN_BASE_URL
+      - cd ../../Refinitiv.Aaa.GuissApi.PostmanTests
+      - ls -al
+      - echo "...run newman..."
+      - newman run "$POSTMAN_COLLECTION" -e "$POSTMAN_ENVIRONMENT" --env-var ${TARGET_URL}=${POSTMAN_BASE_URL} --reporters json --reporter-json-export ${TEST_RESULTS}
+      - export REDEPLOY=FALSE
+    finally:
+      - | # Test multiline yaml support
+        if expr "${REDEPLOY}" == "TRUE" >/dev/null; then
+          echo "Upload test results if any."
+          ls -al
+          if test -f "$TEST_RESULTS"; then
+            aws s3 cp "$TEST_RESULTS" s3://a206104-aaa-sdlc-apis-notts/services/apis/template-api/template-api-deployment-$VERSION/Refinitiv.Aaa.GuissApi.PostmanTests/ --quiet
+            echo "$TEST_RESULTS uploaded"
+          fi
+          echo "rollback"
+          ls -al
+          cd ../../../
+          pwd
+          ls -al
+          cd template-api-deployment-$OLD_VERSION
+          ls -al
+          cd terraform/template-api-sdlc
+          ls -al
+          terraform init -backend-config="../environments/${ENV}/region/${REGION}/infra-backend.tfvars"
+          terraform plan -var-file="../environments/${ENV}/region/${REGION}/infra-env.tfvars" -var app_version_number=$OLD_VERSION
+          terraform apply -auto-approve -var-file="../environments/${ENV}/region/${REGION}/infra-env.tfvars" -var app_version_number=$OLD_VERSION
+          echo "successfully rollled back!"
+        else
+          echo "successful build, nothing to do!"
+        fi
+  post_build:
+    commands:
+      - echo "Completed Terraform phase.."
+      # - command
+#artifacts:
+  #files:
+    # - location
+    # - location
+  #name: $(date +%Y-%m-%d)
+  #discard-paths: yes
+  #base-directory: location
+#cache:
+  #paths:
+    # - paths
