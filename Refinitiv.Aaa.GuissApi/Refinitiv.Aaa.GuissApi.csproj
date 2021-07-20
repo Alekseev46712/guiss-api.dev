@@ -24,7 +24,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.15" />
     <PackageReference Include="Refinitiv.Aaa.Api.Common" Version="21.2.26" />
     <PackageReference Include="Refinitiv.Aaa.Foundation.ApiClient" Version="1.2.7" />
-    <PackageReference Include="Refinitiv.Aaa.Interfaces" Version="21.2.26" />
     <PackageReference Include="Refinitiv.Aaa.Logging" Version="0.4.2" />
     <PackageReference Include="Refinitiv.Aaa.MessageBus.Amazon" Version="21.2.26" />
     <PackageReference Include="Refinitiv.Aaa.Pagination" Version="1.0.0.33" />
@@ -35,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Refinitiv.Aaa.GuissApi.Facade\Refinitiv.Aaa.GuissApi.Facade.csproj" />
+    <ProjectReference Include="..\Refinitiv.Aaa.GuissApi.Interfaces\Refinitiv.Aaa.GuissApi.Interfaces.csproj" />
   </ItemGroup>
 
   <ItemGroup>

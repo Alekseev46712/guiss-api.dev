@@ -1,41 +1,36 @@
-resource "aws_dynamodb_table" "replay-table" {
-  name           = "a206104-aaa-replay-dynamodb"
+resource "aws_dynamodb_table" "user-attributes" {
+  name           = "a206104_UserAttributes"
   billing_mode   = "PROVISIONED"
   read_capacity  = 10
   write_capacity = 10
-  hash_key       = "Guid"
+  hash_key       = "UserUuid"
+  range_key      = "Name"
 
   attribute {
-    name = "Guid"
+    name = "UserUuid"
     type = "S"
   }
 
   attribute {
-    name = "Date"
+    name = "Name"
     type = "S"
-  }
-
-  attribute {
-    name = "Time"
-    type = "N"
   }
 
   ttl {
-    attribute_name = "TTL"
-    enabled        = true
+    attribute_name = "TimeToExist"
+    enabled        = false
   }
 
   global_secondary_index {
-    name            = "Date-index"
-    hash_key        = "Date"
-    range_key       = "Time"
+    name            = "Name-index"
+    hash_key        = "Name"
     write_capacity  = 10
     read_capacity   = 10
     projection_type = "ALL"
   }
 
   tags = {
-    Name                              = "a206104-aaa-replay-dynamodb"
+    Name                              = "a206104_UserAttributes"
     "tr:application-asset-insight-id" = "206104"
     "tr:environment-name"             = "DEVELOPMENT"
     "tr:resource-owner"               = "AAADevelopmentNottingham2@thomson.com"
