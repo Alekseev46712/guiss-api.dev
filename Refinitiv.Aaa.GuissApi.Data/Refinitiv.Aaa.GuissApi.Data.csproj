@@ -26,4 +26,7 @@
   <ItemGroup>
     <Folder Include="Exceptions\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Refinitiv.Aaa.GuissApi.Interfaces\Refinitiv.Aaa.GuissApi.Interfaces.csproj" />
+  </ItemGroup>
 </Project>
