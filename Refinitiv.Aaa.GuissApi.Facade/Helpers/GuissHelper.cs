@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Refinitiv.Aaa.Interfaces;
 using Refinitiv.Aaa.Interfaces.Business;
 using Refinitiv.Aaa.Interfaces.Messaging;
 using Refinitiv.Aaa.MessageBus.Amazon.Models;
@@ -165,7 +164,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             {
                 CorrelationId = aaaRequestHeaders.CorrelationId,
                 Content = template,
-                CallerUuid = aaaRequestHeaders.RefinitiveUuid,
+                CallerUuid = aaaRequestHeaders.RefinitivUuid,
                 Namespace = aaaRequestHeaders.Namespace,
             };
         }

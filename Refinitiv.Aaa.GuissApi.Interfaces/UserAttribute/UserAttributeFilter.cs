@@ -9,5 +9,11 @@ namespace Refinitiv.Aaa.GuissApi.Interfaces.UserAttribute
         /// </summary>
         /// <value>The UserUuid.</value>
         public string UserUuid { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Name for filtering by it.
+        /// </summary>
+        /// <value>The Name.</value>
+        public string Name { get; set; }
     }
 }

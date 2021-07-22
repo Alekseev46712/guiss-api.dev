@@ -5,7 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Refinitiv.Aaa.Interfaces" Version="21.2.26" />
+      <PackageReference Include="Refinitiv.Aaa.Interfaces" Version="21.5.2" />
+      <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     </ItemGroup>
 
 </Project>

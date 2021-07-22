@@ -40,6 +40,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade
                 .AddScoped<IPaginationService, PaginationService>()
                 .AddScoped<IPaginationHelper, PaginationHelper>()
                 .AddScoped(typeof(ILoggerHelper<>), typeof(LoggerHelper<>))
+                .AddScoped<IUserAttributeHelper, UserAttributeHelper>()
                 .ConfigureDatabase(configuration)
                 .ConfigureDataDependencies(configuration)
                 .ConfigureAwsMessageBus(configuration);
