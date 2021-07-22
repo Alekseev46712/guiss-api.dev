@@ -1,0 +1,135 @@
+---
+var_sources:
+  - name: vault
+    type: vault
+    config:
+      url: https://vault.sdp.refinitiv.com 
+      client_token: ((auth-token))
+      shared_path: shared
+
+  - name: vault-kv
+    type: dummy
+    config:
+      vars:
+        secret: ((vault:kv/secret))
+
+  - name: vault-aws
+    type: dummy
+    config:
+      vars:
+        aws: ((vault:aws/sts/653551970210-a250395-developer))
+
+resource_types:
+- name: artifactory
+  type: docker-image
+  source:
+    repository: springio/artifactory-resource
+    tag: 0.0.14
+
+resources:
+- name: source
+  type: git
+  icon: gitlab
+  source:
+    uri: ((GIT_REPO))
+    branch: develop
+    private_key: ((vault-kv:secret.rsa_key))
+
+- name: bams
+  type: artifactory
+  icon: source-repository
+  source:
+    uri: ((BAMS_URL))
+    username: ((vault-kv:secret.bams_user))
+    password: ((vault-kv:secret.bams_pass))
+    build_name: ((BAMS_METEDATA_BUILDNAME))
+
+- name: docker-hub
+  type: docker-image
+  icon: docker
+  source:
+    username: ((vault-kv:secret.dockerhub_user))
+    password: ((vault-kv:secret.dockerhub_pass))
+    repository: dockerhub135/test
+
+jobs:
+
+
+- name: sonarqube
+  plan:
+  - get: source
+    trigger: true
+  - get: docker-hub
+  - task: sonarqube
+    image: docker-hub
+    file: source/ci/tasks/sonarqube.yml
+    input_mapping: {input: source}
+    params:
+      GIT_BRANCH: ((GIT_BRANCH))
+      BAMS_USER: ((vault-kv:secret.bams_user))
+      BAMS_PASS: ((vault-kv:secret.bams_pass))
+      SONAR_PROJECT_KEY: ((SONARQUBE_PROJECT_KEY))
+      SONAR_TOKEN: ((vault-kv:secret.sonarqube_token))
+
+
+- name: unit-tests
+  plan:
+  - get: source
+    trigger: true
+    passed: [sonarqube]
+  - get: docker-hub
+  - task: unit-tests
+    image: docker-hub
+    file: source/ci/tasks/unit-tests.yml
+    input_mapping: {input: source}
+    params:
+      BAMS_USER: ((vault-kv:secret.bams_user))
+      BAMS_PASS: ((vault-kv:secret.bams_pass))
+
+
+- name: build-((ENV))
+  plan:
+  - get: source
+    trigger: true
+    passed: [unit-tests]
+  - get: docker-hub
+  - task: build
+    image: docker-hub
+    file: source/ci/tasks/build.yml
+    input_mapping: {input: source}
+    output_mapping: {output: build}
+    params:
+      ENV: ((ENV))
+      GIT_BRANCH: ((GIT_BRANCH))
+      PROJECT_DIR: ((PROJECT_DIR))
+      BAMS_DIR: ((BAMS_DIR))
+      BAMS_USER: ((vault-kv:secret.bams_user))
+      BAMS_PASS: ((vault-kv:secret.bams_pass))
+      ARTIFACT_NAME: ((ARTIFACT_NAME))
+  - put: bams
+    params:
+      repo: ((BAMS_PATH))/((BAMS_DIR))
+      folder: build/((BAMS_DIR))
+      disable_checksum_uploads: true
+      module_layout: none
+
+- name: deploy-((ENV))
+  plan:
+  - get: source
+  - task: deploy
+    file: source/ci/tasks/deploy.yml
+    input_mapping: {input: source}
+    params:
+      ENV: ((ENV))
+      GIT_BRANCH: ((GIT_BRANCH))
+      BAMS_URL: ((BAMS_URL))
+      BAMS_PATH: ((BAMS_PATH))
+      BAMS_DIR: ((BAMS_DIR))
+      BAMS_USER: ((vault-kv:secret.bams_user))
+      BAMS_PASS: ((vault-kv:secret.bams_pass))
+      ARTIFACT_NAME: ((ARTIFACT_NAME))
+      TERRAFORM_SUBDIR: ((TERRAFORM_SUBDIR))
+      AWS_REGION: ((AWS_REGION))
+      AWS_ACCESS_KEY_ID: ((vault-aws:aws.access_key))
+      AWS_SECRET_ACCESS_KEY: ((vault-aws:aws.secret_key))
+      AWS_SESSION_TOKEN: ((vault-aws:aws.security_token))

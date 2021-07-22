@@ -1,0 +1,16 @@
+---
+ENV: "dev"
+AWS_REGION: "us-east-1"
+
+GIT_REPO: "ssh://git@git.sami.int.thomsonreuters.com:aaa-ciam/guiss-api.git"
+GIT_BRANCH: "develop"
+PROJECT_DIR: "Refinitiv.Aaa.GuissApi"
+TERRAFORM_SUBDIR: "guiss-api"
+
+BAMS_URL: "https://bams-aws.refinitiv.com/artifactory"
+BAMS_PATH: "default.generic.cloud/aaa/aws"
+BAMS_DIR: "guiss-api"
+BAMS_METEDATA_BUILDNAME: "guiss-api"
+ARTIFACT_NAME: "guiss-api"
+
+SONARQUBE_PROJECT_KEY: "guiss-api"
