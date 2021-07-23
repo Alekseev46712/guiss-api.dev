@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Refinitiv.Aaa.Api.Common;
 using Refinitiv.Aaa.Api.Common.Attributes;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
+using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Refinitiv.Aaa.GuissApi.Controllers
@@ -48,22 +49,17 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
 
         [HttpPost]
       
-        public async Task<IActionResult> Post([FromBody] GuissDetails newGuiss)
+        public async Task<IActionResult> Post([FromBody] UserAttributeDetails newGuiss)
         {
             // Create object containing all required properties for the create
-            var template = new Guiss(newGuiss)
-            {
-                UpdatedOn = DateTimeOffset.UtcNow,
-            };
+            var template = new UserAttribute(newGuiss);
+           
 
             // Call the helper to insert the new item
-            var savedItem = await templateHelper.InsertAsync(template);
+            var savedItem = await userAttributeHelper.InsertAsync(template);
 
-            // Log audit entry
-            loggerHelper.LogAuditEntry(LoggerEvent.Created, "Guiss Created", savedItem.Id);
+            return Ok(savedItem);
 
-            // Return the newly created item
-            return CreatedAtAction("Get", savedItem.Id, savedItem);
         }
     }
 }

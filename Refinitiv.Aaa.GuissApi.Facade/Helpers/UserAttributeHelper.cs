@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Refinitiv.Aaa.Foundation.ApiClient.Helpers;
 using Refinitiv.Aaa.GuissApi.Data.Interfaces;
+using Refinitiv.Aaa.GuissApi.Facade.Extensions;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 
@@ -41,6 +43,31 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             var result = NodeProcessor.BuildJsonObject(dataToParse);
 
             return result;
+        }
+
+        public async Task<UserAttribute> InsertAsync(UserAttribute item)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException(nameof(item));
+            }
+
+            return await InsertAttributeAsync(item);
+        }
+
+        private async Task<UserAttribute> InsertAttributeAsync(UserAttribute item)
+        {
+            item.UpdatedBy = "123";
+            item.UpdatedOn = DateTimeOffset.UtcNow;
+            item.SearchName = item.Name.ToLower();
+            var dto = item.Map();
+           
+
+            var savedGuiss = await userAttributeRepository.SaveAsync(dto).ConfigureAwait(false);
+            var newGuiss = savedGuiss.Map();
+          
+
+            return newGuiss;
         }
     }
 }

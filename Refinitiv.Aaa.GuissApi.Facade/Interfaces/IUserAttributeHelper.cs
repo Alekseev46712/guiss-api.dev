@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
 {
@@ -14,5 +15,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <param name="userUuid">UserUuid of the item to get.</param>
         /// <returns>User attributes.</returns>
         Task<JObject> GetAllByUserUuidAsync(string userUuid);
+        Task<UserAttribute> InsertAsync(UserAttribute item);
     }
 }

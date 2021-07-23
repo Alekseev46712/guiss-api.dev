@@ -35,7 +35,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade
 
             services
                 .AddSingleton<IAppSettingsConfiguration, AppSettingsConfiguration>()
-                .AddScoped<IGuissHelper, GuissHelper>()
+                //.AddScoped<IGuissHelper, GuissHelper>()
                 .AddScoped<IMessageHandler, MessageHandler>()
                 .AddScoped<IPaginationService, PaginationService>()
                 .AddScoped<IPaginationHelper, PaginationHelper>()

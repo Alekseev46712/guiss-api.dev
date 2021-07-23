@@ -1,5 +1,6 @@
 ﻿using Refinitiv.Aaa.GuissApi.Data.Models;
 using Refinitiv.Aaa.GuissApi.Facade.Models;
+using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Extensions
 {
@@ -13,20 +14,22 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Extensions
         /// </summary>
         /// <param name="db">Dto to map.</param>
         /// <returns>A Guiss object mapped from GuissDb.</returns>
-        public static Guiss Map(this GuissDb db)
+        public static UserAttribute Map(this UserAttributeDb userAttributeDb)
         {
-            if (db == null)
+            if (userAttributeDb == null)
             {
                 return null;
             }
 
-            return new Guiss
+            return new UserAttribute
             {
-                Id = db.Id,
-                Version = db.Version,
-                UpdatedOn = db.UpdatedOn,
-                Name = db.Name,
-                UpdatedBy = db.UpdatedBy,
+                Name = userAttributeDb.Name,
+                SearchName = userAttributeDb.SearchName,
+                UpdatedBy = userAttributeDb.UpdatedBy,
+                UpdatedOn = userAttributeDb.UpdatedOn,
+                UserUuid = userAttributeDb.UserUuid,
+                Value = userAttributeDb.Value,
+                Version = userAttributeDb.Version
             };
         }
 
@@ -35,20 +38,22 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Extensions
         /// </summary>
         /// <param name="template">Guiss model to map.</param>
         /// <returns>A GuissDb object mapped from a Guiss.</returns>
-        public static GuissDb Map(this Guiss template)
+        public static UserAttributeDb Map(this UserAttribute userAttribute)
         {
-            if (template == null)
+            if (userAttribute == null)
             {
                 return null;
             }
 
-            return new GuissDb
+            return new UserAttributeDb
             {
-                Id = template.Id,
-                Version = template.Version,
-                UpdatedOn = template.UpdatedOn,
-                Name = template.Name,
-                UpdatedBy = template.UpdatedBy,
+                Name = userAttribute.Name,
+                SearchName = userAttribute.SearchName,
+                UpdatedBy = userAttribute.UpdatedBy,
+                UpdatedOn = userAttribute.UpdatedOn,
+                UserUuid = userAttribute.UserUuid,
+                Value = userAttribute.Value,
+                Version = userAttribute.Version
             };
         }
     }
