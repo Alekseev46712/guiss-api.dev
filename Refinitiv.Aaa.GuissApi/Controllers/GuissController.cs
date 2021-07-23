@@ -22,7 +22,7 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
     /// </summary>
     [ApiController]
     [AaaHeaders]
-    [Route("api/guiss")]
+    [Route("api/template")]
     [Produces("application/json")]
     [SwaggerOperationFilter(typeof(HeaderOperationFilter))]
     public class GuissController : ControllerBase

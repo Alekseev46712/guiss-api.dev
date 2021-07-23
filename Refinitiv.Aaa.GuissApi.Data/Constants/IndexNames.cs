@@ -6,12 +6,6 @@
     internal static class IndexNames
     {
         /// <summary>
-        /// The KindIndex value.
-        /// </summary>
-        /// <value>The KindIndex.</value>
-        public const string KindIndex = "Kind-index";
-
-        /// <summary>
         /// The NameIndex value.
         /// </summary>
         /// <value>The NameIndex.</value>
