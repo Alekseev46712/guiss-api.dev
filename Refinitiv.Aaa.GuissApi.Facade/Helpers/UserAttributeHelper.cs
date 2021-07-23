@@ -58,15 +58,13 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 
         /// <inheritdoc />
         private async Task<UserAttribute> InsertAttributeAsync(UserAttribute userAttribute)
-        {
-           
+        {     
             var userAttributeDb = userAttribute.Map();
            
-
             var savedGuiss = await userAttributeRepository.SaveAsync(userAttributeDb).ConfigureAwait(false);
+
             var newAttribute = savedGuiss.Map();
           
-
             return newAttribute;
         }
 
@@ -87,11 +85,10 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             var userAttributeDb = userAttribute.Map();
 
             var savedUserAttribute = await userAttributeRepository.SaveAsync(userAttributeDb).ConfigureAwait(false);
+
             var newAttribute = savedUserAttribute.Map();
            
-
-            return newAttribute;
-           
+            return newAttribute;           
         }
     }
 }
