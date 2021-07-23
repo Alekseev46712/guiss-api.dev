@@ -15,7 +15,19 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <param name="userUuid">UserUuid of the item to get.</param>
         /// <returns>User attributes.</returns>
         Task<JObject> GetAllByUserUuidAsync(string userUuid);
-        Task<UserAttribute> InsertAsync(UserAttribute item);
+
+        /// <summary>
+        /// Inserts User Attribute
+        /// </summary>
+        /// <param name="userAttribute">User Attribute.</param>
+        /// <returns>User attribute.</returns>
+        Task<UserAttribute> InsertAsync(UserAttribute userAttribute);
+
+        /// <summary>
+        /// Updates User Attribute
+        /// </summary>
+        /// <param name="userAttribute">User Attribute.</param>
+        /// <returns>User attribute.</returns>
         Task<UserAttribute> UpdateAsync(UserAttribute userAttribute);
     }
 }

@@ -45,6 +45,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             return result;
         }
 
+        /// <inheritdoc />
         public async Task<UserAttribute> InsertAsync(UserAttribute userAttribute)
         {
             if (userAttribute == null)
@@ -55,6 +56,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             return await InsertAttributeAsync(userAttribute);
         }
 
+        /// <inheritdoc />
         private async Task<UserAttribute> InsertAttributeAsync(UserAttribute userAttribute)
         {
            
@@ -68,6 +70,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             return newAttribute;
         }
 
+        /// <inheritdoc />
         public Task<UserAttribute> UpdateAsync(UserAttribute userAttribute)
         {
             if (userAttribute == null)
@@ -78,6 +81,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             return UpdateAttributeAsync(userAttribute);
         }
 
+        /// <inheritdoc />
         private async Task<UserAttribute> UpdateAttributeAsync(UserAttribute userAttribute)
         {
             var userAttributeDb = userAttribute.Map();

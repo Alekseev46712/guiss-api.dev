@@ -12,7 +12,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Extensions
         /// <summary>
         /// Maps a Guiss DTO object into a Guiss Model.
         /// </summary>
-        /// <param name="db">Dto to map.</param>
+        /// <param name="userAttributeDb">Dto to map.</param>
         /// <returns>A Guiss object mapped from GuissDb.</returns>
         public static UserAttribute Map(this UserAttributeDb userAttributeDb)
         {
@@ -36,7 +36,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Extensions
         /// <summary>
         /// Maps a Guiss model into a DTO object.
         /// </summary>
-        /// <param name="template">Guiss model to map.</param>
+        /// <param name="userAttribute">Guiss model to map.</param>
         /// <returns>A GuissDb object mapped from a Guiss.</returns>
         public static UserAttributeDb Map(this UserAttribute userAttribute)
         {

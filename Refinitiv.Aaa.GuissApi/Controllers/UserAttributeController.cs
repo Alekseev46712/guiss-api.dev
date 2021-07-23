@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Refinitiv.Aaa.Api.Common;
 using Refinitiv.Aaa.Api.Common.Attributes;
+using Refinitiv.Aaa.GuissApi.Data.Exceptions;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using Refinitiv.Aaa.Interfaces.Headers;
@@ -31,6 +32,9 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
         /// Initializes a new instance of the <see cref="UserAttributeController"/> class.
         /// </summary>
         /// <param name="userAttributeHelper">Helper used to access the data.</param>
+        /// <param name="aaaRequestHeaders">Helps to recieve headers.</param>
+        /// <param name="userAttributeValidator">Helps to validate attributes.</param>
+
         public UserAttributeController(
             IUserAttributeHelper userAttributeHelper,
             IAaaRequestHeaders aaaRequestHeaders,
@@ -56,8 +60,18 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Creates and updates user attributes
+        /// </summary>
+        /// <param name="details">The uuid of the user.</param>
+        /// <returns>IActionResult.</returns>
         [HttpPut]
-      
+        [SwaggerResponse(StatusCodes.Status200OK, "UserAttribute created or updated")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "User with the specified Uuid not found")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status409Conflict)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
+
         public async Task<IActionResult> Put([FromBody, Required] UserAttributeDetails details)
         {
             // Create object containing all required properties for the create
@@ -79,11 +93,18 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
 
             if (putRequestValidationResult != null)
             {
-               var updatedAttribute = await userAttributeHelper.UpdateAsync(putRequestValidationResult);
-               return Ok(updatedAttribute);
+                try
+                {
+                    var updatedAttribute = await userAttributeHelper.UpdateAsync(putRequestValidationResult);
+                    return Ok(updatedAttribute);
+                }
+                catch (UpdateConflictException)
+                {
+                    return Conflict();
+                }
+                
             }
-
-            // Call the helper to insert the new item
+      
             var savedItem = await userAttributeHelper.InsertAsync(userAttribute);
 
             return Ok(savedItem);

@@ -11,12 +11,17 @@ using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Validation
 {
+    /// <summary>
+    /// Validets requests
+    /// </summary>
     public class UserAttributeValidator : IUserAttributeValidator
     {
         private readonly IUserHelper userHelper;
         private readonly IUserAttributeHelper userAttributeHelper;
         private readonly IUserAttributeRepository userAttributeRepository;
-        /// <param name="userHelper">user Helper.</param>
+        /// <param name="userHelper">User Helper.</param>
+        /// /// <param name="userAttributeHelper">User Attribute Helper</param>
+        /// /// <param name="userAttributeRepository">User Attribute Repository.</param>
         public UserAttributeValidator(IUserHelper userHelper, IUserAttributeHelper userAttributeHelper, IUserAttributeRepository userAttributeRepository)
         {
             this.userHelper = userHelper;
@@ -24,9 +29,13 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
             this.userAttributeRepository = userAttributeRepository;
 
 
-    }
+        }
 
-
+        /// <summary>
+        /// Checks if User Uuid is valid by calling users api
+        /// </summary>
+        /// <param name="newUserAttributeDetails">User Attribute Details.</param>
+        /// <returns>IActionResult.</returns>
         public async Task<IActionResult> ValidateAttributeAsync(UserAttribute newUserAttributeDetails)
         {
             if (newUserAttributeDetails == null)
@@ -43,6 +52,11 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
             return new AcceptedResult();
         }
 
+        /// <summary>
+        /// Checks if it's update request or post
+        /// </summary>
+        /// <param name="userAttribute">User Attribute Details.</param>
+        /// <returns>UserAttribute or null.</returns>
         public async Task<UserAttribute> ValidatePutRequestAsync(UserAttribute userAttribute)
         {
             if (userAttribute == null)
