@@ -45,5 +45,25 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost]
+      
+        public async Task<IActionResult> Post([FromBody] GuissDetails newGuiss)
+        {
+            // Create object containing all required properties for the create
+            var template = new Guiss(newGuiss)
+            {
+                UpdatedOn = DateTimeOffset.UtcNow,
+            };
+
+            // Call the helper to insert the new item
+            var savedItem = await templateHelper.InsertAsync(template);
+
+            // Log audit entry
+            loggerHelper.LogAuditEntry(LoggerEvent.Created, "Guiss Created", savedItem.Id);
+
+            // Return the newly created item
+            return CreatedAtAction("Get", savedItem.Id, savedItem);
+        }
     }
 }
