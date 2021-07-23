@@ -37,7 +37,8 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
         /// </summary>
         /// <param name="userAttributeHelper">Helper used to access the data.</param>
         /// <param name="aaaRequestHeaders">Helps to recieve headers.</param>
-        /// <param name="userAttributeValidator">Helps to validate attributes.</param>
+        /// <param name="userAttributeValidator">Validates attributes.</param>
+        /// <param name="loggerHelper">provide logging.</param>
 
         public UserAttributeController(
             IUserAttributeHelper userAttributeHelper,
