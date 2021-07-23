@@ -10,13 +10,13 @@ namespace Refinitiv.Aaa.GuissApi.Data.Constants
     public class UserAttributeNames
     {
         /// <summary>
-        /// The UserUuid attribute.
+        /// The SearchUserUuid attribute.
         /// </summary>
-        public const string UserUuid = nameof(UserAttributeDb.UserUuid);
+        public const string SearchUserUuid = nameof(UserAttributeDb.SearchUserUuid);
 
         /// <summary>
-        /// The Name attribute.
+        /// The SearchName attribute.
         /// </summary>
-        public const string Name = nameof(UserAttributeDb.Name);
+        public const string SearchName = nameof(UserAttributeDb.SearchName);
     }
 }

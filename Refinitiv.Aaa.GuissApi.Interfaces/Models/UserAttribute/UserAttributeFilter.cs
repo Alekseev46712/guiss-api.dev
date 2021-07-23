@@ -1,6 +1,7 @@
 ﻿using Refinitiv.Aaa.Interfaces.Business;
+using System.Collections.Generic;
 
-namespace Refinitiv.Aaa.GuissApi.Interfaces.UserAttribute
+namespace Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute
 {
     public class UserAttributeFilter : IFilter
     {
@@ -11,9 +12,9 @@ namespace Refinitiv.Aaa.GuissApi.Interfaces.UserAttribute
         public string UserUuid { get; set; }
 
         /// <summary>
-        /// Gets or sets the Name for filtering by it.
+        /// Gets or sets the Names for filtering by them.
         /// </summary>
-        /// <value>The Name.</value>
-        public string Name { get; set; }
+        /// <value>The Names.</value>
+        public List<string> Names { get; set; }
     }
 }

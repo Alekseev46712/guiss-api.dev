@@ -15,9 +15,9 @@ using Refinitiv.Aaa.Logging;
 using Refinitiv.Aaa.Logging.Interfaces;
 using Refinitiv.Aaa.Pagination;
 using Refinitiv.Aaa.GuissApi.Facade.Extensions;
-using Refinitiv.Aaa.GuissApi.Interfaces.Configuration;
 using Refinitiv.Aaa.GuissApi.Models;
 using Refinitiv.Aaa.Interfaces.Headers;
+using Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration;
 
 namespace Refinitiv.Aaa.GuissApi
 {
@@ -31,8 +31,8 @@ namespace Refinitiv.Aaa.GuissApi
         private readonly IConfiguration configuration;
         private const string SwaggerSection = "Swagger";
         private const string LoggingSection = "Logging";
-        private const string PaginationStoreHashPath = "ParameterStore:PaginationParameterStorePath";
         private const string AppSettingsSection = "AppSettings";
+        private const string PaginationStoreHashPath = "ParameterStore:PaginationParameterStorePath";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.

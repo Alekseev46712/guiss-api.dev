@@ -18,11 +18,17 @@ namespace Refinitiv.Aaa.GuissApi.Data.Models
         public string UserUuid { get; set; }
 
         /// <summary>
+        /// Gets or sets the User Uuid for case-independent searching.
+        /// </summary>
+        /// <value>The User Uuid converted to lower case.</value>
+        [DynamoDBGlobalSecondaryIndexHashKey(IndexNames.UserUuidIndex)]
+        public string SearchUserUuid { get; set; }
+
+        /// <summary>
         /// Gets or sets the user attribute name for case-independent searching.
         /// </summary>
         /// <value>The user attribute name converted to lower case.</value>
         [DynamoDBRangeKey]
-        [DynamoDBGlobalSecondaryIndexHashKey(IndexNames.NameIndex)]
         public string Name { get; set; }
 
         /// <summary>

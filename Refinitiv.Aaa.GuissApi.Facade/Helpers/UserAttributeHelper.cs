@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 using Refinitiv.Aaa.Foundation.ApiClient.Helpers;
 using Refinitiv.Aaa.GuissApi.Data.Interfaces;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
-using Refinitiv.Aaa.GuissApi.Interfaces.UserAttribute;
+using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 {

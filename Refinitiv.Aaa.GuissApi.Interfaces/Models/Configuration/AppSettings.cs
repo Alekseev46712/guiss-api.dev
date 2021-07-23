@@ -1,6 +1,6 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Refinitiv.Aaa.GuissApi.Interfaces.Configuration
+namespace Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration
 {
     /// <summary>
     ///  Represents properties from appsettings file for database configuration.
