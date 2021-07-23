@@ -11,18 +11,11 @@ namespace Refinitiv.Aaa.GuissApi.Data.Models
     public class UserAttributeDb
     {
         /// <summary>
-        /// Gets or sets the User Uuid.
-        /// </summary>
-        /// <value>The User Uuid.</value>
-        [DynamoDBHashKey]
-        public string UserUuid { get; set; }
-
-        /// <summary>
         /// Gets or sets the User Uuid for case-independent searching.
         /// </summary>
         /// <value>The User Uuid converted to lower case.</value>
-        [DynamoDBGlobalSecondaryIndexHashKey(IndexNames.UserUuidIndex)]
-        public string SearchUserUuid { get; set; }
+        [DynamoDBHashKey]
+        public string UserUuid { get; set; }
 
         /// <summary>
         /// Gets or sets the user attribute name for case-independent searching.

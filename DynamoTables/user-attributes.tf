@@ -10,11 +10,6 @@ resource "aws_dynamodb_table" "user-attributes" {
     name = "UserUuid"
     type = "S"
   }
-  
-  attribute {
-    name = "SearchUserUuid"
-    type = "S"
-  }
 
   attribute {
     name = "Name"
@@ -24,14 +19,6 @@ resource "aws_dynamodb_table" "user-attributes" {
   ttl {
     attribute_name = "TimeToExist"
     enabled        = false
-  }
-  
-  global_secondary_index {
-    name            = "UserUuid-index"
-    hash_key        = "SearchUserUuid"
-    write_capacity  = 10
-    read_capacity   = 10
-    projection_type = "ALL"
   }
 
   tags = {

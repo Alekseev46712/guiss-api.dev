@@ -57,7 +57,6 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
             {
                 BackwardSearch = cursor.BackwardSearch,
                 PaginationToken = cursor.LastEvaluatedKey ?? "{}",
-                IndexName = IndexNames.UserUuidIndex,
                 Filter = queryFilter
             };
 
@@ -132,7 +131,6 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
             {
                 BackwardSearch = cursor.BackwardSearch,
                 PaginationToken = cursor.LastEvaluatedKey ?? "{}",
-                IndexName = IndexNames.UserUuidIndex,
                 Filter = queryFilter,
                 Limit = cursor.Limit,
             };
@@ -145,7 +143,7 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
         {
             try
             {
-                return await dynamoDb.LoadAsync<UserAttributeDb>(userUuid, name, dbConfig);
+                return await dynamoDb.LoadAsync<UserAttributeDb>(userUuid.ToLower(CultureInfo.CurrentCulture), name.ToLower(CultureInfo.CurrentCulture), dbConfig);
             }
             catch (AmazonDynamoDBException ex)
             {
@@ -212,7 +210,7 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
 
             if (userAttributeFilter.UserUuid != null)
             {
-                queryFilter.AddCondition(UserAttributeNames.SearchUserUuid,
+                queryFilter.AddCondition(UserAttributeNames.UserUuid,
                     QueryOperator.Equal,
                     userAttributeFilter.UserUuid.ToLower(CultureInfo.CurrentCulture));
             }
