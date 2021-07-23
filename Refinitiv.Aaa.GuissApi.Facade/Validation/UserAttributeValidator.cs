@@ -1,0 +1,67 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Refinitiv.Aaa.Foundation.ApiClient.Interfaces;
+using Refinitiv.Aaa.GuissApi.Data.Interfaces;
+using Refinitiv.Aaa.GuissApi.Facade.Extensions;
+using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
+using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Refinitiv.Aaa.GuissApi.Facade.Validation
+{
+    public class UserAttributeValidator : IUserAttributeValidator
+    {
+        private readonly IUserHelper userHelper;
+        private readonly IUserAttributeHelper userAttributeHelper;
+        private readonly IUserAttributeRepository userAttributeRepository;
+        /// <param name="userHelper">user Helper.</param>
+        public UserAttributeValidator(IUserHelper userHelper, IUserAttributeHelper userAttributeHelper, IUserAttributeRepository userAttributeRepository)
+        {
+            this.userHelper = userHelper;
+            this.userAttributeHelper = userAttributeHelper;
+            this.userAttributeRepository = userAttributeRepository;
+
+
+    }
+
+
+        public async Task<IActionResult> ValidateAttributeAsync(UserAttribute newUserAttributeDetails)
+        {
+            if (newUserAttributeDetails == null)
+            {
+                throw new ArgumentNullException(nameof(newUserAttributeDetails));
+            }
+            var exsistingFromUsersApi = await userHelper.GetUserByUuidAsync(newUserAttributeDetails.UserUuid);
+            if (exsistingFromUsersApi == null)
+            {
+                return new NotFoundObjectResult(new { Message = "The User is not found" });
+            }
+
+
+            return new AcceptedResult();
+        }
+
+        public async Task<UserAttribute> ValidatePutRequestAsync(UserAttribute userAttribute)
+        {
+            if (userAttribute == null)
+            {
+                throw new ArgumentNullException(nameof(userAttribute));
+            }
+
+            var exsistingUserAttribute = await userAttributeRepository.FindByUserUuidAndNameAsync(userAttribute.UserUuid, userAttribute.Name);
+
+            if (exsistingUserAttribute == null)
+            {
+                return null;
+            }
+
+            exsistingUserAttribute.Value = userAttribute.Value;
+            exsistingUserAttribute.UpdatedBy = userAttribute.UpdatedBy;
+            exsistingUserAttribute.UpdatedOn = userAttribute.UpdatedOn;
+
+            return exsistingUserAttribute.Map();
+        }
+    }
+}

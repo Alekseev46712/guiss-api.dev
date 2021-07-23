@@ -11,6 +11,7 @@ using Refinitiv.Aaa.GuissApi.Facade.Helpers;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Facade.Models;
 using Refinitiv.Aaa.MessageBus.Amazon;
+using Refinitiv.Aaa.GuissApi.Facade.Validation;
 
 namespace Refinitiv.Aaa.GuissApi.Facade
 {
@@ -41,6 +42,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade
                 .AddScoped<IPaginationHelper, PaginationHelper>()
                 .AddScoped(typeof(ILoggerHelper<>), typeof(LoggerHelper<>))
                 .AddScoped<IUserAttributeHelper, UserAttributeHelper>()
+                .AddScoped<IUserAttributeValidator, UserAttributeValidator>()
+                .AddScoped<IUserHelper, UserHelper>()           
                 .ConfigureDatabase(configuration)
                 .ConfigureDataDependencies(configuration)
                 .ConfigureAwsMessageBus(configuration);

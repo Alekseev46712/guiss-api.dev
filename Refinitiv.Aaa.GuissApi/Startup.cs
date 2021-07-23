@@ -18,6 +18,8 @@ using Refinitiv.Aaa.GuissApi.Facade.Extensions;
 using Refinitiv.Aaa.GuissApi.Models;
 using Refinitiv.Aaa.Interfaces.Headers;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration;
+using Refinitiv.Aaa.Foundation.ApiClient.Constants;
+using System;
 
 namespace Refinitiv.Aaa.GuissApi
 {
@@ -33,6 +35,8 @@ namespace Refinitiv.Aaa.GuissApi
         private const string LoggingSection = "Logging";
         private const string AppSettingsSection = "AppSettings";
         private const string PaginationStoreHashPath = "ParameterStore:PaginationParameterStorePath";
+        private const string UserApiBaseAddress = "AppSettings:Services:UserApi";
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
@@ -75,6 +79,11 @@ namespace Refinitiv.Aaa.GuissApi
                 .AddHttpContextAccessor()
                 .ConfigureFacade(configuration)
                 .ConfigureSwaggerServices(configuration);
+
+            services.AddHttpClient(ServiceNames.UserApi, c =>
+            {
+                c.BaseAddress = new Uri(configuration[UserApiBaseAddress]);
+            });
 
             if (environment.IsDevelopment())
             {

@@ -45,29 +45,49 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             return result;
         }
 
-        public async Task<UserAttribute> InsertAsync(UserAttribute item)
+        public async Task<UserAttribute> InsertAsync(UserAttribute userAttribute)
         {
-            if (item == null)
+            if (userAttribute == null)
             {
-                throw new ArgumentNullException(nameof(item));
+                throw new ArgumentNullException(nameof(userAttribute));
             }
 
-            return await InsertAttributeAsync(item);
+            return await InsertAttributeAsync(userAttribute);
         }
 
-        private async Task<UserAttribute> InsertAttributeAsync(UserAttribute item)
+        private async Task<UserAttribute> InsertAttributeAsync(UserAttribute userAttribute)
         {
-            item.UpdatedBy = "123";
-            item.UpdatedOn = DateTimeOffset.UtcNow;
-            item.SearchName = item.Name.ToLower();
-            var dto = item.Map();
+           
+            var userAttributeDb = userAttribute.Map();
            
 
-            var savedGuiss = await userAttributeRepository.SaveAsync(dto).ConfigureAwait(false);
-            var newGuiss = savedGuiss.Map();
+            var savedGuiss = await userAttributeRepository.SaveAsync(userAttributeDb).ConfigureAwait(false);
+            var newAttribute = savedGuiss.Map();
           
 
-            return newGuiss;
+            return newAttribute;
+        }
+
+        public Task<UserAttribute> UpdateAsync(UserAttribute userAttribute)
+        {
+            if (userAttribute == null)
+            {
+                throw new ArgumentNullException(nameof(userAttribute));
+            }
+
+            return UpdateAttributeAsync(userAttribute);
+        }
+
+        private async Task<UserAttribute> UpdateAttributeAsync(UserAttribute userAttribute)
+        {
+            var userAttributeDb = userAttribute.Map();
+
+            var savedUserAttribute = await userAttributeRepository.SaveAsync(userAttributeDb).ConfigureAwait(false);
+            var newAttribute = savedUserAttribute.Map();
+           
+
+            return newAttribute;
+           
         }
     }
 }
