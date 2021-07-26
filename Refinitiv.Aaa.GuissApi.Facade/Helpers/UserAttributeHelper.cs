@@ -68,8 +68,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             var userAttributeDb = mapper.Map<UserAttribute, UserAttributeDb>(userAttribute);
 
             userAttributeDb.Name = userAttribute.Name.ToLower();
-           
-            var savedAttribute = await userAttributeRepository.SaveAsync(userAttributeDb).ConfigureAwait(false);
+
+            var savedAttribute = await userAttributeRepository.SaveAsync(userAttributeDb);
 
             var newAttribute = mapper.Map<UserAttributeDb, UserAttribute>(savedAttribute);
 
@@ -92,7 +92,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         {
             var userAttributeDb = mapper.Map<UserAttribute, UserAttributeDb>(userAttribute);
 
-            var savedUserAttribute = await userAttributeRepository.SaveAsync(userAttributeDb).ConfigureAwait(false);
+            var savedUserAttribute = await userAttributeRepository.SaveAsync(userAttributeDb);
 
             var newAttribute = mapper.Map<UserAttributeDb, UserAttribute>(savedUserAttribute);
 
