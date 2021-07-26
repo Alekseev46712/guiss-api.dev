@@ -7,11 +7,6 @@ namespace Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute
 {
     public class UserAttributeDetails
     {
-        public UserAttributeDetails()
-        {
-
-        }
-
         public UserAttributeDetails(UserAttributeDetails details)
         {
             this.UserUuid = details.UserUuid;
