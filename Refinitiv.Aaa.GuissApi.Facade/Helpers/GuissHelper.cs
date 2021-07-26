@@ -67,16 +67,16 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
                 templateResultSet.Next = paginationHelper.CreatePaginationToken(new Cursor<GuissFilter>(cursor.Limit, filter, cursor.LastEvaluatedKey));
             }
 
-            templateResultSet.Items = templates.Select(o => o.Map());
+            //templateResultSet.Items = templates.Select(o => o.Map());
 
-            return templateResultSet;
+            return null;//templateResultSet;
         }
 
         /// <inheritdoc />
         public async Task<Guiss> FindByIdAsync(string id)
         {
             var item = await templateRepository.FindByIdAsync(id).ConfigureAwait(false);
-            return item?.Map();
+            return null;//item?.Map();
         }
 
         /// <inheritdoc />
@@ -113,31 +113,31 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 
         private async Task<Guiss> InsertGuissAsync(Guiss item)
         {
-            var dto = item.Map();
-            dto.Id = Guid.NewGuid().ToString();
+            //var dto = item.Map();
+            //dto.Id = Guid.NewGuid().ToString();
 
-            var savedGuiss = await templateRepository.SaveAsync(dto).ConfigureAwait(false);
-            var newGuiss = savedGuiss.Map();
-            var message = GetGuissCreatedMessage(newGuiss);
+            //var savedGuiss = await templateRepository.SaveAsync(dto).ConfigureAwait(false);
+            //var newGuiss = savedGuiss.Map();
+            //var message = GetGuissCreatedMessage(newGuiss);
 
-            await messagePublisher.PublishMessageAsync("Guiss", message).ConfigureAwait(false);
+            //await messagePublisher.PublishMessageAsync("Guiss", message).ConfigureAwait(false);
 
-            return newGuiss;
+            return null;// newGuiss;
         }
 
         private async Task<Guiss> UpdateGuissAsync(Guiss item)
         {
             logger.LogInformation($"Updating template with id {item.Id}.");
 
-            var dto = item.Map();
+            //var dto = item.Map();
 
-            var savedGuiss = await templateRepository.SaveAsync(dto).ConfigureAwait(false);
-            var newGuiss = savedGuiss.Map();
-            var message = GetGuissUpdatedMessage(newGuiss);
+            //var savedGuiss = await templateRepository.SaveAsync(dto).ConfigureAwait(false);
+            //var newGuiss = savedGuiss.Map();
+            // var message = GetGuissUpdatedMessage(newGuiss);
 
-            await messagePublisher.PublishMessageAsync("Guiss", message).ConfigureAwait(false);
+            //await messagePublisher.PublishMessageAsync("Guiss", message).ConfigureAwait(false);
 
-            return newGuiss;
+            return null;// newGuiss;
         }
 
         private IMessage<Guiss> GetGuissCreatedMessage(Guiss template)
