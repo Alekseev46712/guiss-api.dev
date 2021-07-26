@@ -56,17 +56,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
             return InternalValidateAttributeAsync(userAttributeDetails);
         }
 
-        private async Task<IActionResult> InternalValidateAttributeAsync(UserAttributeDetails userAttributeDetails)
-        {
-            var exsistingFromUsersApi = await userHelper.GetUserByUuidAsync(userAttributeDetails.UserUuid);
-            if (exsistingFromUsersApi == null)
-            {
-                return new NotFoundObjectResult(new { Message = "The User is not found" });
-            }
-
-            return new AcceptedResult();
-        }
-
         /// <summary>
         /// Checks if it's update request or post, if it is put returns model to update
         /// </summary>
@@ -94,5 +83,15 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
             return mapper.Map<UserAttributeDb, UserAttribute>(exsistingUserAttribute);
         }
 
+        private async Task<IActionResult> InternalValidateAttributeAsync(UserAttributeDetails userAttributeDetails)
+        {
+            var exsistingFromUsersApi = await userHelper.GetUserByUuidAsync(userAttributeDetails.UserUuid);
+            if (exsistingFromUsersApi == null)
+            {
+                return new NotFoundObjectResult(new { Message = "The User is not found" });
+            }
+
+            return new AcceptedResult();
+        }
     }
 }

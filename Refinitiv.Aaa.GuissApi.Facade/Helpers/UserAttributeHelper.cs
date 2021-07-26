@@ -68,6 +68,16 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         /// <inheritdoc />
+        public Task<UserAttribute> UpdateAsync(UserAttribute userAttribute, string value)
+        {
+            if (userAttribute == null)
+            {
+                throw new ArgumentNullException(nameof(userAttribute));
+            }
+
+            return UpdateAttributeAsync(userAttribute, value);
+        }
+
         private async Task<UserAttribute> InsertAttributeAsync(UserAttributeDetails userAttributeDetails)
         {
             var userAttribute = CreateUserAttributeObject(userAttributeDetails);
@@ -81,18 +91,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             return newAttribute;
         }
 
-        /// <inheritdoc />
-        public Task<UserAttribute> UpdateAsync(UserAttribute userAttribute, string value)
-        {
-            if (userAttribute == null)
-            {
-                throw new ArgumentNullException(nameof(userAttribute));
-            }
-
-            return UpdateAttributeAsync(userAttribute, value);
-        }
-
-        /// <inheritdoc />
         private async Task<UserAttribute> UpdateAttributeAsync(UserAttribute userAttribute, string value)
         {
             var userAttributeDb = mapper.Map<UserAttribute, UserAttributeDb>(userAttribute);
