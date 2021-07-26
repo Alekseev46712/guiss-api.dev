@@ -4,13 +4,11 @@ using System.Text;
 
 namespace Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute
 {
+    /// <summary>
+    /// UserAttribute model.
+    /// </summary>
     public class UserAttribute : UserAttributeDetails
     {
-        public UserAttribute()
-        {
-
-        }
-
         public UserAttribute(UserAttributeDetails details) : base(details)
         {
 
