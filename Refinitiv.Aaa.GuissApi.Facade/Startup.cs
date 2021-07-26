@@ -12,6 +12,7 @@ using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Facade.Models;
 using Refinitiv.Aaa.MessageBus.Amazon;
 using Refinitiv.Aaa.GuissApi.Facade.Validation;
+using Refinitiv.Aaa.GuissApi.Facade.Mapping;
 
 namespace Refinitiv.Aaa.GuissApi.Facade
 {
@@ -34,7 +35,10 @@ namespace Refinitiv.Aaa.GuissApi.Facade
                 throw new ArgumentNullException(nameof(configuration));
             }
 
-            services
+            services.AddAutoMapper(
+               typeof(UserAttributeMappingProfile).Assembly);
+
+           services
                 .AddSingleton<IAppSettingsConfiguration, AppSettingsConfiguration>()
                 //.AddScoped<IGuissHelper, GuissHelper>()
                 .AddScoped<IMessageHandler, MessageHandler>()

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Refinitiv.Aaa.Foundation.ApiClient.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Interfaces;
+using Refinitiv.Aaa.GuissApi.Data.Models;
 using Refinitiv.Aaa.GuissApi.Facade.Extensions;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
@@ -17,16 +19,18 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
     public class UserAttributeValidator : IUserAttributeValidator
     {
         private readonly IUserHelper userHelper;
-        private readonly IUserAttributeHelper userAttributeHelper;
+        private readonly IMapper mapper;
         private readonly IUserAttributeRepository userAttributeRepository;
+
         /// <param name="userHelper">User Helper.</param>
-        /// /// <param name="userAttributeHelper">User Attribute Helper</param>
-        /// /// <param name="userAttributeRepository">User Attribute Repository.</param>
-        public UserAttributeValidator(IUserHelper userHelper, IUserAttributeHelper userAttributeHelper, IUserAttributeRepository userAttributeRepository)
+        /// <param name="userAttributeHelper">User Attribute Helper</param>
+        /// <param name="userAttributeRepository">User Attribute Repository.</param>
+        /// <param name="mapper">Automapper.</param>
+        public UserAttributeValidator(IUserHelper userHelper, IUserAttributeHelper userAttributeHelper, IUserAttributeRepository userAttributeRepository, IMapper mapper)
         {
             this.userHelper = userHelper;
-            this.userAttributeHelper = userAttributeHelper;
             this.userAttributeRepository = userAttributeRepository;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -83,7 +87,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
             exsistingUserAttribute.UpdatedBy = userAttribute.UpdatedBy;
             exsistingUserAttribute.UpdatedOn = userAttribute.UpdatedOn;
 
-            return exsistingUserAttribute.Map();
+            return mapper.Map<UserAttributeDb, UserAttribute>(exsistingUserAttribute);
         }
 
     }
