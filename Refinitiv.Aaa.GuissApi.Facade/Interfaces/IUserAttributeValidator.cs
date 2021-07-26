@@ -15,14 +15,14 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <summary>
         /// Checks if User Uuid is valid by calling users api
         /// </summary>
-        /// <param name="newUserAttributeDetails">User Attribute Details.</param>
+        /// <param name="userAttribute">User Attribute Model.</param>
         /// <returns>IActionResult.</returns>
-        Task<IActionResult> ValidateAttributeAsync(UserAttribute newUserAttributeDetails);
+        Task<IActionResult> ValidateAttributeAsync(UserAttribute userAttribute);
 
         /// <summary>
         /// Checks if it's update request or post
         /// </summary>
-        /// <param name="userAttribute">User Attribute Details.</param>
+        /// <param name="userAttribute">User Attribute Model.</param>
         /// <returns>UserAttribute or null.</returns>
         Task<UserAttribute> ValidatePutRequestAsync(UserAttribute userAttribute);
     }

@@ -32,21 +32,21 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         /// <summary>
         /// Checks if User Uuid is valid by calling users api
         /// </summary>
-        /// <param name="newUserAttributeDetails">User Attribute Details.</param>
+        /// <param name="userAttribute">User Attribute Details.</param>
         /// <returns>IActionResult.</returns>
-        public Task<IActionResult> ValidateAttributeAsync(UserAttribute newUserAttributeDetails)
+        public Task<IActionResult> ValidateAttributeAsync(UserAttribute userAttribute)
         {
-            if (newUserAttributeDetails == null)
+            if (userAttribute == null)
             {
-                throw new ArgumentNullException(nameof(newUserAttributeDetails));
+                throw new ArgumentNullException(nameof(userAttribute));
             }
 
-            return InternalValidateAttributeAsync(newUserAttributeDetails);
+            return InternalValidateAttributeAsync(userAttribute);
         }
 
-        private async Task<IActionResult> InternalValidateAttributeAsync(UserAttribute newUserAttributeDetails)
+        private async Task<IActionResult> InternalValidateAttributeAsync(UserAttribute userAttribute)
         {
-            var exsistingFromUsersApi = await userHelper.GetUserByUuidAsync(newUserAttributeDetails.UserUuid);
+            var exsistingFromUsersApi = await userHelper.GetUserByUuidAsync(userAttribute.UserUuid);
             if (exsistingFromUsersApi == null)
             {
                 return new NotFoundObjectResult(new { Message = "The User is not found" });
