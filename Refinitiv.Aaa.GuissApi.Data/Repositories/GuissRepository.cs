@@ -48,7 +48,7 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
                 ItemKinds.Guiss,
                 new DynamoDBOperationConfig
                 {
-                    IndexName = IndexNames.UserUuidIndex,
+                    IndexName = IndexNames.NameIndex,
                     OverrideTableName = tableName,
                 });
 
@@ -154,7 +154,7 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
                 Limit = cursor.Limit,
                 BackwardSearch = cursor.BackwardSearch,
                 PaginationToken = cursor.LastEvaluatedKey ?? "{}",
-                IndexName = IndexNames.UserUuidIndex,
+                IndexName = IndexNames.NameIndex,
                 Filter = new QueryFilter("Kind", QueryOperator.Equal, ItemKinds.Guiss),
             };
 

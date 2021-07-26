@@ -12,6 +12,12 @@ namespace Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute
         public string UserUuid { get; set; }
 
         /// <summary>
+        /// Gets or sets the Name for filtering by it.
+        /// </summary>
+        /// <value>The Name.</value>
+        public string Name { get; set; }
+
+        /// <summary>
         /// Gets or sets the Names for filtering by them.
         /// </summary>
         /// <value>The Names.</value>

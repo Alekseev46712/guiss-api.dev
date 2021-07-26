@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using Amazon.DynamoDBv2.DocumentModel;
 using Refinitiv.Aaa.Interfaces.Business;
 using Refinitiv.Aaa.Pagination.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Data.Interfaces
 {

@@ -21,6 +21,14 @@ resource "aws_dynamodb_table" "user-attributes" {
     enabled        = false
   }
 
+  global_secondary_index {
+    name            = "Name-index"
+    hash_key        = "Name"
+    write_capacity  = 10
+    read_capacity   = 10
+    projection_type = "ALL"
+  }
+  
   tags = {
     Name                              = "a250395_UserAttributes"
     "tr:application-asset-insight-id" = "250395"

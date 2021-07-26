@@ -57,6 +57,7 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
             {
                 BackwardSearch = cursor.BackwardSearch,
                 PaginationToken = cursor.LastEvaluatedKey ?? "{}",
+                IndexName = GetIndexByFilter(cursor.QueryParamsObject),
                 Filter = queryFilter
             };
 
@@ -131,6 +132,7 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
             {
                 BackwardSearch = cursor.BackwardSearch,
                 PaginationToken = cursor.LastEvaluatedKey ?? "{}",
+                IndexName = GetIndexByFilter(cursor.QueryParamsObject),
                 Filter = queryFilter,
                 Limit = cursor.Limit,
             };
@@ -215,6 +217,13 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
                     userAttributeFilter.UserUuid.ToLower(CultureInfo.CurrentCulture));
             }
 
+            if (userAttributeFilter.Name != null)
+            {
+                queryFilter.AddCondition(UserAttributeNames.Name,
+                    QueryOperator.Equal,
+                    userAttributeFilter.Name.ToLower(CultureInfo.CurrentCulture));
+            }
+
             if (userAttributeFilter.Names != null && userAttributeFilter.Names.Any())
             {
                 queryFilter.AddCondition(UserAttributeNames.SearchName,
@@ -223,6 +232,21 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
             }
 
             return queryFilter;
+        }
+
+        private static string GetIndexByFilter(UserAttributeFilter filter)
+        {
+            if (filter == null)
+            {
+                return null;
+            }
+
+            if (!string.IsNullOrEmpty(filter.Name))
+            {
+                return IndexNames.NameIndex;
+            }
+
+            return null;
         }
     }
 }
