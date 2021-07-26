@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Refinitiv.Aaa.GuissApi.Data.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Models;
 using Refinitiv.Aaa.GuissApi.Data.Repositories;
-using Refinitiv.Aaa.GuissApi.Interfaces.UserAttribute;
+using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 
 namespace Refinitiv.Aaa.GuissApi.Data
 {
@@ -45,9 +45,8 @@ namespace Refinitiv.Aaa.GuissApi.Data
                 .AddSingleton(dynamoDbConfig)
                 .AddScoped<IAmazonDynamoDB>(s => new AmazonDynamoDBClient(s.GetService<AmazonDynamoDBConfig>()))
                 .AddScoped<IDynamoDBContext, DynamoDBContext>()
-                .AddScoped<IDynamoDbDocumentQueryWrapper<UserAttributeDb, UserAttributeFilter>,
-                    UserAttributeQueryWrapper>()
-                .AddScoped<IUserAttributeRepository, UserAttributeRepository>();
+                .AddScoped<IUserAttributeRepository, UserAttributeRepository>()
+                .AddScoped<IDynamoDbDocumentQueryWrapper<UserAttributeDb, UserAttributeFilter>, UserAttributeQueryWrapper>();
         }
 
         /// <summary>

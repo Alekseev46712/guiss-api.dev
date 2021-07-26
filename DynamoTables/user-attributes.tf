@@ -1,5 +1,5 @@
 resource "aws_dynamodb_table" "user-attributes" {
-  name           = "a206104_UserAttributes"
+  name           = "a250395_UserAttributes"
   billing_mode   = "PROVISIONED"
   read_capacity  = 10
   write_capacity = 10
@@ -28,10 +28,10 @@ resource "aws_dynamodb_table" "user-attributes" {
     read_capacity   = 10
     projection_type = "ALL"
   }
-
+  
   tags = {
-    Name                              = "a206104_UserAttributes"
-    "tr:application-asset-insight-id" = "206104"
+    Name                              = "a250395_UserAttributes"
+    "tr:application-asset-insight-id" = "250395"
     "tr:environment-name"             = "DEVELOPMENT"
     "tr:resource-owner"               = "AAADevelopmentNottingham2@thomson.com"
   }
