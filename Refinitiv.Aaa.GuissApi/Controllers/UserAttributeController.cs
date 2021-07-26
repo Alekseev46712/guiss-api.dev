@@ -81,22 +81,14 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
 
         public async Task<IActionResult> Put([FromBody, Required] UserAttributeDetails details)
         {
-            // Create object containing all required properties for the create
-            var userAttribute = new UserAttribute(details)
-            {
-                UpdatedOn = DateTime.UtcNow,
-                UpdatedBy = aaaRequestHeaders.RefinitivUuid,
-                SearchName = details.Name.ToLower()
-            };
-
-            var attributeValidationResult = await userAttributeValidator.ValidateAttributeAsync(userAttribute);
+            var attributeValidationResult = await userAttributeValidator.ValidateAttributeAsync(details);
 
             if (!(attributeValidationResult is AcceptedResult))
             {
                 return attributeValidationResult;
             }
 
-            var putRequestValidationResult = await userAttributeValidator.ValidatePutRequestAsync(userAttribute);
+            var putRequestValidationResult = await userAttributeValidator.ValidatePutRequestAsync(details);
 
             if (putRequestValidationResult != null)
             {
@@ -113,11 +105,10 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
                 
             }
       
-            var savedItem = await userAttributeHelper.InsertAsync(userAttribute);
+            var savedItem = await userAttributeHelper.InsertAsync(details);
             loggerHelper.LogAuditEntry(LoggerEvent.Created, "Attribute Created", $"uuid :{savedItem.UserUuid}, name : {savedItem.Name}");
 
             return Ok(savedItem);
-
         }
     }
 }

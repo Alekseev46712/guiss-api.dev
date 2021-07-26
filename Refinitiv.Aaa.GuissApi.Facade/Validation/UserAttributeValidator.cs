@@ -6,6 +6,7 @@ using Refinitiv.Aaa.GuissApi.Data.Models;
 using Refinitiv.Aaa.GuissApi.Facade.Extensions;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
+using Refinitiv.Aaa.Interfaces.Headers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,36 +22,43 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         private readonly IUserHelper userHelper;
         private readonly IMapper mapper;
         private readonly IUserAttributeRepository userAttributeRepository;
+        private readonly IAaaRequestHeaders aaaRequestHeaders;
 
         /// <param name="userHelper">User Helper.</param>
         /// <param name="userAttributeHelper">User Attribute Helper</param>
         /// <param name="userAttributeRepository">User Attribute Repository.</param>
         /// <param name="mapper">Automapper.</param>
-        public UserAttributeValidator(IUserHelper userHelper, IUserAttributeHelper userAttributeHelper, IUserAttributeRepository userAttributeRepository, IMapper mapper)
+        /// <param name="aaaRequestHeaders">Request headers.</param>
+        public UserAttributeValidator(IUserHelper userHelper,
+            IUserAttributeHelper userAttributeHelper,
+            IUserAttributeRepository userAttributeRepository,
+            IMapper mapper,
+            IAaaRequestHeaders aaaRequestHeaders)
         {
             this.userHelper = userHelper;
             this.userAttributeRepository = userAttributeRepository;
             this.mapper = mapper;
+            this.aaaRequestHeaders = aaaRequestHeaders;
         }
 
         /// <summary>
         /// Checks if User Uuid is valid by calling users api
         /// </summary>
-        /// <param name="userAttribute">User Attribute Details.</param>
+        /// <param name="userAttributeDetails">User Attribute Details.</param>
         /// <returns>IActionResult.</returns>
-        public Task<IActionResult> ValidateAttributeAsync(UserAttribute userAttribute)
+        public Task<IActionResult> ValidateAttributeAsync(UserAttributeDetails userAttributeDetails)
         {
-            if (userAttribute == null)
+            if (userAttributeDetails == null)
             {
-                throw new ArgumentNullException(nameof(userAttribute));
+                throw new ArgumentNullException(nameof(userAttributeDetails));
             }
 
-            return InternalValidateAttributeAsync(userAttribute);
+            return InternalValidateAttributeAsync(userAttributeDetails);
         }
 
-        private async Task<IActionResult> InternalValidateAttributeAsync(UserAttribute userAttribute)
+        private async Task<IActionResult> InternalValidateAttributeAsync(UserAttributeDetails userAttributeDetails)
         {
-            var exsistingFromUsersApi = await userHelper.GetUserByUuidAsync(userAttribute.UserUuid);
+            var exsistingFromUsersApi = await userHelper.GetUserByUuidAsync(userAttributeDetails.UserUuid);
             if (exsistingFromUsersApi == null)
             {
                 return new NotFoundObjectResult(new { Message = "The User is not found" });
@@ -62,30 +70,30 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         /// <summary>
         /// Checks if it's update request or post
         /// </summary>
-        /// <param name="userAttribute">User Attribute Details.</param>
+        /// <param name="userAttributeDetails">User Attribute Details.</param>
         /// <returns>UserAttribute or null.</returns>
-        public Task<UserAttribute> ValidatePutRequestAsync(UserAttribute userAttribute)
+        public Task<UserAttribute> ValidatePutRequestAsync(UserAttributeDetails userAttributeDetails)
         {
-            if (userAttribute == null)
+            if (userAttributeDetails == null)
             {
-                throw new ArgumentNullException(nameof(userAttribute));
+                throw new ArgumentNullException(nameof(userAttributeDetails));
             }
 
-            return InternalValidatePutRequestAsync(userAttribute);
+            return InternalValidatePutRequestAsync(userAttributeDetails);
         }
 
-        private async Task<UserAttribute> InternalValidatePutRequestAsync(UserAttribute userAttribute)
+        private async Task<UserAttribute> InternalValidatePutRequestAsync(UserAttributeDetails userAttributeDetails)
         {
-            var exsistingUserAttribute = await userAttributeRepository.FindByUserUuidAndNameAsync(userAttribute.UserUuid, userAttribute.Name);
+            var exsistingUserAttribute = await userAttributeRepository.FindByUserUuidAndNameAsync(userAttributeDetails.UserUuid, userAttributeDetails.Name);
 
             if (exsistingUserAttribute == null)
             {
                 return null;
             }
 
-            exsistingUserAttribute.Value = userAttribute.Value;
-            exsistingUserAttribute.UpdatedBy = userAttribute.UpdatedBy;
-            exsistingUserAttribute.UpdatedOn = userAttribute.UpdatedOn;
+            exsistingUserAttribute.Value = userAttributeDetails.Value;
+            exsistingUserAttribute.UpdatedBy = aaaRequestHeaders.RefinitivUuid;
+            exsistingUserAttribute.UpdatedOn = DateTime.UtcNow;
 
             return mapper.Map<UserAttributeDb, UserAttribute>(exsistingUserAttribute);
         }

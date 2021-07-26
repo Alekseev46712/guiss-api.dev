@@ -10,6 +10,7 @@ using Refinitiv.Aaa.GuissApi.Data.Models;
 using Refinitiv.Aaa.GuissApi.Facade.Extensions;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
+using Refinitiv.Aaa.Interfaces.Headers;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 {
@@ -18,18 +19,22 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
     {
         private readonly IUserAttributeRepository userAttributeRepository;
         private readonly IMapper mapper;
+        private readonly IAaaRequestHeaders aaaRequestHeaders;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AppAccountHelper"/> class.
         /// </summary>
         /// <param name="userAttributeRepository">Repository used to access the data.</param>
         /// <param name="mapper">Automapper.</param>
+        /// <param name="aaaRequestHeaders">Request headers.</param>
         public UserAttributeHelper(
             IUserAttributeRepository userAttributeRepository,
-            IMapper mapper)
+            IMapper mapper,
+            IAaaRequestHeaders aaaRequestHeaders)
         {
             this.userAttributeRepository = userAttributeRepository;
             this.mapper = mapper;
+            this.aaaRequestHeaders = aaaRequestHeaders;
         }
 
         /// <inheritdoc />
@@ -52,22 +57,22 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         /// <inheritdoc />
-        public async Task<UserAttribute> InsertAsync(UserAttribute userAttribute)
+        public Task<UserAttribute> InsertAsync(UserAttributeDetails userAttributeDetails)
         {
-            if (userAttribute == null)
+            if (userAttributeDetails == null)
             {
-                throw new ArgumentNullException(nameof(userAttribute));
+                throw new ArgumentNullException(nameof(userAttributeDetails));
             }
 
-            return await InsertAttributeAsync(userAttribute);
+            return InsertAttributeAsync(userAttributeDetails);
         }
 
         /// <inheritdoc />
-        private async Task<UserAttribute> InsertAttributeAsync(UserAttribute userAttribute)
-        {     
-            var userAttributeDb = mapper.Map<UserAttribute, UserAttributeDb>(userAttribute);
+        private async Task<UserAttribute> InsertAttributeAsync(UserAttributeDetails userAttributeDetails)
+        {
+            var userAttribute = CreateUserAttributeObject(userAttributeDetails);
 
-            userAttributeDb.Name = userAttribute.Name.ToLower();
+            var userAttributeDb = mapper.Map<UserAttribute, UserAttributeDb>(userAttribute);
 
             var savedAttribute = await userAttributeRepository.SaveAsync(userAttributeDb);
 
@@ -97,6 +102,25 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             var newAttribute = mapper.Map<UserAttributeDb, UserAttribute>(savedUserAttribute);
 
             return newAttribute;           
+        }
+
+        private UserAttribute CreateUserAttributeObject(UserAttributeDetails userAttributeDetails)
+        {
+            if (userAttributeDetails == null)
+            {
+                throw new ArgumentNullException(nameof(userAttributeDetails));
+            }
+            return PerformCreateUserAttributeObject(userAttributeDetails);
+        }
+
+        private UserAttribute PerformCreateUserAttributeObject(UserAttributeDetails userAttributeDetails)
+        {         
+            return new UserAttribute(userAttributeDetails)
+            {
+                UpdatedOn = DateTime.UtcNow,
+                UpdatedBy = aaaRequestHeaders.RefinitivUuid,
+                SearchName = userAttributeDetails.Name
+            };
         }
     }
 }

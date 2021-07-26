@@ -19,14 +19,14 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <summary>
         /// Inserts User Attribute
         /// </summary>
-        /// <param name="userAttribute">User Attribute.</param>
+        /// <param name="userAttributeDetails">User Attribute Details.</param>
         /// <returns>User attribute.</returns>
-        Task<UserAttribute> InsertAsync(UserAttribute userAttribute);
+        Task<UserAttribute> InsertAsync(UserAttributeDetails userAttributeDetails);
 
         /// <summary>
         /// Updates User Attribute
         /// </summary>
-        /// <param name="userAttribute">User Attribute.</param>
+        /// <param name="userAttribute">User Attribute .</param>
         /// <returns>User attribute.</returns>
         Task<UserAttribute> UpdateAsync(UserAttribute userAttribute);
     }
