@@ -13,7 +13,11 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Mapping
         public UserAttributeMappingProfile()
         {
             CreateMap<UserAttributeDb, UserAttribute>()
-                .ReverseMap();
+            .ReverseMap()
+            .ForMember(m => m.SearchName, opt => opt.MapFrom(obj => obj.Name.ToLower()));
+
+            CreateMap<UserAttributeDetails, UserAttribute>()
+            .ReverseMap();
         }
     }
 }

@@ -9,13 +9,6 @@ namespace Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute
     /// </summary>
     public class UserAttribute : UserAttributeDetails
     {
-        public UserAttribute(UserAttributeDetails details) : base(details)
-        {
-
-        }
-
-        public string SearchName { get; set; }
-
         public long? Version { get; set; }
 
         public DateTimeOffset UpdatedOn { get; set; }

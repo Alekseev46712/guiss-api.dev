@@ -118,13 +118,12 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         private UserAttribute PerformCreateUserAttributeObject(UserAttributeDetails userAttributeDetails)
-        {         
-            return new UserAttribute(userAttributeDetails)
-            {
-                UpdatedOn = DateTime.UtcNow,
-                UpdatedBy = aaaRequestHeaders.RefinitivUuid,
-                SearchName = userAttributeDetails.Name
-            };
+        {
+            var userAttribute = mapper.Map<UserAttributeDetails, UserAttribute>(userAttributeDetails);
+            userAttribute.UpdatedOn = DateTime.UtcNow;
+            userAttribute.UpdatedBy = aaaRequestHeaders.RefinitivUuid;
+
+            return userAttribute;
         }
     }
 }
