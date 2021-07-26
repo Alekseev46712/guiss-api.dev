@@ -82,20 +82,24 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         /// <inheritdoc />
-        public Task<UserAttribute> UpdateAsync(UserAttribute userAttribute)
+        public Task<UserAttribute> UpdateAsync(UserAttribute userAttribute, string value)
         {
             if (userAttribute == null)
             {
                 throw new ArgumentNullException(nameof(userAttribute));
             }
 
-            return UpdateAttributeAsync(userAttribute);
+            return UpdateAttributeAsync(userAttribute, value);
         }
 
         /// <inheritdoc />
-        private async Task<UserAttribute> UpdateAttributeAsync(UserAttribute userAttribute)
+        private async Task<UserAttribute> UpdateAttributeAsync(UserAttribute userAttribute, string value)
         {
             var userAttributeDb = mapper.Map<UserAttribute, UserAttributeDb>(userAttribute);
+
+            userAttributeDb.Value = value;
+            userAttributeDb.UpdatedBy = aaaRequestHeaders.RefinitivUuid;
+            userAttributeDb.UpdatedOn = DateTime.UtcNow;
 
             var savedUserAttribute = await userAttributeRepository.SaveAsync(userAttributeDb);
 

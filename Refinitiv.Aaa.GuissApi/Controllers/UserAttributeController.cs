@@ -88,21 +88,20 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
                 return attributeValidationResult;
             }
 
-            var putRequestValidationResult = await userAttributeValidator.ValidatePutRequestAsync(details);
+            var userAttribute = await userAttributeValidator.ValidatePutRequestAsync(details);
 
-            if (putRequestValidationResult != null)
+            if (userAttribute != null)
             {
                 try
                 {
-                    var updatedAttribute = await userAttributeHelper.UpdateAsync(putRequestValidationResult);
+                    var updatedAttribute = await userAttributeHelper.UpdateAsync(userAttribute, details.Value);
                     loggerHelper.LogAuditEntry(LoggerEvent.Updated, "Attribute Updated", $"uuid :{updatedAttribute.UserUuid}, name : {updatedAttribute.Name}");
                     return Ok(updatedAttribute);
                 }
                 catch (UpdateConflictException)
                 {
                     return Conflict();
-                }
-                
+                }           
             }
       
             var savedItem = await userAttributeHelper.InsertAsync(details);

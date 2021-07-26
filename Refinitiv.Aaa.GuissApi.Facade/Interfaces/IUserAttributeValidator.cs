@@ -22,7 +22,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <summary>
         /// Checks if it's update request or post
         /// </summary>
-        /// <param name="userAttribute">User Attribute Model.</param>
+        /// <param name="userAttributeDetails">User Attribute Model.</param>
         /// <returns>UserAttribute or null.</returns>
         Task<UserAttribute> ValidatePutRequestAsync(UserAttributeDetails userAttributeDetails);
     }

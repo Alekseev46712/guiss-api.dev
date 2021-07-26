@@ -68,7 +68,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         }
 
         /// <summary>
-        /// Checks if it's update request or post
+        /// Checks if it's update request or post, if it is put returns model to update
         /// </summary>
         /// <param name="userAttributeDetails">User Attribute Details.</param>
         /// <returns>UserAttribute or null.</returns>
@@ -90,10 +90,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
             {
                 return null;
             }
-
-            exsistingUserAttribute.Value = userAttributeDetails.Value;
-            exsistingUserAttribute.UpdatedBy = aaaRequestHeaders.RefinitivUuid;
-            exsistingUserAttribute.UpdatedOn = DateTime.UtcNow;
 
             return mapper.Map<UserAttributeDb, UserAttribute>(exsistingUserAttribute);
         }

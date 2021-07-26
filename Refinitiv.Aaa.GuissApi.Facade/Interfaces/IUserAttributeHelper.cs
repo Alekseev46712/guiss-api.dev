@@ -27,7 +27,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// Updates User Attribute
         /// </summary>
         /// <param name="userAttribute">User Attribute .</param>
+        /// <param name="value">Value to update .</param>
         /// <returns>User attribute.</returns>
-        Task<UserAttribute> UpdateAsync(UserAttribute userAttribute);
+        Task<UserAttribute> UpdateAsync(UserAttribute userAttribute, string value);
     }
 }
