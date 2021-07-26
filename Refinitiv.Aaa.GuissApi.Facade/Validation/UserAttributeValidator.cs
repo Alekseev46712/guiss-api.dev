@@ -27,8 +27,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
             this.userHelper = userHelper;
             this.userAttributeHelper = userAttributeHelper;
             this.userAttributeRepository = userAttributeRepository;
-
-
         }
 
         /// <summary>
@@ -47,7 +45,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
             {
                 return new NotFoundObjectResult(new { Message = "The User is not found" });
             }
-
 
             return new AcceptedResult();
         }
