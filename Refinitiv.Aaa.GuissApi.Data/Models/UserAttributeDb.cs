@@ -22,6 +22,7 @@ namespace Refinitiv.Aaa.GuissApi.Data.Models
         /// </summary>
         /// <value>The user attribute name converted to lower case.</value>
         [DynamoDBRangeKey]
+        [DynamoDBGlobalSecondaryIndexHashKey(IndexNames.NameIndex)]
         public string Name { get; set; }
 
         /// <summary>

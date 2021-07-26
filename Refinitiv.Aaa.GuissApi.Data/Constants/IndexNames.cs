@@ -6,9 +6,10 @@
     internal static class IndexNames
     {
         /// <summary>
-        /// The UserUuid value.
+        /// The NameIndex value.
         /// </summary>
-        /// <value>The UserUuid.</value>
-        public const string UserUuidIndex = "UserUuid-index";
+        /// <value>The NameIndex.</value>
+        public const string NameIndex = "Name-index";
+
     }
 }
