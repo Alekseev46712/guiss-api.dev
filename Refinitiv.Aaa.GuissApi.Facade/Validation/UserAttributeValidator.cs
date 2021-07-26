@@ -34,12 +34,18 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         /// </summary>
         /// <param name="newUserAttributeDetails">User Attribute Details.</param>
         /// <returns>IActionResult.</returns>
-        public async Task<IActionResult> ValidateAttributeAsync(UserAttribute newUserAttributeDetails)
+        public Task<IActionResult> ValidateAttributeAsync(UserAttribute newUserAttributeDetails)
         {
             if (newUserAttributeDetails == null)
             {
                 throw new ArgumentNullException(nameof(newUserAttributeDetails));
             }
+
+            return InternalValidateAttributeAsync(newUserAttributeDetails);
+        }
+
+        private async Task<IActionResult> InternalValidateAttributeAsync(UserAttribute newUserAttributeDetails)
+        {
             var exsistingFromUsersApi = await userHelper.GetUserByUuidAsync(newUserAttributeDetails.UserUuid);
             if (exsistingFromUsersApi == null)
             {
@@ -54,13 +60,18 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         /// </summary>
         /// <param name="userAttribute">User Attribute Details.</param>
         /// <returns>UserAttribute or null.</returns>
-        public async Task<UserAttribute> ValidatePutRequestAsync(UserAttribute userAttribute)
+        public Task<UserAttribute> ValidatePutRequestAsync(UserAttribute userAttribute)
         {
             if (userAttribute == null)
             {
                 throw new ArgumentNullException(nameof(userAttribute));
             }
 
+            return InternalValidatePutRequestAsync(userAttribute);
+        }
+
+        private async Task<UserAttribute> InternalValidatePutRequestAsync(UserAttribute userAttribute)
+        {
             var exsistingUserAttribute = await userAttributeRepository.FindByUserUuidAndNameAsync(userAttribute.UserUuid, userAttribute.Name);
 
             if (exsistingUserAttribute == null)
@@ -74,5 +85,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
 
             return exsistingUserAttribute.Map();
         }
+
     }
 }
