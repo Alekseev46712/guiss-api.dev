@@ -60,6 +60,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         private async Task<UserAttribute> InsertAttributeAsync(UserAttribute userAttribute)
         {     
             var userAttributeDb = userAttribute.Map();
+
+            userAttributeDb.Name = userAttribute.Name.ToLower();
            
             var savedGuiss = await userAttributeRepository.SaveAsync(userAttributeDb).ConfigureAwait(false);
 
