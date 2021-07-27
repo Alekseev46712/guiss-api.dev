@@ -23,14 +23,14 @@ sed -i '/- name: deploy-/,/<<: \*parameters/d' ci/pipeline-deploy.yml
 for ENV in dev qa; do
   for VERSION in $GIT_TAG; do
   echo "- name: deploy-${ENV}-${VERSION/\//-}
-    plan:
-    - get: source
-    - task: deploy
-      file: source/ci/tasks/deploy.yml
-      input_mapping: {input: source}
-      params:
-        ARTIFACT_VERSION: $VERSION
-        <<: *parameters" >> ci/pipeline-deploy.yml
+  plan:
+  - get: source
+  - task: deploy
+    file: source/ci/tasks/deploy.yml
+    input_mapping: {input: source}
+    params:
+      ARTIFACT_VERSION: $VERSION
+      <<: *parameters" >> ci/pipeline-deploy.yml
   done
 done
 
