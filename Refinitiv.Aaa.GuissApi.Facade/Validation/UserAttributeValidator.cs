@@ -22,23 +22,17 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         private readonly IUserHelper userHelper;
         private readonly IMapper mapper;
         private readonly IUserAttributeRepository userAttributeRepository;
-        private readonly IAaaRequestHeaders aaaRequestHeaders;
 
         /// <param name="userHelper">User Helper.</param>
-        /// <param name="userAttributeHelper">User Attribute Helper</param>
         /// <param name="userAttributeRepository">User Attribute Repository.</param>
         /// <param name="mapper">Automapper.</param>
-        /// <param name="aaaRequestHeaders">Request headers.</param>
         public UserAttributeValidator(IUserHelper userHelper,
-            IUserAttributeHelper userAttributeHelper,
             IUserAttributeRepository userAttributeRepository,
-            IMapper mapper,
-            IAaaRequestHeaders aaaRequestHeaders)
+            IMapper mapper)
         {
             this.userHelper = userHelper;
             this.userAttributeRepository = userAttributeRepository;
             this.mapper = mapper;
-            this.aaaRequestHeaders = aaaRequestHeaders;
         }
 
         /// <summary>
