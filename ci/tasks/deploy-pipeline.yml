@@ -1,0 +1,11 @@
+platform: linux
+image_resource:
+  type: registry-image
+  source:
+    repository: alpine
+inputs:
+  - name: input
+outputs:
+  - name: output
+run:
+  path: input/ci/scripts/deploy-pipeline.sh

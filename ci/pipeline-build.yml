@@ -1,4 +1,3 @@
----
 var_sources:
   - name: vault
     type: vault
@@ -31,8 +30,8 @@ resources:
   type: git
   icon: gitlab
   source:
-    uri: ((GIT_REPO))
-    branch: develop
+    uri: ssh://git@((GIT_REPO))
+    branch: ((GIT_BRANCH))
     private_key: ((vault-kv:secret.rsa_key))
 
 - name: bams
@@ -65,7 +64,6 @@ jobs:
     file: source/ci/tasks/sonarqube.yml
     input_mapping: {input: source}
     params:
-      GIT_BRANCH: ((GIT_BRANCH))
       BAMS_USER: ((vault-kv:secret.bams_user))
       BAMS_PASS: ((vault-kv:secret.bams_pass))
       SONAR_PROJECT_KEY: ((SONARQUBE_PROJECT_KEY))
@@ -87,7 +85,7 @@ jobs:
       BAMS_PASS: ((vault-kv:secret.bams_pass))
 
 
-- name: build-((ENV))
+- name: build
   plan:
   - get: source
     trigger: true
@@ -99,8 +97,8 @@ jobs:
     input_mapping: {input: source}
     output_mapping: {output: build}
     params:
-      ENV: ((ENV))
       GIT_BRANCH: ((GIT_BRANCH))
+      GIT_SSHKEY: ((vault-kv:secret.rsa_key))
       PROJECT_DIR: ((PROJECT_DIR))
       BAMS_DIR: ((BAMS_DIR))
       BAMS_USER: ((vault-kv:secret.bams_user))
@@ -113,23 +111,19 @@ jobs:
       disable_checksum_uploads: true
       module_layout: none
 
-- name: deploy-((ENV))
+
+- name: setup-deploy
   plan:
   - get: source
-  - task: deploy
-    file: source/ci/tasks/deploy.yml
+    trigger: true
+    passed: [build]
+  - task: set-pipeline
+    file: source/ci/tasks/deploy-pipeline.yml
     input_mapping: {input: source}
+    output_mapping: {output: updated}
     params:
-      ENV: ((ENV))
-      GIT_BRANCH: ((GIT_BRANCH))
-      BAMS_URL: ((BAMS_URL))
-      BAMS_PATH: ((BAMS_PATH))
-      BAMS_DIR: ((BAMS_DIR))
-      BAMS_USER: ((vault-kv:secret.bams_user))
-      BAMS_PASS: ((vault-kv:secret.bams_pass))
-      ARTIFACT_NAME: ((ARTIFACT_NAME))
-      TERRAFORM_SUBDIR: ((TERRAFORM_SUBDIR))
-      AWS_REGION: ((AWS_REGION))
-      AWS_ACCESS_KEY_ID: ((vault-aws:aws.access_key))
-      AWS_SECRET_ACCESS_KEY: ((vault-aws:aws.secret_key))
-      AWS_SESSION_TOKEN: ((vault-aws:aws.security_token))
+      GIT_SSHKEY: ((vault-kv:secret.rsa_key))
+  - set_pipeline: guiss-api-deploy
+    file: updated/pipeline-deploy.yml
+    var_files:
+      - updated/config.yml

@@ -2,9 +2,6 @@
 
 set -e
 
-# Checkout
-git checkout ${GIT_BRANCH}
-
 # Restore packages
 export HOME="/tmp"
 nuget sources update -Name "BAMS (AWS)" -username ${BAMS_USER} -password ${BAMS_PASS} -ConfigFile NuGet.config -StorePasswordInClearText
@@ -14,7 +11,6 @@ dotnet /sonar-scanner/SonarScanner.MSBuild.dll begin \
   /k:${SONAR_PROJECT_KEY} \
   /d:sonar.host.url="https://sonarqube.refinitiv.com" \
   /d:sonar.login=${SONAR_TOKEN} \
-  /d:sonar.branch.name=${GIT_BRANCH} \
   /d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx" \
   /d:sonar.cs.opencover.reportsPaths="**/CoverageResults/coverage.opencover.xml"
 dotnet restore

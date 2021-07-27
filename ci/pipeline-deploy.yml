@@ -1,0 +1,45 @@
+---
+parameters: &parameters
+  ENV: ((ENV))
+  BAMS_URL: ((BAMS_URL))
+  BAMS_PATH: ((BAMS_PATH))
+  BAMS_DIR: ((BAMS_DIR))
+  BAMS_USER: ((vault-kv:secret.bams_user))
+  BAMS_PASS: ((vault-kv:secret.bams_pass))
+  ARTIFACT_NAME: ((ARTIFACT_NAME))
+  TERRAFORM_SUBDIR: ((TERRAFORM_SUBDIR))
+  AWS_REGION: ((AWS_REGION))
+  AWS_ACCESS_KEY_ID: ((vault-aws:aws.access_key))
+  AWS_SECRET_ACCESS_KEY: ((vault-aws:aws.secret_key))
+  AWS_SESSION_TOKEN: ((vault-aws:aws.security_token))
+
+var_sources:
+  - name: vault
+    type: vault
+    config:
+      url: https://vault.sdp.refinitiv.com 
+      client_token: ((auth-token))
+      shared_path: shared
+
+  - name: vault-kv
+    type: dummy
+    config:
+      vars:
+        secret: ((vault:kv/secret))
+
+  - name: vault-aws
+    type: dummy
+    config:
+      vars:
+        aws: ((vault:aws/sts/653551970210-a250395-developer))
+
+resources:
+- name: source
+  type: git
+  icon: gitlab
+  source:
+    uri: ssh://git@((GIT_REPO))
+    branch: ((GIT_BRANCH))
+    private_key: ((vault-kv:secret.rsa_key))
+
+jobs:

@@ -33,15 +33,13 @@ secure_params = []
 db_billing_mode   = "PAY_PER_REQUEST"
 db_read_capacity  = "0"
 db_write_capacity = "0"
-db_hash_key       = "Id"
-db_range_key      = "IsDeleted"
+db_hash_key       = "UserUuid"
+db_range_key      = "Name"
 db_encryption     = true
 db_attributes = [
-    { name = "Id", type = "S" },
-    { name = "SearchId", type = "S" },
-    { name = "SearchUuid", type = "S" },
+    { name = "UserUuid", type = "S" },
+    { name = "Name", type = "S" }
   ]
 db_global_secondary_indexes = [
-    { name = "Id-index", hash_key = "SearchId", write_capacity = 10, read_capacity = 10, projection_type = "ALL" },
-    {name  = "Uuid-index", hash_key = "SearchUuid", write_capacity = 10, read_capacity = 10, projection_type = "ALL" }
+    { name = "Name-index", hash_key = "Name", write_capacity = 10, read_capacity = 10, projection_type = "ALL" }
   ]

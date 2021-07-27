@@ -2,8 +2,9 @@
 ENV: "dev"
 AWS_REGION: "us-east-1"
 
-GIT_REPO: "ssh://git@git.sami.int.thomsonreuters.com:aaa-ciam/guiss-api.git"
+GIT_REPO: "git.sami.int.thomsonreuters.com/aaa-ciam/guiss-api.git"
 GIT_BRANCH: "develop"
+
 PROJECT_DIR: "Refinitiv.Aaa.GuissApi"
 TERRAFORM_SUBDIR: "guiss-api"
 
