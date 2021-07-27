@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Refinitiv.Aaa.Interfaces.Business;
@@ -8,7 +7,6 @@ using Refinitiv.Aaa.MessageBus.Amazon.Models;
 using Refinitiv.Aaa.Pagination.Models;
 using Refinitiv.Aaa.GuissApi.Data.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Models;
-using Refinitiv.Aaa.GuissApi.Facade.Extensions;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Facade.Models;
 using Refinitiv.Aaa.Interfaces.Headers;

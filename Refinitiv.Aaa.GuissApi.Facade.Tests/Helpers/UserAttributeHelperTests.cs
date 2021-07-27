@@ -9,15 +9,16 @@ using Refinitiv.Aaa.GuissApi.Facade.Mapping;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using Refinitiv.Aaa.Interfaces.Headers;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using AutoFixture;
+using Newtonsoft.Json.Linq;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
 {
     [TestFixture]
     public class UserAttributeHelperTests
     {
+        private readonly IFixture fixture = new Fixture();
         private UserAttributeHelper userAttributeHelper;
         private Mock<IUserAttributeRepository> userAttributeRepository;
         private Mock<IAaaRequestHeaders> aaaRequestHeaders;
@@ -43,6 +44,23 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         }
 
         [Test]
+        public async Task GetAllByUserUuidAsync_ShouldCallSearchAsyncWithUserUuidFilterAndReturnJObject()
+        {
+            var attributes = fixture.CreateMany<UserAttributeDb>();
+            var userUuid = fixture.Create<string>();
+
+            userAttributeRepository.Setup(x =>
+                    x.SearchAsync(It.Is<UserAttributeFilter>(a => a.UserUuid == userUuid)))
+                .ReturnsAsync(attributes);
+
+            var result = await userAttributeHelper.GetAllByUserUuidAsync(userUuid);
+
+            userAttributeRepository.VerifyAll();
+
+            result.Should().BeOfType<JObject>("because a result is always returned");
+        }
+
+        [Test]
         public void InsertAsyncThrowsExceptionIfArgumentIsNull()
         {
             UserAttributeDetails userAttributeDetails = null;
@@ -62,7 +80,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
 
         [Test]
         public async Task InsertAsyncCallSaveChangesIfArgumentIsNotNull()
-        {  
+        {
             var userAttributeDetails = new UserAttributeDetails();
 
             userAttributeRepository.Setup(x => x.SaveAsync(It.IsAny<UserAttributeDb>())).ReturnsAsync(new UserAttributeDb());
