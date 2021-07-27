@@ -61,6 +61,33 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
             return Ok(result);
         }
 
+
+        /// <summary>
+        /// Deletes user attributes by Uuis and by Name.
+        /// </summary>
+        /// <param name="uuid">The attributes uuid to be deleted.</param>
+        /// <param name="name">The attributes name to be deleted.</param>
+        /// <returns>IActionResult</returns>
+        [HttpDelete("{uuid}/{name}")]
+        [SwaggerResponse((int)StatusCodes.Status200OK, "OK")]
+        [SwaggerResponse((int)StatusCodes.Status400BadRequest, "Bad Request")]
+        [SwaggerResponse((int)StatusCodes.Status404NotFound, "Attribute does not exist")]
+        [SwaggerResponse((int)StatusCodes.Status500InternalServerError, "Internal Server Error")]
+        public async Task<IActionResult> DeleteUserAttribute([FromRoute] string uuid, [FromRoute] string name)
+        {
+            // Check that the model exists
+            var deletedItem = await userAttributeHelper.GetUserAttributeAsync(uuid, name);
+            if (deletedItem == null)
+            {
+                return NotFound();
+            }
+
+            // Now delete the model
+            await userAttributeHelper.DeleteUserAttributeAsync(uuid, name);
+
+            return NoContent();
+        }
+
         /// <summary>
         /// Creates and updates user attributes
         /// </summary>

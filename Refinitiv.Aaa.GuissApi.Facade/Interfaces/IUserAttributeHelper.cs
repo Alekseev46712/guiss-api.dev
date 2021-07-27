@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using Refinitiv.Aaa.GuissApi.Data.Models;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
@@ -15,6 +16,21 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <param name="userUuid">UserUuid of the item to get.</param>
         /// <returns>User attributes.</returns>
         Task<JObject> GetAllByUserUuidAsync(string userUuid);
+
+        /// <summary>
+        /// Get UserAttribute by UserUuid and Name.
+        /// </summary>
+        /// <param name="uuid">UserUuid of the item to get.</param>
+        /// <param name="name">UserName of the item to get.</param>
+        /// <returns>User attributes.</returns>
+        Task<UserAttributeDb> GetUserAttributeAsync(string uuid, string name);
+
+
+        /// <summary>Delete UserAttribute by UserUuid and Name.</summary>
+        /// <param name="uuid">UserUuuid of the item to delete.</param>
+        /// <param name="name">UserName of the item to delete.</param>
+        /// <returns>Task.</returns>
+        Task DeleteUserAttributeAsync(string uuid, string name);
 
         /// <summary>
         /// Inserts User Attribute
