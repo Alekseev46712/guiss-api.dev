@@ -20,10 +20,9 @@ using System.Threading.Tasks;
 namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
 {
     [TestFixture]
-    class UserAttributeValidatorTest
+    public class UserAttributeValidatorTests
     {
         private Mock<IUserAttributeRepository> userAttributeRepository;
-        private Mock<IAaaRequestHeaders> aaaRequestHeaders;
         private Mock<IUserHelper> userHelper;
         private UserAttributeValidator userAttributeValidator;
         private IMapper mapper;
@@ -38,11 +37,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
             });
 
             mapper = mappingConfig.CreateMapper();
-
-            aaaRequestHeaders = new Mock<IAaaRequestHeaders>();
-
             userAttributeRepository = new Mock<IUserAttributeRepository>();
-
             userHelper = new Mock<IUserHelper>();
 
             userAttributeValidator = new UserAttributeValidator(
@@ -69,7 +64,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
         }
 
         [Test]
-        public async Task ValidateAttributeAsyncReturnsNotFoundObjectResultIfUserDoesntExistInUsersApu()
+        public async Task ValidateAttributeAsyncReturnsNotFoundObjectResultIfUserDoesntExistInUsersApi()
         {
             userHelper.Setup(x => x.GetUserByUuidAsync(It.IsAny<string>())).ReturnsAsync((UserResponse)null);
 
@@ -118,6 +113,5 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
 
             result.Should().BeEquivalentTo(expected);
         }
-
     }
 }
