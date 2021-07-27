@@ -16,13 +16,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Amazon.DynamoDBv2.DataModel;
-using Amazon.DynamoDBv2.DocumentModel;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Refinitiv.Aaa.GuissApi.Data.Constants;
-using Refinitiv.Aaa.GuissApi.Interfaces.Configuration;
-using Amazon.DynamoDBv2;
+
 
 namespace Refinitiv.Aaa.GuissApi.Data.Repositories
 {
@@ -74,10 +68,10 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
 
         /// <inheritdoc />
         public async Task<UserAttributeDb> GetUserAttributeAsync(string id, string name)
-        { 
+        {
             try
             {
-               return await dynamoDb.LoadAsync<UserAttributeDb>(id, name, operationConfig);
+                return await dynamoDb.LoadAsync<UserAttributeDb>(id, name, dbConfig);
             }
             catch (AmazonDynamoDBException ex)
             {
@@ -222,14 +216,7 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
             logger.LogTrace($"Deleted item with UserUuid: {userUuid} and Name {name}.");
         }
 
-        public async Task DeleteAsync(string uuid, string name)
-        {
-            // stub, will be extended
-            //hurd delete
-            await Task.CompletedTask;
-        }
-
-        private static QueryFilter BuildQueryFilter(UserAttributeFilter appAccountFilter)
+        private static QueryFilter BuildQueryFilter(UserAttributeFilter userAttributeFilter)
         {
             var queryFilter = new QueryFilter();
 

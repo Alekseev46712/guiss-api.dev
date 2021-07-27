@@ -7,7 +7,6 @@ using Newtonsoft.Json.Linq;
 using Refinitiv.Aaa.Foundation.ApiClient.Helpers;
 using Refinitiv.Aaa.GuissApi.Data.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Models;
-using Refinitiv.Aaa.GuissApi.Data.Models;
 using Refinitiv.Aaa.GuissApi.Facade.Extensions;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
@@ -64,9 +63,9 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         /// <param name="uuid"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public async Task<UserAttributeDb> GetUserAttributeAsync(string uuid, string name)
+        public async Task<UserAttributeDb> FindByUserUuidAndNameAsync(string uuid, string name)
         {
-            return await userAttributeRepository.GetUserAttributeAsync(uuid, name);
+            return await userAttributeRepository.FindByUserUuidAndNameAsync(uuid, name);
         }
 
 

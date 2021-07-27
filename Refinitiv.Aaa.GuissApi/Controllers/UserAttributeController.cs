@@ -76,7 +76,7 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
         public async Task<IActionResult> DeleteUserAttribute([FromRoute] string uuid, [FromRoute] string name)
         {
             // Check that the model exists
-            var deletedItem = await userAttributeHelper.GetUserAttributeAsync(uuid, name);
+            var deletedItem = await userAttributeHelper.FindByUserUuidAndNameAsync(uuid, name);
             if (deletedItem == null)
             {
                 return NotFound();
