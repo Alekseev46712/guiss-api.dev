@@ -73,11 +73,11 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
         [SwaggerResponse(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get([FromQuery, Required] string userUuid, string attributes)
         {
-            var attributeValidationResult = await userAttributeValidator.ValidateUserUuidAsync(userUuid);
+            var userValidationResult = await userAttributeValidator.ValidateUserUuidAsync(userUuid);
 
-            if (!(attributeValidationResult is AcceptedResult))
+            if (!(userValidationResult is AcceptedResult))
             {
-                return attributeValidationResult;
+                return userValidationResult;
             }
 
             try
