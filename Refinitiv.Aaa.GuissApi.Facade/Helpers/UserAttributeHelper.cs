@@ -8,7 +8,6 @@ using Newtonsoft.Json.Linq;
 using Refinitiv.Aaa.Foundation.ApiClient.Helpers;
 using Refinitiv.Aaa.GuissApi.Data.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Models;
-using Refinitiv.Aaa.GuissApi.Facade.Extensions;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using Refinitiv.Aaa.Interfaces.Headers;
@@ -114,7 +113,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 
             var newAttribute = mapper.Map<UserAttributeDb, UserAttribute>(savedUserAttribute);
 
-            return newAttribute;           
+            return newAttribute;
         }
 
         private UserAttribute CreateUserAttributeObject(UserAttributeDetails userAttributeDetails)

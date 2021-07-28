@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -10,7 +9,6 @@ using Refinitiv.Aaa.Foundation.ApiClient.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Exceptions;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
-using Refinitiv.Aaa.Interfaces.Headers;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Refinitiv.Aaa.GuissApi.Controllers
@@ -26,28 +24,22 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
     public class UserAttributeController : ControllerBase
     {
         private readonly IUserAttributeHelper userAttributeHelper;
-        private readonly IAaaRequestHeaders aaaRequestHeaders;
         private readonly IUserAttributeValidator userAttributeValidator;
         private readonly ILoggerHelper<UserAttributeController> loggerHelper;
-
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserAttributeController"/> class.
         /// </summary>
         /// <param name="userAttributeHelper">Helper used to access the data.</param>
-        /// <param name="aaaRequestHeaders">Helps to recieve headers.</param>
         /// <param name="userAttributeValidator">Validates attributes.</param>
         /// <param name="loggerHelper">provide logging.</param>
 
         public UserAttributeController(
             IUserAttributeHelper userAttributeHelper,
-            IAaaRequestHeaders aaaRequestHeaders,
             IUserAttributeValidator userAttributeValidator,
             ILoggerHelper<UserAttributeController> loggerHelper)
         {
             this.userAttributeHelper = userAttributeHelper;
-            this.aaaRequestHeaders = aaaRequestHeaders;
             this.userAttributeValidator = userAttributeValidator;
             this.loggerHelper = loggerHelper;
         }
@@ -132,9 +124,9 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
                 catch (UpdateConflictException)
                 {
                     return Conflict();
-                }           
+                }
             }
-      
+
             var savedItem = await userAttributeHelper.InsertAsync(details);
             loggerHelper.LogAuditEntry(LoggerEvent.Created, "Attribute Created", $"uuid :{savedItem.UserUuid}, name : {savedItem.Name}");
 
