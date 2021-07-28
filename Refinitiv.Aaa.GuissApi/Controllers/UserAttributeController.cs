@@ -70,7 +70,6 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
         /// <returns>IActionResult</returns>
         [HttpDelete("{uuid}/{name}")]
         [SwaggerResponse((int)StatusCodes.Status200OK, "OK")]
-        [SwaggerResponse((int)StatusCodes.Status400BadRequest, "Bad Request")]
         [SwaggerResponse((int)StatusCodes.Status404NotFound, "Attribute does not exist")]
         [SwaggerResponse((int)StatusCodes.Status500InternalServerError, "Internal Server Error")]
         public async Task<IActionResult> DeleteUserAttribute([FromRoute] string uuid, [FromRoute] string name)

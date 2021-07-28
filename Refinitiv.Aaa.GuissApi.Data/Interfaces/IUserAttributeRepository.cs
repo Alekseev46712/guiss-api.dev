@@ -27,14 +27,6 @@ namespace Refinitiv.Aaa.GuissApi.Data.Interfaces
         Task<IEnumerable<UserAttributeDb>> SearchAsync(UserAttributeFilter filter);
 
         /// <summary>
-        /// Get UserAttribute by UserUuid and Name
-        /// </summary>
-        /// <param name="uuid"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        Task<UserAttributeDb> GetUserAttributeAsync(string uuid, string name);
-
-        /// <summary>
         /// Search for the UserAttributes by specified filter including pagination.
         /// </summary>
         /// <param name="cursor">Cursor for pagination.</param>

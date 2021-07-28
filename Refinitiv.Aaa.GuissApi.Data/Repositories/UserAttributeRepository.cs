@@ -66,19 +66,6 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
             return items;
         }
 
-        /// <inheritdoc />
-        public async Task<UserAttributeDb> GetUserAttributeAsync(string id, string name)
-        {
-            try
-            {
-                return await dynamoDb.LoadAsync<UserAttributeDb>(id, name, dbConfig);
-            }
-            catch (AmazonDynamoDBException ex)
-            {
-                logger.LogError(ex, "{Method}: An exception has occurred while get UserAttribute with id {Id} and name {name}.", nameof(GetUserAttributeAsync), id);
-                throw;
-            }
-        }
 
         /// <inheritdoc />
         public Task<UserAttributeDb> FindByUserUuidAndNameAsync(string userUuid, string name)
