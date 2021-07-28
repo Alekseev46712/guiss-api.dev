@@ -71,7 +71,7 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
         [SwaggerResponse(StatusCodes.Status400BadRequest, "Bad Request, missing param")]
         [SwaggerResponse(StatusCodes.Status404NotFound, "User with the specified Uuid not found")]
         [SwaggerResponse(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Get([FromQuery, Required] string userUuid, string attributes)
+        public async Task<IActionResult> Get([FromQuery, Required] string userUuid, [FromQuery, Required] string attributes)
         {
             var userValidationResult = await userAttributeValidator.ValidateUserUuidAsync(userUuid);
 

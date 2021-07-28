@@ -46,6 +46,11 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         /// <inheritdoc/>
         public Task<IActionResult> ValidateUserUuidAsync(string userUuid)
         {
+            if (userUuid == null)
+            {
+                throw new ArgumentNullException(nameof(userUuid));
+            }
+
             var userAttributeDetails = new UserAttributeDetails { UserUuid = userUuid };
             return InternalValidateAttributeAsync(userAttributeDetails);
         }
