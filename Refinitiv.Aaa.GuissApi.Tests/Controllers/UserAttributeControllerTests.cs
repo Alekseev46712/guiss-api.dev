@@ -7,16 +7,16 @@ using Refinitiv.Aaa.GuissApi.Controllers;
 using Refinitiv.Aaa.GuissApi.Data.Exceptions;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using AutoFixture;
+using Newtonsoft.Json.Linq;
 
 namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
 {
     [TestFixture]
     public class UserAttributeControllerTests
     {
+        private readonly IFixture fixture = new Fixture();
         private UserAttributeController userAttributeController;
         private Mock<IUserAttributeHelper> userAttributeHelper;
         private Mock<IUserAttributeValidator> userAttributeValidator;
@@ -35,6 +35,30 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
                 loggerHelper.Object
                 );
         }
+
+        #region Get
+
+        [Test]
+        public async Task Get_ShouldCallGetAllByUserUuidAsyncAndReturnJObject()
+        {
+            var jsonData = fixture.Create<JObject>();
+            var userUuid = fixture.Create<string>();
+
+            userAttributeHelper.Setup(g => g.GetAllByUserUuidAsync(userUuid))
+                .ReturnsAsync(jsonData);
+
+            var result = await userAttributeController.Get(userUuid);
+
+            userAttributeHelper.VerifyAll();
+
+            result.Should().BeOfType<OkObjectResult>("because a result is always returned")
+                .Which.Value
+                .Should().BeEquivalentTo(jsonData);
+        }
+
+        #endregion
+
+        #region Put
 
         [Test]
         public async Task PutReturnsNotFoundObjectResultIfUserDoesntExistInUsersApi()
@@ -98,5 +122,6 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
             result.Should().BeEquivalentTo(new ConflictResult());
         }
 
+        #endregion
     }
 }
