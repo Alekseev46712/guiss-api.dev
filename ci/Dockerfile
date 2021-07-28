@@ -21,6 +21,7 @@ RUN wget -q https://packages.microsoft.com/config/ubuntu/19.04/packages-microsof
         apt-transport-https \
         ca-certificates \
         curl \
+        jq \
         gnupg-agent \
         software-properties-common \
         nuget \
