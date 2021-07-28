@@ -45,7 +45,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
                 UserUuid = userUuid
             };
 
-            return InternalGetUserAttributes(filter);
+            return InternalGetUserAttributesAsync(filter);
         }
 
         /// <inheritdoc />
@@ -63,7 +63,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
                 Names = attributesList
             };
 
-            return InternalGetUserAttributes(filter);
+            return InternalGetUserAttributesAsync(filter);
         }
 
         /// <inheritdoc />
@@ -134,7 +134,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             return userAttribute;
         }
 
-        private async Task<JObject> InternalGetUserAttributes(UserAttributeFilter filter)
+        private async Task<JObject> InternalGetUserAttributesAsync(UserAttributeFilter filter)
         {
             var items = await userAttributeRepository.SearchAsync(filter);
 
