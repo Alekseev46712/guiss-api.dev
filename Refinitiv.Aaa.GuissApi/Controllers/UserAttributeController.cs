@@ -68,6 +68,37 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
         }
 
         /// <summary>
+        /// Gets list of selected attributes registered for the specified user.
+        /// </summary>
+        /// <param name="userUuid">The uuid of the user.</param>
+        /// <param name="attributes">The comma separated string of the selected attributes.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet("userattribute")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Returns the list of the selected registered attributes")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Bad Request, missing param")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "User with the specified Uuid not found")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Get([FromQuery, Required] string userUuid, string attributes)
+        {
+            var attributeValidationResult = await userAttributeValidator.ValidateUserUuidAsync(userUuid);
+
+            if (!(attributeValidationResult is AcceptedResult))
+            {
+                return attributeValidationResult;
+            }
+
+            try
+            {
+                var result = await userAttributeHelper.GetAttributesByUserUuidAsync(userUuid, attributes);
+                return Ok(result);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Creates and updates user attributes
         /// </summary>
         /// <param name="details">The uuid of the user.</param>

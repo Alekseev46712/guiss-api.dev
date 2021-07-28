@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -38,22 +39,32 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         /// <inheritdoc />
-        public async Task<JObject> GetAllByUserUuidAsync(string userUuid)
+        public Task<JObject> GetAllByUserUuidAsync(string userUuid)
         {
             var filter = new UserAttributeFilter
             {
                 UserUuid = userUuid
             };
 
-            var items = await userAttributeRepository.SearchAsync(filter);
+            return InternalGetUserAttributes(filter);
+        }
 
-            var dataToParse = items.
-                Select(x => new KeyValuePair<string, string>(x.Name, x.Value))
-                .ToList();
+        /// <inheritdoc />
+        public Task<JObject> GetAttributesByUserUuidAsync(string userUuid, string attributes)
+        {
+            if (attributes == null)
+            {
+                throw new ArgumentNullException(nameof(attributes));
+            }
 
-            var result = NodeProcessor.BuildJsonObject(dataToParse);
+            var attributesList = attributes.ToLower(CultureInfo.CurrentCulture).Split(',').ToList();
+            var filter = new UserAttributeFilter
+            {
+                UserUuid = userUuid,
+                Names = attributesList
+            };
 
-            return result;
+            return InternalGetUserAttributes(filter);
         }
 
         /// <inheritdoc />
@@ -122,6 +133,19 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             userAttribute.UpdatedBy = aaaRequestHeaders.RefinitivUuid;
 
             return userAttribute;
+        }
+
+        private async Task<JObject> InternalGetUserAttributes(UserAttributeFilter filter)
+        {
+            var items = await userAttributeRepository.SearchAsync(filter);
+
+            var dataToParse = items.
+                Select(x => new KeyValuePair<string, string>(x.Name, x.Value))
+                .ToList();
+
+            var result = NodeProcessor.BuildJsonObject(dataToParse);
+
+            return result;
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
@@ -30,5 +31,13 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <param name="value">Value to update .</param>
         /// <returns>User attribute.</returns>
         Task<UserAttribute> UpdateAsync(UserAttribute userAttribute, string value);
+
+        /// <summary>
+        /// Gets selected attributes for user with the specified userUuid.
+        /// </summary>
+        /// <param name="userUuid">UserUuid of the item to get.</param>
+        /// <param name="attributes">Comma separated string of the attribute names to get.</param>
+        /// <returns>User attributes.</returns>
+        Task<JObject> GetAttributesByUserUuidAsync(string userUuid, string attributes);
     }
 }

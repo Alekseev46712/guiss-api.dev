@@ -57,6 +57,17 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         }
 
         /// <summary>
+        /// Checks if User Uuid is valid by calling users api
+        /// </summary>
+        /// <param name="userUuid">User UUID</param>
+        /// <returns></returns>
+        public Task<IActionResult> ValidateUserUuidAsync(string userUuid)
+        {
+            var userAttributeDetails = new UserAttributeDetails { UserUuid = userUuid };
+            return InternalValidateAttributeAsync(userAttributeDetails);
+        }
+
+        /// <summary>
         /// Checks if it's update request or post, if it is put returns model to update
         /// </summary>
         /// <param name="userAttributeDetails">User Attribute Details.</param>
