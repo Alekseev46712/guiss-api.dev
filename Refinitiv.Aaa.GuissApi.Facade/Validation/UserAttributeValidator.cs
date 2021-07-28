@@ -3,13 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Refinitiv.Aaa.Foundation.ApiClient.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Models;
-using Refinitiv.Aaa.GuissApi.Facade.Extensions;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
-using Refinitiv.Aaa.Interfaces.Headers;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Validation

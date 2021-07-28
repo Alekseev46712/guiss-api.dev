@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -10,7 +9,6 @@ using Refinitiv.Aaa.Foundation.ApiClient.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Exceptions;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
-using Refinitiv.Aaa.Interfaces.Headers;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Refinitiv.Aaa.GuissApi.Controllers
@@ -69,16 +67,16 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
         /// <param name="name">The attributes name to be deleted.</param>
         /// <returns>IActionResult</returns>
         [HttpDelete("{uuid}/{name}")]
-        [SwaggerResponse((int)StatusCodes.Status200OK, "OK")]
-        [SwaggerResponse((int)StatusCodes.Status404NotFound, "Attribute does not exist")]
-        [SwaggerResponse((int)StatusCodes.Status500InternalServerError, "Internal Server Error")]
+        [SwaggerResponse(StatusCodes.Status200OK, "OK")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Attribute does not exist")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal Server Error")]
         public async Task<IActionResult> DeleteUserAttribute([FromRoute] string uuid, [FromRoute] string name)
         {
             // Check that the model exists
-            var deletedItem = await userAttributeHelper.FindByUserUuidAndNameAsync(uuid, name);
-            if (deletedItem == null)
+            var attributeValidationResult = await userAttributeValidator.ValidateAttributeAsync(new UserAttributeDetails { UserUuid = uuid, Name = name });
+            if (!(attributeValidationResult is AcceptedResult))
             {
-                return NotFound();
+                return attributeValidationResult;
             }
 
             // Now delete the model

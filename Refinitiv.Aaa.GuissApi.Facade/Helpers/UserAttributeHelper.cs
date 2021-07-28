@@ -7,7 +7,6 @@ using Newtonsoft.Json.Linq;
 using Refinitiv.Aaa.Foundation.ApiClient.Helpers;
 using Refinitiv.Aaa.GuissApi.Data.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Models;
-using Refinitiv.Aaa.GuissApi.Facade.Extensions;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using Refinitiv.Aaa.Interfaces.Headers;
@@ -56,7 +55,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             return result;
         }
 
-
         /// <summary>
         /// Get UserAttribute by UserUuid and Name
         /// </summary>
@@ -67,7 +65,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         {
             return await userAttributeRepository.FindByUserUuidAndNameAsync(uuid, name);
         }
-
 
         /// <summary>
         /// Delete UserAttribute by UserUuid and Name
