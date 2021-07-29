@@ -48,6 +48,33 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
         }
 
         /// <inheritdoc />
+        public Task<UserAttributeDb> FindByUserUuidAndNameAsync(string userUuid, string name)
+        {
+            if (userUuid == null)
+            {
+                throw new ArgumentNullException(nameof(userUuid));
+            }
+
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            return GetUserAttributeAsync(userUuid, name);
+        }
+
+        /// <inheritdoc />
+        public Task<(IEnumerable<UserAttributeDb>, string FirstItemToken, string LastItemToken)> SearchAsync(Cursor<UserAttributeFilter> cursor)
+        {
+            if (cursor == null)
+            {
+                throw new ArgumentNullException(nameof(cursor));
+            }
+
+            return PerformSearchAsync(cursor);
+        }
+
+        /// <inheritdoc />
         public async Task<IEnumerable<UserAttributeDb>> SearchAsync(UserAttributeFilter filter)
         {
             var cursor = new Cursor<UserAttributeFilter>(0, filter);
@@ -64,33 +91,6 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
 
             var (items, _, _) = await userAttributeQueryWrapper.PerformQueryAsync(dbConfig.OverrideTableName, cursor, queryOperationConfig);
             return items;
-        }
-
-        /// <inheritdoc />
-        public Task<UserAttributeDb> FindByUserUuidAndNameAsync(string userUuid, string name)
-        {
-            if (userUuid == null)
-            {
-                throw new ArgumentNullException(nameof(userUuid));
-            }
-
-            if (name == null)
-            {
-                throw new ArgumentNullException(nameof(userUuid));
-            }
-
-            return GetUserAttributeAsync(userUuid, name);
-        }
-
-        /// <inheritdoc />
-        public Task<(IEnumerable<UserAttributeDb>, string FirstItemToken, string LastItemToken)> SearchAsync(Cursor<UserAttributeFilter> cursor)
-        {
-            if (cursor == null)
-            {
-                throw new ArgumentNullException(nameof(cursor));
-            }
-
-            return PerformSearchAsync(cursor);
         }
 
         /// <inheritdoc />
