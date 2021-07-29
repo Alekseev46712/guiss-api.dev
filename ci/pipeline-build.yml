@@ -36,11 +36,12 @@ resources:
   icon: gitlab
   source:
     uri: ssh://git@((GIT_REPO))
-    branch: ((GIT_BRANCH))
+    branch: ((GIT_DEV))
     private_key: ((vault-kv:secret.rsa_key))
 
 - name: gitlab-mr
   type: merge-request
+  icon: gitlab
   source:
     uri: https://((GIT_REPO))
     private_token: ((vault-kv:secret.git_token))
@@ -111,7 +112,7 @@ jobs:
     input_mapping: {input: repo}
     output_mapping: {output: build}
     params:
-      GIT_BRANCH: ((GIT_BRANCH))
+      GIT_BRANCH: ((GIT_DEV))
       GIT_SSHKEY: ((vault-kv:secret.rsa_key))
       PROJECT_DIR: ((PROJECT_DIR))
       BAMS_DIR: ((BAMS_DIR))
@@ -150,6 +151,10 @@ jobs:
     resource: gitlab-mr
     trigger: true
   - get: docker-hub
+  - put: gitlab-mr
+    params:
+      repository: repo
+      status: running
   - task: sonarqube
     image: docker-hub
     file: repo/ci/tasks/sonarqube.yml
@@ -159,7 +164,11 @@ jobs:
       BAMS_PASS: ((vault-kv:secret.bams_pass))
       SONAR_PROJECT_KEY: ((SONARQUBE_PROJECT_KEY))
       SONAR_TOKEN: ((vault-kv:secret.sonarqube_token))
-
+  on_failure:
+    put: gitlab-mr
+    params:
+      repository: repo
+      status: faile
 
 - name: unit-tests-snapshot
   plan:
@@ -175,6 +184,12 @@ jobs:
     params:
       BAMS_USER: ((vault-kv:secret.bams_user))
       BAMS_PASS: ((vault-kv:secret.bams_pass))
+  on_failure:
+    put: gitlab-mr
+    params:
+      repository: repo
+      status: faile
+
 
 - name: build-snapshot
   plan:
@@ -189,7 +204,7 @@ jobs:
     input_mapping: {input: repo}
     output_mapping: {output: build}
     params:
-      GIT_BRANCH: ((GIT_BRANCH))
+      GIT_BRANCH: ((GIT_DEV))
       GIT_SSHKEY: ((vault-kv:secret.rsa_key))
       PROJECT_DIR: ((PROJECT_DIR))
       BAMS_DIR: ((BAMS_DIR))
@@ -202,13 +217,21 @@ jobs:
       folder: build/((BAMS_DIR))
       disable_checksum_uploads: true
       module_layout: none
+  on_failure:
+    put: gitlab-mr
+    params:
+      repository: repo
+      status: faile
 
-- name: setup-deploy
+
+- name: setup-deploy-snapshot
   plan:
   - get: repo-mr
     resource: gitlab-mr
     trigger: true
     passed: [build-snapshot]
+  - get: repo
+    resource: gitlab-develop
   - task: set-pipeline
     file: repo/ci/tasks/deploy-pipeline.yml
     input_mapping: {input: repo}
@@ -219,3 +242,13 @@ jobs:
     file: updated/pipeline-deploy.yml
     var_files:
       - updated/config.yml
+  on_failure:
+    put: gitlab-mr
+    params:
+      repository: repo
+      status: failed
+  on_success:
+    put: gitlab-mr
+    params:
+      repository: repo-mr
+      status: success
