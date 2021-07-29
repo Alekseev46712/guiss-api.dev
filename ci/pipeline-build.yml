@@ -19,6 +19,11 @@ var_sources:
         aws: ((vault:aws/sts/653551970210-a250395-developer))
 
 resource_types:
+- name: merge-request
+  type: docker-image
+  source:
+    repository: samcontesse/gitlab-merge-request-resource
+
 - name: artifactory
   type: docker-image
   source:
@@ -26,13 +31,19 @@ resource_types:
     tag: 0.0.14
 
 resources:
-- name: source
+- name: gitlab-develop
   type: git
   icon: gitlab
   source:
     uri: ssh://git@((GIT_REPO))
     branch: ((GIT_BRANCH))
     private_key: ((vault-kv:secret.rsa_key))
+
+- name: gitlab-mr
+  type: merge-request
+  source:
+    uri: https://((GIT_REPO))
+    private_token: ((vault-kv:secret.git_token))
 
 - name: bams
   type: artifactory
@@ -54,15 +65,16 @@ resources:
 jobs:
 
 
-- name: sonarqube
+- name: sonarqube-develop
   plan:
-  - get: source
+  - get: repo
+    resource: gitlab-develop
     trigger: true
   - get: docker-hub
   - task: sonarqube
     image: docker-hub
-    file: source/ci/tasks/sonarqube.yml
-    input_mapping: {input: source}
+    file: repo/ci/tasks/sonarqube.yml
+    input_mapping: {input: repo}
     params:
       BAMS_USER: ((vault-kv:secret.bams_user))
       BAMS_PASS: ((vault-kv:secret.bams_pass))
@@ -70,31 +82,33 @@ jobs:
       SONAR_TOKEN: ((vault-kv:secret.sonarqube_token))
 
 
-- name: unit-tests
+- name: unit-tests-develop
   plan:
-  - get: source
+  - get: repo
+    resource: gitlab-develop
     trigger: true
-    passed: [sonarqube]
+    passed: [sonarqube-develop]
   - get: docker-hub
   - task: unit-tests
     image: docker-hub
-    file: source/ci/tasks/unit-tests.yml
-    input_mapping: {input: source}
+    file: repo/ci/tasks/unit-tests.yml
+    input_mapping: {input: repo}
     params:
       BAMS_USER: ((vault-kv:secret.bams_user))
       BAMS_PASS: ((vault-kv:secret.bams_pass))
 
 
-- name: build
+- name: build-develop
   plan:
-  - get: source
+  - get: repo
+    resource: gitlab-develop
     trigger: true
-    passed: [unit-tests]
+    passed: [unit-tests-develop]
   - get: docker-hub
   - task: build
     image: docker-hub
-    file: source/ci/tasks/build.yml
-    input_mapping: {input: source}
+    file: repo/ci/tasks/build.yml
+    input_mapping: {input: repo}
     output_mapping: {output: build}
     params:
       GIT_BRANCH: ((GIT_BRANCH))
@@ -112,18 +126,96 @@ jobs:
       module_layout: none
 
 
-- name: setup-deploy
+- name: setup-deploy-develop
   plan:
-  - get: source
+  - get: repo
+    resource: gitlab-develop
     trigger: true
-    passed: [build]
+    passed: [build-develop]
   - task: set-pipeline
-    file: source/ci/tasks/deploy-pipeline.yml
-    input_mapping: {input: source}
+    file: repo/ci/tasks/deploy-pipeline.yml
+    input_mapping: {input: repo}
     output_mapping: {output: updated}
     params:
       GIT_SSHKEY: ((vault-kv:secret.rsa_key))
-  - set_pipeline: guiss-api-deploy
+  - set_pipeline: ((DEPLOY_PIPELINE))
+    file: updated/pipeline-deploy.yml
+    var_files:
+      - updated/config.yml
+
+
+- name: sonarqube-snapshot
+  plan:
+  - get: repo
+    resource: gitlab-mr
+    trigger: true
+  - get: docker-hub
+  - task: sonarqube
+    image: docker-hub
+    file: repo/ci/tasks/sonarqube.yml
+    input_mapping: {input: repo}
+    params:
+      BAMS_USER: ((vault-kv:secret.bams_user))
+      BAMS_PASS: ((vault-kv:secret.bams_pass))
+      SONAR_PROJECT_KEY: ((SONARQUBE_PROJECT_KEY))
+      SONAR_TOKEN: ((vault-kv:secret.sonarqube_token))
+
+
+- name: unit-tests-snapshot
+  plan:
+  - get: repo
+    resource: gitlab-mr
+    trigger: true
+    passed: [sonarqube-snapshot]
+  - get: docker-hub
+  - task: unit-tests
+    image: docker-hub
+    file: repo/ci/tasks/unit-tests.yml
+    input_mapping: {input: repo}
+    params:
+      BAMS_USER: ((vault-kv:secret.bams_user))
+      BAMS_PASS: ((vault-kv:secret.bams_pass))
+
+- name: build-snapshot
+  plan:
+  - get: repo
+    resource: gitlab-mr
+    trigger: true
+    passed: [unit-tests-snapshot]
+  - get: docker-hub
+  - task: build
+    image: docker-hub
+    file: repo/ci/tasks/build.yml
+    input_mapping: {input: repo}
+    output_mapping: {output: build}
+    params:
+      GIT_BRANCH: ((GIT_BRANCH))
+      GIT_SSHKEY: ((vault-kv:secret.rsa_key))
+      PROJECT_DIR: ((PROJECT_DIR))
+      BAMS_DIR: ((BAMS_DIR))
+      BAMS_USER: ((vault-kv:secret.bams_user))
+      BAMS_PASS: ((vault-kv:secret.bams_pass))
+      ARTIFACT_NAME: ((ARTIFACT_NAME))
+  - put: bams
+    params:
+      repo: ((BAMS_PATH))/((BAMS_DIR))
+      folder: build/((BAMS_DIR))
+      disable_checksum_uploads: true
+      module_layout: none
+
+- name: setup-deploy
+  plan:
+  - get: repo-mr
+    resource: gitlab-mr
+    trigger: true
+    passed: [build-snapshot]
+  - task: set-pipeline
+    file: repo/ci/tasks/deploy-pipeline.yml
+    input_mapping: {input: repo}
+    output_mapping: {output: updated}
+    params:
+      GIT_SSHKEY: ((vault-kv:secret.rsa_key))
+  - set_pipeline: ((DEPLOY_PIPELINE))
     file: updated/pipeline-deploy.yml
     var_files:
       - updated/config.yml

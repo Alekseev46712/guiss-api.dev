@@ -7,6 +7,7 @@ GIT_BRANCH: "develop"
 
 PROJECT_DIR: "Refinitiv.Aaa.GuissApi"
 TERRAFORM_SUBDIR: "guiss-api"
+DEPLOY_PIPELINE: "guiss-api-deploy"
 
 BAMS_URL: "https://bams-aws.refinitiv.com/artifactory"
 BAMS_PATH: "default.generic.cloud/aaa/aws"

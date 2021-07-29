@@ -24,10 +24,11 @@ for ENV in dev qa; do
   for VERSION in $GIT_TAG; do
   echo "- name: deploy-${ENV}-${VERSION/\//-}
   plan:
-  - get: source
+  - get: repo
+    resource: gitlab
   - task: deploy
-    file: source/ci/tasks/deploy.yml
-    input_mapping: {input: source}
+    file: repo/ci/tasks/deploy.yml
+    input_mapping: {input: repo}
     params:
       ARTIFACT_VERSION: $VERSION
       <<: *parameters" >> ci/pipeline-deploy.yml

@@ -34,7 +34,7 @@ var_sources:
         aws: ((vault:aws/sts/653551970210-a250395-developer))
 
 resources:
-- name: source
+- name: gitlab
   type: git
   icon: gitlab
   source:
