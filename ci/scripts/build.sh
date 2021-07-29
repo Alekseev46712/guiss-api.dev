@@ -7,6 +7,7 @@ set -x
 export HOME="/tmp"
 echo "${GIT_SSHKEY}" > ~/id_rsa
 chmod -R 700 ~/id_rsa
+export GIT_SSH_COMMAND='ssh -i ~/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 
 # Set subdir
 case ${GIT_BRANCH} in
@@ -35,8 +36,8 @@ case ${GIT_BRANCH} in
   ;;
   *)
     mkdir set_tag; cd set_tag
-    GIT_SSH_COMMAND='ssh -i ~/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null' git clone -b ${GIT_MR_SOURCE} ssh://git@${GIT_REPO} .
-    GIT_SSH_COMMAND='ssh -i ~/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null' git reset --hard ${GIT_MR_SHA}
+    git clone -b ${GIT_MR_SOURCE} ssh://git@${GIT_REPO} .
+    git reset --hard ${GIT_MR_SHA}
     GIT_TAG=$(git for-each-ref refs/tags/snapshot refs/tags/develop --sort=-taggerdate --format='%(refname:short)' --count=1)
     [ ! -z ${GIT_TAG} ] && VERSION=$(echo "${GIT_TAG##*/}"|awk -F. -v OFS=. '{$4=$4+1;print}') || VERSION="0.0.0.0"
     cd ..
