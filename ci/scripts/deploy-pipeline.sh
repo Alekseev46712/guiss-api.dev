@@ -37,4 +37,4 @@ done
 
 # Copy files to output
 cp ci/pipeline-deploy.yml ../output/pipeline-deploy.yml
-cp ci/conf-dev.yml ../output/config.yml
+cp ci/config.yml ../output/config.yml

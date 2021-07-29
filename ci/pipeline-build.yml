@@ -63,8 +63,32 @@ resources:
     password: ((vault-kv:secret.dockerhub_pass))
     repository: dockerhub135/test
 
-jobs:
+groups:
+- name: all
+  jobs:
+    - sonarqube-develop
+    - unit-tests-develop
+    - build-develop
+    - setup-deploy-develop
+    - sonarqube-snapshot
+    - unit-tests-snapshot
+    - build-snapshot
+    - setup-deploy-snapshot
+- name: develop
+  jobs:
+    - sonarqube-develop
+    - unit-tests-develop
+    - build-develop
+    - setup-deploy-develop
+- name: mr
+  jobs:
+    - sonarqube-snapshot
+    - unit-tests-snapshot
+    - build-snapshot
+    - setup-deploy-snapshot
 
+
+jobs:
 
 - name: sonarqube-develop
   plan:
