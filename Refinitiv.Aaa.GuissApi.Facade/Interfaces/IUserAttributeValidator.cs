@@ -29,5 +29,12 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <param name="userAttributeDetails">User Attribute Model.</param>
         /// <returns>UserAttribute or null.</returns>
         Task<UserAttribute> ValidatePutRequestAsync(UserAttributeDetails userAttributeDetails);
+
+        /// <summary>
+        /// Checks if attributes string contains any comma separated values
+        /// </summary>
+        /// <param name="attributes"></param>
+        /// <returns></returns>
+        IActionResult ValidateAttributesString(string attributes);
     }
 }

@@ -6,6 +6,7 @@ using Refinitiv.Aaa.GuissApi.Data.Models;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Validation
@@ -40,19 +41,28 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
                 throw new ArgumentNullException(nameof(userAttributeDetails));
             }
 
-            return InternalValidateAttributeAsync(userAttributeDetails);
+            return InternalValidateUserUuidAsync(userAttributeDetails.UserUuid);
         }
 
         /// <inheritdoc/>
-        public Task<IActionResult> ValidateUserUuidAsync(string userUuid)
+        public async Task<IActionResult> ValidateUserUuidAsync(string userUuid)
         {
-            if (userUuid == null)
+            if (String.IsNullOrEmpty(userUuid))
             {
-                throw new ArgumentNullException(nameof(userUuid));
+                return new BadRequestObjectResult(new { Message = "The User is null or empty" });
             }
 
-            var userAttributeDetails = new UserAttributeDetails { UserUuid = userUuid };
-            return InternalValidateAttributeAsync(userAttributeDetails);
+            return await InternalValidateUserUuidAsync(userUuid);
+        }
+
+        /// <inheritdoc/>
+        public IActionResult ValidateAttributesString(string attributes)
+        {
+            if (String.IsNullOrEmpty(attributes) || !attributes.Split(',').Any())
+            {
+                return new BadRequestObjectResult(new { Message = "The attributes string is null or empty" });
+            }
+            return new AcceptedResult();
         }
 
         /// <inheritdoc/>
@@ -78,14 +88,14 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
             return mapper.Map<UserAttributeDb, UserAttribute>(exsistingUserAttribute);
         }
 
-        private async Task<IActionResult> InternalValidateAttributeAsync(UserAttributeDetails userAttributeDetails)
+        private async Task<IActionResult> InternalValidateUserUuidAsync(string userUuid)
         {
-            var exsistingFromUsersApi = await userHelper.GetUserByUuidAsync(userAttributeDetails.UserUuid);
+            var exsistingFromUsersApi = await userHelper.GetUserByUuidAsync(userUuid);
             if (exsistingFromUsersApi == null)
             {
                 return new NotFoundObjectResult(new { Message = "The User is not found" });
             }
-
+            
             return new AcceptedResult();
         }
     }

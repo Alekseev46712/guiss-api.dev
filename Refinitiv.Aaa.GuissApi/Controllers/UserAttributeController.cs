@@ -80,15 +80,16 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
                 return userValidationResult;
             }
 
-            try
+            var attributesValidationResult = userAttributeValidator.ValidateAttributesString(attributes);
+
+            if (!(attributesValidationResult is AcceptedResult))
             {
-                var result = await userAttributeHelper.GetAttributesByUserUuidAsync(userUuid, attributes);
-                return Ok(result);
+                return attributesValidationResult;
             }
-            catch (ArgumentNullException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+
+            var result = await userAttributeHelper.GetAttributesByUserUuidAsync(userUuid, attributes);
+            return Ok(result);
+
         }
 
         /// <summary>

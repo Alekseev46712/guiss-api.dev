@@ -64,10 +64,10 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
         }
 
         [Test]
-        public async Task ValidateUserUuidAsyncThrowsArgumentNullExceptionIfUuidIsNull()
+        public async Task ValidateUserUuidAsyncReturnsBadRequestObjectResultIfUuidIsNull()
         {
-            Func<Task> act = async () => { await userAttributeValidator.ValidateUserUuidAsync(null); };
-            await act.Should().ThrowAsync<ArgumentNullException>();
+            var result = await userAttributeValidator.ValidateUserUuidAsync(null);
+            result.Should().BeOfType<BadRequestObjectResult>();
         }
 
         [Test]

@@ -65,6 +65,7 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
             var attributes = fixture.Create<string>();
 
             userAttributeValidator.Setup(u => u.ValidateUserUuidAsync(userUuid)).ReturnsAsync(new AcceptedResult());
+            userAttributeValidator.Setup(u => u.ValidateAttributesString(attributes)).Returns(new AcceptedResult());
 
             userAttributeHelper.Setup(g => g.GetAttributesByUserUuidAsync(userUuid, attributes))
                 .ReturnsAsync(jsonData);
@@ -92,16 +93,15 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
         }
 
         [Test]
-        public async Task GetUserAttributes_OnNullAttributedsNotFound_ShouldReturnBadRequest()
+        public async Task GetUserAttributes_OnNoAttributeds_ShouldReturnBadRequest()
         {
             var userUuid = fixture.Create<string>();
-            string attributes = null;
+            string attributes = ",";
 
             userAttributeValidator.Setup(u => u.ValidateUserUuidAsync(userUuid)).ReturnsAsync(new AcceptedResult());
+            userAttributeValidator.Setup(u => u.ValidateAttributesString(attributes)).Returns(new BadRequestObjectResult("test"));
 
-            userAttributeHelper.Setup(u => u.GetAttributesByUserUuidAsync(userUuid, attributes)).ThrowsAsync(new ArgumentNullException(nameof(attributes)));
-
-            var result = await userAttributeController.Get(userUuid, null);
+            var result = await userAttributeController.Get(userUuid, attributes);
 
             result.Should().BeOfType<BadRequestObjectResult>();
         }
