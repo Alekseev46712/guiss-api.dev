@@ -1,10 +1,7 @@
 ﻿using Refinitiv.Aaa.GuissApi.Data.Models;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Text;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Mapping
 {

@@ -124,7 +124,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 
             var newAttribute = mapper.Map<UserAttributeDb, UserAttribute>(savedUserAttribute);
 
-            return newAttribute;           
+            return newAttribute;
         }
 
         private UserAttribute CreateUserAttributeObject(UserAttributeDetails userAttributeDetails)

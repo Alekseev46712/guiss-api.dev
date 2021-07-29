@@ -119,9 +119,9 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
                 catch (UpdateConflictException)
                 {
                     return Conflict();
-                }           
+                }
             }
-      
+
             var savedItem = await userAttributeHelper.InsertAsync(details);
             loggerHelper.LogAuditEntry(LoggerEvent.Created, "Attribute Created", $"uuid :{savedItem.UserUuid}, name : {savedItem.Name}");
 
