@@ -44,6 +44,33 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
         }
 
         [Test]
+        public async Task ValidateUserUuidAsyncReturnsNotFoundObjectResultIfUserDoesNotExist()
+        {
+            var uuid = "test";
+            userHelper.Setup(h => h.GetUserByUuidAsync(It.IsAny<string>())).ReturnsAsync((UserResponse) null);
+            var result = await userAttributeValidator.ValidateUserUuidAsync(uuid);
+            result.Should().BeOfType<NotFoundObjectResult>();
+        }
+
+        [Test]
+        public async Task ValidateUserUuidAsyncReturnsAcceptedResultIfUserExists()
+        {
+            var uuid = "test";
+            var userResponse = new UserResponse { Uuid = uuid };
+            
+            userHelper.Setup(h => h.GetUserByUuidAsync(It.IsAny<string>())).ReturnsAsync(userResponse);
+            var result = await userAttributeValidator.ValidateUserUuidAsync(uuid);
+            result.Should().BeOfType<AcceptedResult>();
+        }
+
+        [Test]
+        public async Task ValidateUserUuidAsyncReturnsBadRequestObjectResultIfUuidIsNull()
+        {
+            var result = await userAttributeValidator.ValidateUserUuidAsync(null);
+            result.Should().BeOfType<BadRequestObjectResult>();
+        }
+
+        [Test]
         public void ValidateAttributeAsyncThrowsExceptionIfArgumentIsNull()
         {
             UserAttributeDetails userAttributeDetails = null;

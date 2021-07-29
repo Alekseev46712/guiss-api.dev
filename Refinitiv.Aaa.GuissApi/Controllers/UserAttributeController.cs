@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -83,6 +84,38 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
             await userAttributeHelper.DeleteUserAttributeAsync(uuid, name);
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Gets list of selected attributes registered for the specified user.
+        /// </summary>
+        /// <param name="userUuid">The uuid of the user.</param>
+        /// <param name="attributes">The comma separated string of the selected attributes.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet("userattribute")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Returns the list of the selected registered attributes")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Bad Request, missing param")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "User with the specified Uuid not found")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Get([FromQuery, Required] string userUuid, [FromQuery, Required] string attributes)
+        {
+            var userValidationResult = await userAttributeValidator.ValidateUserUuidAsync(userUuid);
+
+            if (!(userValidationResult is AcceptedResult))
+            {
+                return userValidationResult;
+            }
+
+            var attributesValidationResult = userAttributeValidator.ValidateAttributesString(attributes);
+
+            if (!(attributesValidationResult is AcceptedResult))
+            {
+                return attributesValidationResult;
+            }
+
+            var result = await userAttributeHelper.GetAttributesByUserUuidAsync(userUuid, attributes);
+            return Ok(result);
+
         }
 
         /// <summary>

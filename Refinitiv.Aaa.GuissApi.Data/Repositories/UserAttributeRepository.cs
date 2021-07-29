@@ -231,7 +231,7 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
                     ScanOperator.In,
                     userAttributeFilter.Names.Select(n => new AttributeValue(n.ToLower(CultureInfo.CurrentCulture))).ToList());
             }
-
+            
             return queryFilter;
         }
 

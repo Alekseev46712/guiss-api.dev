@@ -10,6 +10,7 @@ using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using System.Threading.Tasks;
 using AutoFixture;
 using Newtonsoft.Json.Linq;
+using System;
 
 namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
 {
@@ -54,6 +55,55 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
             result.Should().BeOfType<OkObjectResult>("because a result is always returned")
                 .Which.Value
                 .Should().BeEquivalentTo(jsonData);
+        }
+
+        [Test]
+        public async Task GetUserAttributes_ShouldCallGetAttributesByuserUuidAsyncAndReturnJObject()
+        {
+            var jsonData = fixture.Create<JObject>();
+            var userUuid = fixture.Create<string>();
+            var attributes = fixture.Create<string>();
+
+            userAttributeValidator.Setup(u => u.ValidateUserUuidAsync(userUuid)).ReturnsAsync(new AcceptedResult());
+            userAttributeValidator.Setup(u => u.ValidateAttributesString(attributes)).Returns(new AcceptedResult());
+
+            userAttributeHelper.Setup(g => g.GetAttributesByUserUuidAsync(userUuid, attributes))
+                .ReturnsAsync(jsonData);
+
+            var result = await userAttributeController.Get(userUuid, attributes);
+
+            userAttributeHelper.VerifyAll();
+
+            result.Should().BeOfType<OkObjectResult>("because a result is always returned")
+                .Which.Value
+                .Should().BeEquivalentTo(jsonData);
+        }
+
+        [Test]
+        public async Task GetUserAttributes_OnUserNotFound_ShouldReturnNotFound()
+        {
+            var userUuid = fixture.Create<string>();
+            var attributes = fixture.Create<string>();
+
+            userAttributeValidator.Setup(u => u.ValidateUserUuidAsync(userUuid)).ReturnsAsync(new NotFoundObjectResult(new { Message = "The User is not found" }));
+
+            var result = await userAttributeController.Get(userUuid, attributes);
+
+            result.Should().BeOfType<NotFoundObjectResult>();
+        }
+
+        [Test]
+        public async Task GetUserAttributes_OnNoAttributeds_ShouldReturnBadRequest()
+        {
+            var userUuid = fixture.Create<string>();
+            string attributes = ",";
+
+            userAttributeValidator.Setup(u => u.ValidateUserUuidAsync(userUuid)).ReturnsAsync(new AcceptedResult());
+            userAttributeValidator.Setup(u => u.ValidateAttributesString(attributes)).Returns(new BadRequestObjectResult("test"));
+
+            var result = await userAttributeController.Get(userUuid, attributes);
+
+            result.Should().BeOfType<BadRequestObjectResult>();
         }
 
         #endregion

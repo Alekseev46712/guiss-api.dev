@@ -12,6 +12,8 @@ using System;
 using System.Threading.Tasks;
 using AutoFixture;
 using Newtonsoft.Json.Linq;
+using System.Globalization;
+using System.Linq;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
 {
@@ -61,6 +63,32 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         }
 
         [Test]
+        public async Task GetAttributesByUserUuidAsync_ShouldCallSearchAsyncWithUserUuidFilterAndReturnJObject()
+        {
+            var attributes = fixture.CreateMany<UserAttributeDb>();
+            var userUuid = fixture.Create<string>();
+            var attributesNames = "one,two,three";
+
+            userAttributeRepository.Setup(x =>
+                    x.SearchAsync(It.IsAny<UserAttributeFilter>()))
+                .ReturnsAsync(attributes);
+
+            var result = await userAttributeHelper.GetAttributesByUserUuidAsync(userUuid, attributesNames);
+
+            userAttributeRepository.VerifyAll();
+
+            result.Should().BeOfType<JObject>("because a result is always returned");
+        }
+
+        [Test]
+        public async Task GetAttributesByUserUuidAsync_OnNullAttributes_ShouldThrowArgumentNullException()
+        {
+            var userUuid = fixture.Create<string>();
+            Func<Task> act = async () => await userAttributeHelper.GetAttributesByUserUuidAsync(userUuid, null);
+            await act.Should().ThrowAsync<ArgumentNullException>();
+        }
+
+            [Test]
         public void InsertAsyncThrowsExceptionIfArgumentIsNull()
         {
             UserAttributeDetails userAttributeDetails = null;
