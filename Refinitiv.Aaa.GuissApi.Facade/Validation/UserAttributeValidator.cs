@@ -77,9 +77,9 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         }
 
         /// <inheritdoc/>
-        public async Task<IActionResult> ValidateUserAttributesAsync(string userUuid, string usertName)
+        public async Task<IActionResult> ValidateUserAttributesAsync(string userUuid, string name)
         {
-            var exsistingFromUsersApi = await userAttributeRepository.FindByUserUuidAndNameAsync(userUuid, usertName);
+            var exsistingFromUsersApi = await userAttributeRepository.FindByUserUuidAndNameAsync(userUuid, name);
             if (exsistingFromUsersApi == null)
             {
                 return new NotFoundObjectResult(new { Message = "The User is not found" });
