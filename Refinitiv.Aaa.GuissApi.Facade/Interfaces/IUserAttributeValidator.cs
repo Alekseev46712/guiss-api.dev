@@ -36,5 +36,13 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <param name="attributes"></param>
         /// <returns></returns>
         IActionResult ValidateAttributesString(string attributes);
+
+        /// <summary>
+        /// Check exist user attribites by Uuid and Name
+        /// </summary>
+        /// <param name="userUuid"></param>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        Task<IActionResult> ValidateUserAttributesAsync(string userUuid, string userName);
     }
 }

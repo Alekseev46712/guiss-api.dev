@@ -76,6 +76,18 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
             return InternalValidatePutRequestAsync(userAttributeDetails);
         }
 
+        /// <inheritdoc/>
+        public async Task<IActionResult> ValidateUserAttributesAsync(string userUuid, string usertName)
+        {
+            var exsistingFromUsersApi = await userAttributeRepository.FindByUserUuidAndNameAsync(userUuid, usertName);
+            if (exsistingFromUsersApi == null)
+            {
+                return new NotFoundObjectResult(new { Message = "The User is not found" });
+            }
+
+            return new AcceptedResult();
+        }
+
         private async Task<UserAttribute> InternalValidatePutRequestAsync(UserAttributeDetails userAttributeDetails)
         {
             var exsistingUserAttribute = await userAttributeRepository.FindByUserUuidAndNameAsync(userAttributeDetails.UserUuid, userAttributeDetails.Name);
