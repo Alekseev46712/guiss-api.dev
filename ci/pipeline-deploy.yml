@@ -34,12 +34,12 @@ var_sources:
         aws: ((vault:aws/sts/653551970210-a250395-developer))
 
 resources:
-- name: gitlab
+- name: gitlab-develop
   type: git
   icon: gitlab
   source:
     uri: ssh://git@((GIT_REPO))
-    branch: ((GIT_BRANCH))
+    branch: ((GIT_DEV))
     private_key: ((vault-kv:secret.rsa_key))
 
 jobs:

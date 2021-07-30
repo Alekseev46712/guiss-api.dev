@@ -25,7 +25,7 @@ for ENV in dev qa; do
   echo "- name: deploy-${ENV}-${VERSION/\//-}
   plan:
   - get: repo
-    resource: gitlab
+    resource: gitlab-develop
   - task: deploy
     file: repo/ci/tasks/deploy.yml
     input_mapping: {input: repo}
