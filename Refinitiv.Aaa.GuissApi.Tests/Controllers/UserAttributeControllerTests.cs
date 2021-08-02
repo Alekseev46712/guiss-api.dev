@@ -173,5 +173,41 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
         }
 
         #endregion
+
+        #region Delete
+
+        [Test]
+        public async Task DeleteUserAttribute_WhenUserAttributeNotFound_ReturnsNotFoundObjectResult()
+        {
+            var userUuid = fixture.Create<string>();
+            var name = fixture.Create<string>();
+
+            userAttributeValidator.Setup(x => x.ValidateUserAttributesAsync(userUuid, name)).ReturnsAsync(new NotFoundObjectResult(new { Message = "The User is not found" }));
+
+            var result = await userAttributeController.DeleteUserAttribute(userUuid, name);
+
+            userAttributeValidator.VerifyAll();
+
+            result.Should().BeOfType<NotFoundObjectResult>("Because UserAttribitte in this test always not found");
+        }
+
+        [Test]
+        public async Task DeleteUserAttribute_WhenValidationSuccess_ReturnStatus204NoContent()
+        {
+            var userUuid = fixture.Create<string>();
+            var name = fixture.Create<string>();
+
+            userAttributeValidator.Setup(x => x.ValidateUserAttributesAsync(userUuid, name)).ReturnsAsync(new AcceptedResult());
+            userAttributeHelper.Setup(x => x.DeleteUserAttributeAsync(userUuid, name));
+
+            var result = await userAttributeController.DeleteUserAttribute(userUuid, name);
+
+            userAttributeValidator.VerifyAll();
+            userAttributeHelper.VerifyAll();
+
+            result.Should().BeOfType<NoContentResult> ("Because UserAttribitte succsessfully deleted");
+        }
+
+        #endregion
     }
 }

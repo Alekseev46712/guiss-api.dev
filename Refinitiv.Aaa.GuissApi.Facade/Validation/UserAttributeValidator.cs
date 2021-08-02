@@ -82,7 +82,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
             var exsistingFromUsersApi = await userAttributeRepository.FindByUserUuidAndNameAsync(userUuid, name);
             if (exsistingFromUsersApi == null)
             {
-                return new NotFoundObjectResult(new { Message = "The User is not found" });
+                return new NotFoundObjectResult(new { Message = "Attribute does not exist" });
             }
 
             return new AcceptedResult();
