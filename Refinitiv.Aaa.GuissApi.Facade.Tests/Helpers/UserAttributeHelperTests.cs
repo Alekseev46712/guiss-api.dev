@@ -162,5 +162,17 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
             result.Should().BeEquivalentTo(userAttribute);
         }
 
+        [Test]
+        public async Task DeleteUserAttributeAsync_WhenDeletedSuccessfully()
+        {
+            var userUuid = fixture.Create<string>();
+            var name = fixture.Create<string>();
+
+            userAttributeRepository.Setup(x => x.DeleteAsync(userUuid, name));
+
+            await userAttributeHelper.DeleteUserAttributeAsync(userUuid, name);
+
+            userAttributeRepository.VerifyAll();
+        }
     }
 }

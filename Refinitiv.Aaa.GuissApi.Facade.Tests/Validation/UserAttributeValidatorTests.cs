@@ -136,5 +136,47 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
 
             result.Should().BeEquivalentTo(expected);
         }
+
+        [Test]
+        public async Task ValidateUserAttributesAsync_WhenUserUuidOrNameIsNull_ReturnNotFoundObjectResult()
+        {
+            userAttributeRepository.Setup(x => x.FindByUserUuidAndNameAsync(It.IsAny<string>(), It.IsAny<string>()));
+
+            var result = await userAttributeValidator.ValidateUserAttributesAsync(null, null);
+
+            userAttributeRepository.VerifyAll();
+
+            result.Should().BeOfType<NotFoundObjectResult>();
+        }
+
+        [Test]
+        public async Task ValidateUserAttributesAsync_WhenUserAttribiteNotFound_ReturnNotFoundObjectResult()
+        {
+            var userUuid = "testUserUuid";
+            var name = "testName";
+
+            userAttributeRepository.Setup(x => x.FindByUserUuidAndNameAsync(userUuid, name));
+
+            var result = await userAttributeValidator.ValidateUserAttributesAsync(userUuid, name);
+
+            userAttributeRepository.VerifyAll();
+
+            result.Should().BeOfType<NotFoundObjectResult>();
+        }
+
+        [Test]
+        public async Task ValidateUserAttributesAsync_WhenUserAttribiteFound_ReturnAcceptedResult()
+        {
+            var userUuid = "testUserUuid";
+            var name = "testName";
+
+            userAttributeRepository.Setup(x => x.FindByUserUuidAndNameAsync(userUuid, name)).ReturnsAsync(new UserAttributeDb());
+
+            var result = await userAttributeValidator.ValidateUserAttributesAsync(userUuid, name);
+
+            userAttributeRepository.VerifyAll();
+
+            result.Should().BeOfType<AcceptedResult>();
+        }
     }
 }
