@@ -42,4 +42,13 @@ resources:
     branch: ((GIT_DEV))
     private_key: ((vault-kv:secret.rsa_key))
 
+- name: terraform
+  type: docker-image
+  icon: docker
+  source:
+    username: ((vault-kv:secret.bams_user))
+    password: ((vault-kv:secret.bams_pass))
+    repository: bams-aws.refinitiv.com:5001/a250395/terraform
+    tag: 0.12.12
+
 jobs:

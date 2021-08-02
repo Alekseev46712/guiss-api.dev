@@ -26,7 +26,9 @@ for ENV in dev qa; do
   plan:
   - get: repo
     resource: gitlab-develop
+  - get: terraform
   - task: deploy
+    image: terraform
     file: repo/ci/tasks/deploy.yml
     input_mapping: {input: repo}
     params:

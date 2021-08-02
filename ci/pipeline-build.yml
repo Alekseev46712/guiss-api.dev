@@ -22,13 +22,24 @@ resource_types:
 - name: merge-request
   type: docker-image
   source:
-    repository: samcontesse/gitlab-merge-request-resource
+    username: ((vault-kv:secret.bams_user))
+    password: ((vault-kv:secret.bams_pass))
+    repository: bams-aws.refinitiv.com:5001/a250395/gitlab-merge-request
 
 - name: artifactory
   type: docker-image
   source:
-    repository: springio/artifactory-resource
+    username: ((vault-kv:secret.bams_user))
+    password: ((vault-kv:secret.bams_pass))
+    repository: bams-aws.refinitiv.com:5001/a250395/artifactory
     tag: 0.0.14
+
+- name: teams-notification
+  type: docker-image
+  source:
+    username: ((vault-kv:secret.bams_user))
+    password: ((vault-kv:secret.bams_pass))
+    repository: bams-aws.refinitiv.com:5001/a250395/teams-notification
 
 resources:
 - name: gitlab-develop
@@ -55,13 +66,21 @@ resources:
     password: ((vault-kv:secret.bams_pass))
     build_name: ((BAMS_METEDATA_BUILDNAME))
 
-- name: docker-hub
+- name: bams-docker
   type: docker-image
   icon: docker
   source:
-    username: ((vault-kv:secret.dockerhub_user))
-    password: ((vault-kv:secret.dockerhub_pass))
-    repository: dockerhub135/test
+    username: ((vault-kv:secret.bams_user))
+    password: ((vault-kv:secret.bams_pass))
+    repository: bams-aws.refinitiv.com:5001/a250395/dotnet31-sonarqube
+
+- name: alpine
+  type: docker-image
+  icon: docker
+  source:
+    username: ((vault-kv:secret.bams_user))
+    password: ((vault-kv:secret.bams_pass))
+    repository: bams-aws.refinitiv.com:5001/a250395/alpine
 
 groups:
 - name: all
@@ -95,9 +114,9 @@ jobs:
   - get: repo
     resource: gitlab-develop
     trigger: true
-  - get: docker-hub
+  - get: bams-docker
   - task: sonarqube
-    image: docker-hub
+    image: bams-docker
     file: repo/ci/tasks/sonarqube.yml
     input_mapping: {input: repo}
     params:
@@ -113,9 +132,9 @@ jobs:
     resource: gitlab-develop
     trigger: true
     passed: [sonarqube-develop]
-  - get: docker-hub
+  - get: bams-docker
   - task: unit-tests
-    image: docker-hub
+    image: bams-docker
     file: repo/ci/tasks/unit-tests.yml
     input_mapping: {input: repo}
     params:
@@ -129,9 +148,9 @@ jobs:
     resource: gitlab-develop
     trigger: true
     passed: [unit-tests-develop]
-  - get: docker-hub
+  - get: bams-docker
   - task: build
-    image: docker-hub
+    image: bams-docker
     file: repo/ci/tasks/build.yml
     input_mapping: {input: repo}
     output_mapping: {output: build}
@@ -157,7 +176,9 @@ jobs:
     resource: gitlab-develop
     trigger: true
     passed: [build-develop]
+  - get: alpine
   - task: set-pipeline
+    image: alpine
     file: repo/ci/tasks/deploy-pipeline.yml
     input_mapping: {input: repo}
     output_mapping: {output: updated}
@@ -174,13 +195,13 @@ jobs:
   - get: repo
     resource: gitlab-mr
     trigger: true
-  - get: docker-hub
+  - get: bams-docker
   - put: gitlab-mr
     params:
       repository: repo
       status: running
   - task: sonarqube
-    image: docker-hub
+    image: bams-docker
     file: repo/ci/tasks/sonarqube.yml
     input_mapping: {input: repo}
     params:
@@ -194,15 +215,16 @@ jobs:
       repository: repo
       status: faile
 
+
 - name: unit-tests-snapshot
   plan:
   - get: repo
     resource: gitlab-mr
     trigger: true
     passed: [sonarqube-snapshot]
-  - get: docker-hub
+  - get: bams-docker
   - task: unit-tests
-    image: docker-hub
+    image: bams-docker
     file: repo/ci/tasks/unit-tests.yml
     input_mapping: {input: repo}
     params:
@@ -221,9 +243,9 @@ jobs:
     resource: gitlab-mr
     trigger: true
     passed: [unit-tests-snapshot]
-  - get: docker-hub
+  - get: bams-docker
   - task: build
-    image: docker-hub
+    image: bams-docker
     file: repo/ci/tasks/build.yml
     input_mapping: {input: repo}
     output_mapping: {output: build}
@@ -256,7 +278,9 @@ jobs:
     passed: [build-snapshot]
   - get: repo
     resource: gitlab-develop
+  - get: alpine
   - task: set-pipeline
+    image: alpine
     file: repo/ci/tasks/deploy-pipeline.yml
     input_mapping: {input: repo}
     output_mapping: {output: updated}
