@@ -20,7 +20,7 @@ terraform {
 provider "aws" {
   region  = var.aws_region
   profile = var.aws_profile
-  version = "~> 3.5.0"
+  version = "~> 3.16.0"
 }
 
 data "aws_caller_identity" "current" {}

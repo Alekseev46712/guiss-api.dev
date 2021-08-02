@@ -20,8 +20,19 @@ module "lambda" {
   publish                         = var.publish
   lambda_alias_current            = var.lambda_alias_current
   environment_variables           = merge(var.lambda_env_vars, {
-                                      "AWS__ParameterStorePath" = "/${local.prefix}/${var.name_suffix}/${var.param_path}",
-                                      "Version"                 = var.app_version_number
+     "AWS__ParameterStorePath"                      = "/${local.prefix}/${var.name_suffix}/${var.param_path}",
+     "AppSettings__DynamoDb__UserAttributeTableName" = module.dynamodb.name,
+     "Version"                                      = var.app_version_number,
                                     })
   tags                            = local.tags
+}
+
+module "cloudwatch_alarms" {
+  source      = "../modules/metric-alarm"
+  alarms      = var.alarms
+  filters     = var.filters
+  asset_id    = var.asset_id
+  name_suffix = var.name_suffix
+  tags        = local.tags
+  group_name  = "${module.lambda.log_group_name}"
 }

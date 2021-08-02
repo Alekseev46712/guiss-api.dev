@@ -103,38 +103,3 @@ variable "log_target" {
   type        = string
   default     = "CloudWatch"
 }
-
-# Parameters
-variable "params" {
-  type = any
-}
-
-variable "secure_params" {
-  type = any
-}
-
-# DB
-variable "db_billing_mode" {
-  type        = string
-}
-variable "db_read_capacity" {
-  type        = string
-}
-variable "db_write_capacity" {
-  type        = string
-}
-variable "db_hash_key" {
-  type        = string
-}
-variable "db_range_key" {
-  type        = string
-}
-variable "db_encryption" {
-  type        = bool
-}
-variable "db_attributes" {
-  type        = any
-}
-variable "db_global_secondary_indexes" {
-  type        = any
-}
