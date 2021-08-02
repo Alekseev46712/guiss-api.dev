@@ -420,6 +420,7 @@ ASALocalRun/
 **/.terraform
 **/*.tfstate
 **/*.tfstate.backup
+tfplan
 
 # Sonarqube files
 .sonarqube/out/**/*.*
