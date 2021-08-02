@@ -52,6 +52,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade
                 .ConfigureDataDependencies(configuration)
                 .ConfigureAwsMessageBus(configuration);
 
+            services.AddScoped<GuissDelegatingHandler>();
+
             return services;
         }
     }
