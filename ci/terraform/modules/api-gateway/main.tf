@@ -176,6 +176,8 @@ resource "aws_api_gateway_method_settings" "method_settings" {
 
 resource "aws_cloudwatch_log_group" "log_group" {
   name              = "${var.log_group_prefix}${var.prefix}-${var.name}"
+  retention_in_days = 365
+  tags              = var.tags
 }
 
 #

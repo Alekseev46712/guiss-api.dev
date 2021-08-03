@@ -36,7 +36,7 @@ resource "aws_lambda_alias" "lambda_alias_current" {
 
 # create log group which is required for alarms
 resource "aws_cloudwatch_log_group" "log_group" {
-  name = "/aws/lambda/${var.prefix}-${var.name}"
+  name              = "/aws/lambda/${var.prefix}-${var.name}"
   retention_in_days = 365
-  tags = var.tags
+  tags              = var.tags
 }
