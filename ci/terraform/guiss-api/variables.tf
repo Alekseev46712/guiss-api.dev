@@ -53,7 +53,7 @@ variable "memory_size" {
 variable "runtime" {
   description = "Name of the runtime. Defaults to 'dotnetcore2.1'."
   type        = string
-  default     = "dotnetcore2.1"
+  default     = "dotnetcore3.1"
 }
 
 variable "lambda_timeout" {
@@ -84,6 +84,21 @@ variable "lambda_env_vars" {
 
 variable "param_path" {
   type        = string
+}
+
+variable "aws_vpc" {
+  type        = string
+  default     = ""
+}
+
+variable "lambda_subnets" {
+  type        = list
+  default     = []
+}
+
+variable "lambda_security_groups" {
+  type        = list
+  default     = []
 }
 
 # Alarms

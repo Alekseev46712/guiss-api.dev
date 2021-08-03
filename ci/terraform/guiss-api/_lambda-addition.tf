@@ -60,3 +60,9 @@ resource "aws_iam_role_policy" "dynabodb_access" {
     ]
   })
 }
+
+# Access to configure VPC
+resource "aws_iam_role_policy_attachment" "lambda_vpc" {
+  role       = module.lambda_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+}
