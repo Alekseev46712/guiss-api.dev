@@ -55,5 +55,14 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <param name="attributes">Comma separated string of the attribute names to get.</param>
         /// <returns>User attributes.</returns>
         Task<JObject> GetAttributesByUserUuidAsync(string userUuid, string attributes);
+
+        /// <summary>
+        /// Gets selected attributes by namespaces for user with the specified userUuid.
+        /// </summary>
+        /// <param name="userUuid">UserUuid of the item to get.</param>
+        /// <param name="namespaces">Comma separated string of the namespaces to get.</param>
+        /// <returns>User attributes.</returns>
+        Task<JObject> GetAttributesByUserNamespacesAndUuidAsync(string userUuid, string namespaces);
+
     }
 }
