@@ -12,8 +12,6 @@ using System;
 using System.Threading.Tasks;
 using AutoFixture;
 using Newtonsoft.Json.Linq;
-using System.Globalization;
-using System.Linq;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
 {

@@ -24,7 +24,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
         private UserAttributeValidator userAttributeValidator;
         private IMapper mapper;
 
-
         [SetUp]
         public void Setup()
         {
@@ -58,7 +57,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
         {
             var uuid = "test";
             var userResponse = new UserResponse { Uuid = uuid };
-            
+
             userHelper.Setup(h => h.GetUserByUuidAsync(It.IsAny<string>())).ReturnsAsync(userResponse);
             var result = await userAttributeValidator.ValidateUserUuidAsync(uuid);
             result.Should().BeOfType<AcceptedResult>();

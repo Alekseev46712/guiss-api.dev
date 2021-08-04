@@ -40,7 +40,6 @@ namespace Refinitiv.Aaa.GuissApi.Data.Interfaces
         /// <returns>Saved UserAttributeDb object.</returns>
         Task<UserAttributeDb> SaveAsync(UserAttributeDb item);
 
-
         /// <summary>s
         /// Deletes UserAttribute from the database.
         /// </summary>

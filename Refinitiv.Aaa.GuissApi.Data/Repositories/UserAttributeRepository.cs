@@ -17,7 +17,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
-
 namespace Refinitiv.Aaa.GuissApi.Data.Repositories
 {
     /// <inheritdoc />

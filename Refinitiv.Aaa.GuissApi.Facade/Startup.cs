@@ -9,7 +9,6 @@ using Refinitiv.Aaa.Pagination.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data;
 using Refinitiv.Aaa.GuissApi.Facade.Helpers;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
-using Refinitiv.Aaa.GuissApi.Facade.Models;
 using Refinitiv.Aaa.MessageBus.Amazon;
 using Refinitiv.Aaa.GuissApi.Facade.Validation;
 using Refinitiv.Aaa.GuissApi.Facade.Mapping;
@@ -39,17 +38,13 @@ namespace Refinitiv.Aaa.GuissApi.Facade
                typeof(UserAttributeMappingProfile).Assembly);
 
            services
-                .AddSingleton<IAppSettingsConfiguration, AppSettingsConfiguration>()
-                //.AddScoped<IGuissHelper, GuissHelper>()
                 .AddScoped<IMessageHandler, MessageHandler>()
                 .AddScoped<IPaginationService, PaginationService>()
-                .AddScoped<IPaginationHelper, PaginationHelper>()
                 .AddScoped(typeof(ILoggerHelper<>), typeof(LoggerHelper<>))
                 .AddScoped<IUserAttributeHelper, UserAttributeHelper>()
                 .AddScoped<IUserAttributeValidator, UserAttributeValidator>()
-                .AddScoped<IUserHelper, UserHelper>()           
+                .AddScoped<IUserHelper, UserHelper>()
                 .ConfigureDatabase(configuration)
-                .ConfigureDataDependencies(configuration)
                 .ConfigureAwsMessageBus(configuration);
 
             services.AddScoped<ErrorHandlingDelegatingHandler>();

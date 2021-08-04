@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Refinitiv.Aaa.GuissApi.Data.Models;
@@ -25,7 +24,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <param name="name">UserName of the item to get.</param>
         /// <returns>User attributes.</returns>
         Task<UserAttributeDb> FindByUserUuidAndNameAsync(string uuid, string name);
-
 
         /// <summary>Delete UserAttribute by UserUuid and Name.</summary>
         /// <param name="uuid">UserUuuid of the item to delete.</param>

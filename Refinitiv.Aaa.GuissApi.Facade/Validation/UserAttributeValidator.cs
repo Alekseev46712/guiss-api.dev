@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Refinitiv.Aaa.Foundation.ApiClient.Core.Models.User;
 using Refinitiv.Aaa.Foundation.ApiClient.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Models;
@@ -8,7 +7,6 @@ using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Validation
@@ -100,8 +98,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
                 return userValidationResult;
             }
 
-            var exsistingFromUsersApi = await userAttributeRepository.FindByUserUuidAndNameAsync(userUuid, name);
-            if (exsistingFromUsersApi == null)
+            var existingFromUsersApi = await userAttributeRepository.FindByUserUuidAndNameAsync(userUuid, name);
+            if (existingFromUsersApi == null)
             {
                 return new NotFoundObjectResult(new { Message = "Attribute does not exist" });
             }
@@ -111,14 +109,13 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
 
         private async Task<UserAttribute> InternalValidatePutRequestAsync(UserAttributeDetails userAttributeDetails)
         {
-            var exsistingUserAttribute = await userAttributeRepository.FindByUserUuidAndNameAsync(userAttributeDetails.UserUuid, userAttributeDetails.Name);
-
-            if (exsistingUserAttribute == null)
+            var existingFromUsersApi = await userAttributeRepository.FindByUserUuidAndNameAsync(userAttributeDetails.UserUuid, userAttributeDetails.Name);
+            if (existingFromUsersApi == null)
             {
                 return null;
             }
 
-            return mapper.Map<UserAttributeDb, UserAttribute>(exsistingUserAttribute);
+            return mapper.Map<UserAttributeDb, UserAttribute>(existingFromUsersApi);
         }
 
         private async Task<IActionResult> InternalValidateUserUuidAsync(string userUuid)
@@ -128,9 +125,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
                 throw new ArgumentNullException(nameof(userUuid));
             }
 
-            var exsistingFromUsersApi = await userHelper.GetUserByUuidAsync(userUuid);
-
-            if (exsistingFromUsersApi == null)
+            var existingFromUsersApi = await userHelper.GetUserByUuidAsync(userUuid);
+            if (existingFromUsersApi == null)
             {
                 return new NotFoundObjectResult(new { Message = "The User is not found" });
             }
@@ -138,7 +134,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
             return new AcceptedResult();
         }
 
-        private IActionResult InternalValidateCommaSeparatedString(string str)
+        private static IActionResult InternalValidateCommaSeparatedString(string str)
         {
             if (String.IsNullOrEmpty(str) || !str.Split(',').Any())
             {

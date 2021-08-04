@@ -10,7 +10,6 @@ using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using System.Threading.Tasks;
 using AutoFixture;
 using Newtonsoft.Json.Linq;
-using System;
 
 namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
 {
@@ -58,7 +57,7 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
         }
 
         [Test]
-        public async Task GetUserAttributes_ShouldCallGetAttributesByuserUuidAsyncAndReturnJObject()
+        public async Task GetUserAttributes_ShouldCallGetAttributesByUserUuidAsyncAndReturnJObject()
         {
             var jsonData = fixture.Create<JObject>();
             var userUuid = fixture.Create<string>();
@@ -93,7 +92,7 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
         }
 
         [Test]
-        public async Task GetUserAttributes_OnNoAttributeds_ShouldReturnBadRequest()
+        public async Task GetUserAttributes_OnNoAttributes_ShouldReturnBadRequest()
         {
             var userUuid = fixture.Create<string>();
             string attributes = ",";

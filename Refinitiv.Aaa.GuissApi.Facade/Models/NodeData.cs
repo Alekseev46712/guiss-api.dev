@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
+namespace Refinitiv.Aaa.GuissApi.Facade.Models
 {
     /// <summary>
     /// Represents the node data for json object.

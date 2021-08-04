@@ -84,23 +84,13 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             return InternalGetUserAttributesAsync(filter);
         }
 
-        /// <summary>
-        /// Get UserAttribute by UserUuid and Name
-        /// </summary>
-        /// <param name="uuid"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public async Task<UserAttributeDb> FindByUserUuidAndNameAsync(string uuid, string name)
         {
             return await userAttributeRepository.FindByUserUuidAndNameAsync(uuid, name);
         }
 
-        /// <summary>
-        /// Delete UserAttribute by UserUuid and Name
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public async Task DeleteUserAttributeAsync(string id, string name)
         {
             await userAttributeRepository.DeleteAsync(id, name);

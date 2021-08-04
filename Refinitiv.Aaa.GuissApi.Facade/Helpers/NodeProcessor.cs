@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using Refinitiv.Aaa.GuissApi.Facade.Models;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 {

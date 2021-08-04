@@ -19,7 +19,6 @@ using Refinitiv.Aaa.Pagination.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -207,11 +206,11 @@ namespace Refinitiv.Aaa.GuissApi.Data.Tests.Repositories
         public async Task SearchAsync_WhenFilterIsNull_SuccessSearchWithNullFilter()
         {
             var userAttributes = fixture.CreateMany<UserAttributeDb>();
-            var expectedfirstItemToken = fixture.Create<string>();
-            var expectedlastItemToken = fixture.Create<string>();
+            var expectedFirstItemToken = fixture.Create<string>();
+            var expectedLastItemToken = fixture.Create<string>();
             var userAttributeFilter = (UserAttributeFilter)null;
             var cursor = new Cursor<UserAttributeFilter>(0, userAttributeFilter);
-            SetUpPerformQueryMethod(userAttributes, expectedfirstItemToken, expectedlastItemToken);
+            SetUpPerformQueryMethod(userAttributes, expectedFirstItemToken, expectedLastItemToken);
 
             var (foundUserAttributes, firstItemToken, lastItemToken) = await repository.SearchAsync(cursor);
 
@@ -221,8 +220,8 @@ namespace Refinitiv.Aaa.GuissApi.Data.Tests.Repositories
             using (new AssertionScope())
             {
                 foundUserAttributes.Should().BeEquivalentTo(userAttributes);
-                firstItemToken.Should().BeEquivalentTo(expectedfirstItemToken);
-                lastItemToken.Should().BeEquivalentTo(expectedlastItemToken);
+                firstItemToken.Should().BeEquivalentTo(expectedFirstItemToken);
+                lastItemToken.Should().BeEquivalentTo(expectedLastItemToken);
             }
         }
 
@@ -230,11 +229,11 @@ namespace Refinitiv.Aaa.GuissApi.Data.Tests.Repositories
         public async Task SearchAsync_WhenFilteringByUserUuid_SuccessSearchWithUserUuidFilter()
         {
             var userAttributes = fixture.CreateMany<UserAttributeDb>();
-            var expectedfirstItemToken = fixture.Create<string>();
-            var expectedlastItemToken = fixture.Create<string>();
+            var expectedFirstItemToken = fixture.Create<string>();
+            var expectedLastItemToken = fixture.Create<string>();
             var userAttributeFilter = new UserAttributeFilter { UserUuid = "userUuid" };
             var cursor = new Cursor<UserAttributeFilter>(0, userAttributeFilter);
-            SetUpPerformQueryMethod(userAttributes, expectedfirstItemToken, expectedlastItemToken);
+            SetUpPerformQueryMethod(userAttributes, expectedFirstItemToken, expectedLastItemToken);
 
             var (foundUserAttributes, firstItemToken, lastItemToken) = await repository.SearchAsync(cursor);
 
@@ -244,8 +243,8 @@ namespace Refinitiv.Aaa.GuissApi.Data.Tests.Repositories
             using (new AssertionScope())
             {
                 foundUserAttributes.Should().BeEquivalentTo(userAttributes);
-                firstItemToken.Should().BeEquivalentTo(expectedfirstItemToken);
-                lastItemToken.Should().BeEquivalentTo(expectedlastItemToken);
+                firstItemToken.Should().BeEquivalentTo(expectedFirstItemToken);
+                lastItemToken.Should().BeEquivalentTo(expectedLastItemToken);
             }
         }
 
@@ -253,11 +252,11 @@ namespace Refinitiv.Aaa.GuissApi.Data.Tests.Repositories
         public async Task SearchAsync_WhenFilteringByName_SuccessSearchWithNameFilter()
         {
             var userAttributes = fixture.CreateMany<UserAttributeDb>();
-            var expectedfirstItemToken = fixture.Create<string>();
-            var expectedlastItemToken = fixture.Create<string>();
+            var expectedFirstItemToken = fixture.Create<string>();
+            var expectedLastItemToken = fixture.Create<string>();
             var userAttributeFilter = new UserAttributeFilter { Name = "name" };
             var cursor = new Cursor<UserAttributeFilter>(0, userAttributeFilter);
-            SetUpPerformQueryMethod(userAttributes, expectedfirstItemToken, expectedlastItemToken);
+            SetUpPerformQueryMethod(userAttributes, expectedFirstItemToken, expectedLastItemToken);
 
             var (foundUserAttributes, firstItemToken, lastItemToken) = await repository.SearchAsync(cursor);
 
@@ -267,8 +266,8 @@ namespace Refinitiv.Aaa.GuissApi.Data.Tests.Repositories
             using (new AssertionScope())
             {
                 foundUserAttributes.Should().BeEquivalentTo(userAttributes);
-                firstItemToken.Should().BeEquivalentTo(expectedfirstItemToken);
-                lastItemToken.Should().BeEquivalentTo(expectedlastItemToken);
+                firstItemToken.Should().BeEquivalentTo(expectedFirstItemToken);
+                lastItemToken.Should().BeEquivalentTo(expectedLastItemToken);
             }
         }
 
@@ -276,15 +275,15 @@ namespace Refinitiv.Aaa.GuissApi.Data.Tests.Repositories
         public async Task SearchAsync_WhenFilteringByUserUuidAndNames_SuccessSearchWithUserUuidAndNamesFilter()
         {
             var userAttributes = fixture.CreateMany<UserAttributeDb>();
-            var expectedfirstItemToken = fixture.Create<string>();
-            var expectedlastItemToken = fixture.Create<string>();
+            var expectedFirstItemToken = fixture.Create<string>();
+            var expectedLastItemToken = fixture.Create<string>();
             var userAttributeFilter = new UserAttributeFilter
             {
                 UserUuid = "userUuid",
                 Names = new List<string> { "name1", "name2" }
             };
             var cursor = new Cursor<UserAttributeFilter>(0, userAttributeFilter);
-            SetUpPerformQueryMethod(userAttributes, expectedfirstItemToken, expectedlastItemToken);
+            SetUpPerformQueryMethod(userAttributes, expectedFirstItemToken, expectedLastItemToken);
 
             var (foundUserAttributes, firstItemToken, lastItemToken) = await repository.SearchAsync(cursor);
 
@@ -294,8 +293,8 @@ namespace Refinitiv.Aaa.GuissApi.Data.Tests.Repositories
             using (new AssertionScope())
             {
                 foundUserAttributes.Should().BeEquivalentTo(userAttributes);
-                firstItemToken.Should().BeEquivalentTo(expectedfirstItemToken);
-                lastItemToken.Should().BeEquivalentTo(expectedlastItemToken);
+                firstItemToken.Should().BeEquivalentTo(expectedFirstItemToken);
+                lastItemToken.Should().BeEquivalentTo(expectedLastItemToken);
             }
         }
 

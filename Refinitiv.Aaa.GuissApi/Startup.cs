@@ -40,7 +40,6 @@ namespace Refinitiv.Aaa.GuissApi
         private const string PaginationStoreHashPath = "ParameterStore:PaginationParameterStorePath";
         private const string UserApiBaseAddress = "AppSettings:Services:UserApi";
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
