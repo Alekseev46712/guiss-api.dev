@@ -11,5 +11,7 @@
         /// <value>The NameIndex.</value>
         public const string NameIndex = "Name-index";
 
+        public const string Namespace = "Namespace-index";
+
     }
 }

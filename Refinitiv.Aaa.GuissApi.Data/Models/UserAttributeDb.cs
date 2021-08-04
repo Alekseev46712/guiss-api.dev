@@ -25,6 +25,9 @@ namespace Refinitiv.Aaa.GuissApi.Data.Models
         [DynamoDBGlobalSecondaryIndexHashKey(IndexNames.NameIndex)]
         public string Name { get; set; }
 
+        [DynamoDBGlobalSecondaryIndexHashKey(IndexNames.Namespace)]
+        public string Namespace { get; set; }
+
         /// <summary>
         /// Gets or sets the user attribute name for case-independent searching.
         /// </summary>

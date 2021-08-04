@@ -15,7 +15,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Mapping
             .ForMember(dest => dest.SearchName, opt => opt.MapFrom(
                 src => string.IsNullOrEmpty(src.Name)
                 ? string.Empty
-                : src.Name.ToLower(CultureInfo.CurrentCulture)));
+                : src.Name.ToLower(CultureInfo.CurrentCulture)))
+            .ForMember(dest => dest.Namespace, opt => opt.MapFrom(src => src.Name == null ? null : src.Name.Split('.')[0]));
 
             CreateMap<UserAttributeDetails, UserAttribute>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name == null ? null : src.Name.ToLower(CultureInfo.CurrentCulture)))
