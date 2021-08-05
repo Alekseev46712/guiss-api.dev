@@ -58,11 +58,18 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         /// <inheritdoc/>
         public IActionResult ValidateAttributesString(string attributes)
         {
-            if (String.IsNullOrEmpty(attributes) || !attributes.Split(',').Any())
+            return InternalValidateCommaSeparatedString(attributes);
+        }
+
+        /// <inheritdoc/>
+        public IActionResult ValidateNamespacesString(string namespaces)
+        {
+            if (namespaces.Contains('.'))
             {
-                return new BadRequestObjectResult(new { Message = "The attributes string is null or empty" });
+                return new BadRequestObjectResult(new { Message = "The namespaces can't contain dots" });
             }
-            return new AcceptedResult();
+
+            return InternalValidateCommaSeparatedString(namespaces);
         }
 
         /// <inheritdoc/>
@@ -108,6 +115,15 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
                 return new NotFoundObjectResult(new { Message = "The User is not found" });
             }
             
+            return new AcceptedResult();
+        }
+
+        private IActionResult InternalValidateCommaSeparatedString(string str)
+        {
+            if (String.IsNullOrEmpty(str) || !str.Split(',').Any())
+            {
+                return new BadRequestObjectResult(new { Message = "The string is null or empty" });
+            }
             return new AcceptedResult();
         }
     }
