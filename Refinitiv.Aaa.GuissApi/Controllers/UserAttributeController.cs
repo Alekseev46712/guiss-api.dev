@@ -147,7 +147,6 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
 
             var result = await userAttributeHelper.GetAttributesByUserNamespacesAndUuidAsync(userUuid, namespaces);
             return Ok(result);
-
         }
 
         /// <summary>
