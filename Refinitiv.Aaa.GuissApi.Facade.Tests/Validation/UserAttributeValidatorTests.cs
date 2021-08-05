@@ -178,5 +178,33 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
 
             result.Should().BeOfType<AcceptedResult>();
         }
+
+        [Test]
+        public void ValidateNamespacesString_WhenNamespacesAreNull_ReturnBadRequestObjectResult()
+        {
+            var result = userAttributeValidator.ValidateNamespacesString(null);
+
+            result.Should().BeOfType<BadRequestObjectResult>();
+        }
+
+        [Test]
+        public void ValidateNamespacesString_WhenNamespacesContainDot_ReturnBadRequestObjectResult()
+        {
+            var invalidNamespaces = "Level1.level2";
+
+            var result = userAttributeValidator.ValidateNamespacesString(invalidNamespaces);
+
+            result.Should().BeOfType<BadRequestObjectResult>();
+        }
+
+        [Test]
+        public void ValidateNamespacesString_WhenValidationPassed_ReturnAcceptedResult()
+        {
+            var validNamespace = "Level1";
+
+            var result = userAttributeValidator.ValidateNamespacesString(validNamespace);
+
+            result.Should().BeOfType<AcceptedResult>();
+        }
     }
 }
