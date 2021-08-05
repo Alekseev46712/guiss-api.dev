@@ -35,7 +35,7 @@ resource "aws_dynamodb_table" "user-attributes" {
   }
   
   global_secondary_index {
-    name            = "NameSpace-index"
+    name            = "Namespace-index"
     hash_key        = "Namespace"
     write_capacity  = 10
     read_capacity   = 10
