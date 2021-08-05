@@ -66,6 +66,24 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             return InternalGetUserAttributesAsync(filter);
         }
 
+        /// <inheritdoc />
+        public Task<JObject> GetAttributesByUserNamespacesAndUuidAsync(string userUuid, string namespaces)
+        {
+            if (namespaces == null)
+            {
+                throw new ArgumentNullException(nameof(namespaces));
+            }
+
+            var namespacesList = namespaces.ToLower(CultureInfo.CurrentCulture).Split(',').ToList();
+            var filter = new UserAttributeFilter
+            {
+                UserUuid = userUuid,
+                Namespaces = namespacesList
+            };
+
+            return InternalGetUserAttributesAsync(filter);
+        }
+
         /// <summary>
         /// Get UserAttribute by UserUuid and Name
         /// </summary>

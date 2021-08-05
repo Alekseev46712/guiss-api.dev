@@ -26,6 +26,13 @@ namespace Refinitiv.Aaa.GuissApi.Data.Models
         public string Name { get; set; }
 
         /// <summary>
+        /// Gets or sets the user attribute namespace for case-independent searching.
+        /// </summary>
+        /// <value>The user attribute namespace converted to lower case.</value>
+        [DynamoDBGlobalSecondaryIndexHashKey(IndexNames.Namespace)]
+        public string Namespace { get; set; }
+
+        /// <summary>
         /// Gets or sets the user attribute name for case-independent searching.
         /// </summary>
         /// <value>The user attribute name converted to lower case.</value>

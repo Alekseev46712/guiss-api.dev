@@ -119,6 +119,37 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
         }
 
         /// <summary>
+        /// Gets list of selected attributes by namespaces registered for the specified user.
+        /// </summary>
+        /// <param name="userUuid">The uuid of the user.</param>
+        /// <param name="namespaces">The comma separated string of the selected namespaces.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpGet("userattribute/{userUuid}")]
+        [SwaggerResponse(StatusCodes.Status200OK, "Returns the list of the selected registered attributes")]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Bad Request, missing param")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "User with the specified Uuid not found")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetByNamespaces([Required] string userUuid, [FromQuery, Required] string namespaces)
+        {
+            var userValidationResult = await userAttributeValidator.ValidateUserUuidAsync(userUuid);
+
+            if (!(userValidationResult is AcceptedResult))
+            {
+                return userValidationResult;
+            }
+
+            var attributesValidationResult = userAttributeValidator.ValidateNamespacesString(namespaces);
+
+            if (!(attributesValidationResult is AcceptedResult))
+            {
+                return attributesValidationResult;
+            }
+
+            var result = await userAttributeHelper.GetAttributesByUserNamespacesAndUuidAsync(userUuid, namespaces);
+            return Ok(result);
+        }
+
+        /// <summary>
         /// Creates and updates user attributes
         /// </summary>
         /// <param name="details">The uuid of the user.</param>

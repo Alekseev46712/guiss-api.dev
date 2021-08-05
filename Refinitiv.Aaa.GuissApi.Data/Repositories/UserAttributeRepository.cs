@@ -231,7 +231,14 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
                     ScanOperator.In,
                     userAttributeFilter.Names.Select(n => new AttributeValue(n.ToLower(CultureInfo.CurrentCulture))).ToList());
             }
-            
+
+            if (userAttributeFilter.Namespaces != null && userAttributeFilter.Namespaces.Any())
+            {
+                queryFilter.AddCondition(UserAttributeNames.Namespace,
+                    ScanOperator.In,
+                    userAttributeFilter.Namespaces.Select(n => new AttributeValue(n.ToLower(CultureInfo.CurrentCulture))).ToList());
+            }
+
             return queryFilter;
         }
 

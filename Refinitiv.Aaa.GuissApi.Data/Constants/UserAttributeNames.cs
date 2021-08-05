@@ -23,5 +23,10 @@ namespace Refinitiv.Aaa.GuissApi.Data.Constants
         /// The SearchName attribute.
         /// </summary>
         public const string SearchName = nameof(UserAttributeDb.SearchName);
+
+        /// <summary>
+        /// The Namespace attribute.
+        /// </summary>
+        public const string Namespace = nameof(UserAttributeDb.Namespace);
     }
 }

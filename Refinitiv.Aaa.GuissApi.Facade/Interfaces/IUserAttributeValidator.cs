@@ -44,5 +44,12 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <param name="name"></param>
         /// <returns></returns>
         Task<IActionResult> ValidateUserAttributesAsync(string userUuid, string name);
+
+        /// <summary>
+        /// Checks if namespaces string contains any comma separated values
+        /// </summary>
+        /// <param name="namespaces"></param>
+        /// <returns></returns>
+        IActionResult ValidateNamespacesString(string namespaces);
     }
 }

@@ -22,5 +22,11 @@ namespace Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute
         /// </summary>
         /// <value>The Names.</value>
         public List<string> Names { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Namespaces for filtering by them.
+        /// </summary>
+        /// <value>The Names.</value>
+        public List<string> Namespaces { get; set; }
     }
 }
