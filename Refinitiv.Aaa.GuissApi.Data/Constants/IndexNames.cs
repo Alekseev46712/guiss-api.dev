@@ -16,6 +16,5 @@
         /// </summary>
         /// <value>The NamespaceIndex.</value>
         public const string Namespace = "Namespace-index";
-
     }
 }
