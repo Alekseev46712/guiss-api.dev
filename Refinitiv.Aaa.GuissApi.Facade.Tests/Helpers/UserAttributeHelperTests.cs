@@ -174,5 +174,31 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
 
             userAttributeRepository.VerifyAll();
         }
+
+        [Test]
+        public async Task GetAttributesByUserNamespacesAndUuidAsync_OnNullNamespaces_ShouldThrowArgumentNullException()
+        {
+            var userUuid = fixture.Create<string>();
+            Func<Task> act = async () => await userAttributeHelper.GetAttributesByUserNamespacesAndUuidAsync(userUuid, null);
+            await act.Should().ThrowAsync<ArgumentNullException>();
+        }
+
+        [Test]
+        public async Task GetAttributesByUserNamespacesAndUuidAsync_ShouldCallSearchAsyncWithUserUuidFilterAndReturnJObject()
+        {
+            var attributes = fixture.CreateMany<UserAttributeDb>();
+            var userUuid = fixture.Create<string>();
+            var attributesNamespaces = "one,two,three";
+
+            userAttributeRepository.Setup(x =>
+                    x.SearchAsync(It.IsAny<UserAttributeFilter>()))
+                .ReturnsAsync(attributes);
+
+            var result = await userAttributeHelper.GetAttributesByUserNamespacesAndUuidAsync(userUuid, attributesNamespaces);
+
+            userAttributeRepository.VerifyAll();
+
+            result.Should().BeOfType<JObject>("because a result is always returned");
+        }
     }
 }

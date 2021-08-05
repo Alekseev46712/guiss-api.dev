@@ -106,6 +106,54 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
             result.Should().BeOfType<BadRequestObjectResult>();
         }
 
+        [Test]
+        public async Task GetByNamespaces_OnUserNotFound_ShouldReturnNotFound()
+        {
+            var userUuid = fixture.Create<string>();
+            var attributes = fixture.Create<string>();
+
+            userAttributeValidator.Setup(u => u.ValidateUserUuidAsync(userUuid)).ReturnsAsync(new NotFoundObjectResult(new { Message = "The User is not found" }));
+
+            var result = await userAttributeController.GetByNamespaces(userUuid, attributes);
+
+            result.Should().BeOfType<NotFoundObjectResult>();
+        }
+
+        [Test]
+        public async Task GetByNamespaces_OnNoNamespaces_ShouldReturnBadRequest()
+        {
+            var userUuid = fixture.Create<string>();
+            string namespaces = ",";
+
+            userAttributeValidator.Setup(u => u.ValidateUserUuidAsync(userUuid)).ReturnsAsync(new AcceptedResult());
+            userAttributeValidator.Setup(u => u.ValidateNamespacesString(namespaces)).Returns(new BadRequestObjectResult("test"));
+
+            var result = await userAttributeController.GetByNamespaces(userUuid, namespaces);
+
+            result.Should().BeOfType<BadRequestObjectResult>();
+        }
+
+        [Test]
+        public async Task GetByNamespaces_ShouldCallGetAttributesByNamespacesAndUuidAsyncAndReturnJObject()
+        {
+            var jsonData = fixture.Create<JObject>();
+            var userUuid = fixture.Create<string>();
+            var namespaces = fixture.Create<string>();
+
+            userAttributeValidator.Setup(u => u.ValidateUserUuidAsync(userUuid)).ReturnsAsync(new AcceptedResult());
+            userAttributeValidator.Setup(u => u.ValidateNamespacesString(namespaces)).Returns(new AcceptedResult());
+
+            userAttributeHelper.Setup(g => g.GetAttributesByUserNamespacesAndUuidAsync(userUuid, namespaces))
+                .ReturnsAsync(jsonData);
+
+            var result = await userAttributeController.GetByNamespaces(userUuid, namespaces);
+            userAttributeHelper.VerifyAll();
+
+            result.Should().BeOfType<OkObjectResult>("because a result is always returned")
+                .Which.Value
+                .Should().BeEquivalentTo(jsonData);
+        }
+
         #endregion
 
         #region Put
