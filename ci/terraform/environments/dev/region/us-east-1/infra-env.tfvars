@@ -47,10 +47,12 @@ db_range_key      = "Name"
 db_encryption     = true
 db_attributes = [
     { name = "UserUuid", type = "S" },
-    { name = "Name", type = "S" }
+    { name = "Name", type = "S" },
+    { name = "Namespace", type = "S" }
   ]
 db_global_secondary_indexes = [
-    { name = "Name-index", hash_key = "Name", write_capacity = 0, read_capacity = 0, projection_type = "ALL" }
+    { name = "Name-index", hash_key = "Name", write_capacity = 0, read_capacity = 0, projection_type = "ALL" },
+    { name = "Namespace-index", hash_key = "Namespace", write_capacity = 0, read_capacity = 0, projection_type = "ALL" }
   ]
 
 # Route53
