@@ -64,12 +64,14 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         /// <inheritdoc/>
         public IActionResult ValidateNamespacesString(string namespaces)
         {
+            var validationResult = InternalValidateCommaSeparatedString(namespaces);
+
             if (namespaces.Contains('.'))
             {
                 return new BadRequestObjectResult(new { Message = "The namespaces can't contain dots" });
             }
 
-            return InternalValidateCommaSeparatedString(namespaces);
+            return validationResult;
         }
 
         /// <inheritdoc/>
