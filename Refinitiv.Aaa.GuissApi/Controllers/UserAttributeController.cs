@@ -138,7 +138,7 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
                 return userValidationResult;
             }
 
-            var attributesValidationResult = userAttributeValidator.ValidateAttributesString(namespaces);
+            var attributesValidationResult = userAttributeValidator.ValidateNamespacesString(namespaces);
 
             if (!(attributesValidationResult is AcceptedResult))
             {
