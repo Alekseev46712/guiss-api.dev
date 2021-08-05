@@ -188,13 +188,13 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         {
             var attributes = fixture.CreateMany<UserAttributeDb>();
             var userUuid = fixture.Create<string>();
-            var attributesNames = "one,two,three";
+            var attributesNamespaces = "one,two,three";
 
             userAttributeRepository.Setup(x =>
                     x.SearchAsync(It.IsAny<UserAttributeFilter>()))
                 .ReturnsAsync(attributes);
 
-            var result = await userAttributeHelper.GetAttributesByUserNamespacesAndUuidAsync(userUuid, attributesNames);
+            var result = await userAttributeHelper.GetAttributesByUserNamespacesAndUuidAsync(userUuid, attributesNamespaces);
 
             userAttributeRepository.VerifyAll();
 
