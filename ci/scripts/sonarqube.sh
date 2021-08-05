@@ -17,7 +17,7 @@ dotnet restore
 dotnet build --configuration Release
 dotnet test \
   /p:CollectCoverage=true \
-  /p:CoverletOutput=CoverageResults \
+  /p:CoverletOutput=CoverageResults/ \
   /p:CoverletOutputFormat=opencover --configuration Release -l:trx \
   /p:LogFileName=TestResults.trx --filter 'TestCategory!=Integration' --no-build -maxcpucount:1 \
   /p:exclude=[*]*Startup
