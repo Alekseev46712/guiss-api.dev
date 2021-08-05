@@ -66,6 +66,10 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         {
             var validationResult = InternalValidateCommaSeparatedString(namespaces);
 
+            if (!(validationResult is AcceptedResult))
+            {
+                return validationResult;
+            }
             if (namespaces.Contains('.'))
             {
                 return new BadRequestObjectResult(new { Message = "The namespaces can't contain dots" });
