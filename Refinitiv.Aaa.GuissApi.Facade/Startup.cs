@@ -44,6 +44,12 @@ namespace Refinitiv.Aaa.GuissApi.Facade
                 .AddScoped<IUserAttributeHelper, UserAttributeHelper>()
                 .AddScoped<IUserAttributeValidator, UserAttributeValidator>()
                 .AddScoped<IUserHelper, UserHelper>()
+                .AddScoped<IDynamoDbUserAttributeAccessor, DynamoDbUserAttributeAccessor>()
+                .AddScoped<IUserApiAttributeAccessor, UserApiAttributeAccessor>()
+                .AddScoped<IUserAttributeAccessorHelper, UserAttributeAccessorHelper>()
+                .AddScoped<IUserAttributeProvider, UserAttributeProvider>()
+                .AddScoped<DynamoDbUserAttributeAccessor>()
+                .AddScoped<UserApiAttributeAccessor>()
                 .ConfigureDatabase(configuration)
                 .ConfigureAwsMessageBus(configuration);
 

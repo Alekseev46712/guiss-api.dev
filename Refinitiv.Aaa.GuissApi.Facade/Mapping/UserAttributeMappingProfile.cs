@@ -22,6 +22,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Mapping
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name == null ? null : src.Name.ToLower(CultureInfo.CurrentCulture)))
                 .ForMember(dest => dest.UserUuid, opt => opt.MapFrom(src => src.UserUuid == null ? null : src.UserUuid.ToLower(CultureInfo.CurrentCulture)))
             .ReverseMap();
+
+            CreateMap<UserAttributeDb, UserAttributeDetails>();
         }
     }
 }

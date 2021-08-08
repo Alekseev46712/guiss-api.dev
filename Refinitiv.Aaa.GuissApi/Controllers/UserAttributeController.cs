@@ -52,8 +52,15 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
         [HttpGet("getfulluserprofile")]
         [SwaggerResponse(StatusCodes.Status200OK, "Returns the full list of the registered attributes")]
         [SwaggerResponse(StatusCodes.Status500InternalServerError)]
-        public async Task<OkObjectResult> Get([FromQuery, Required] string userUuid)
+        public async Task<IActionResult> Get([FromQuery, Required] string userUuid)
         {
+            var validationResult = await userAttributeValidator.ValidateUserUuidAsync(userUuid);
+
+            if (!(validationResult is AcceptedResult))
+            {
+                return validationResult;
+            }
+
             var result = await userAttributeHelper.GetAllByUserUuidAsync(userUuid);
 
             return Ok(result);

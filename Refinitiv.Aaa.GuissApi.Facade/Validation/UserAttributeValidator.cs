@@ -24,7 +24,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         /// <param name="userHelper">User Helper.</param>
         /// <param name="userAttributeRepository">User Attribute Repository.</param>
         /// <param name="mapper">Automapper.</param>
-        public UserAttributeValidator(IUserHelper userHelper,
+        public UserAttributeValidator(
+            IUserHelper userHelper,
             IUserAttributeRepository userAttributeRepository,
             IMapper mapper)
         {

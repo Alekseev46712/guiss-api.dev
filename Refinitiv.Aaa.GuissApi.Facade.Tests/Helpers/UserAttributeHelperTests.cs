@@ -12,6 +12,7 @@ using System;
 using System.Threading.Tasks;
 using AutoFixture;
 using Newtonsoft.Json.Linq;
+using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
 {
@@ -22,6 +23,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         private UserAttributeHelper userAttributeHelper;
         private Mock<IUserAttributeRepository> userAttributeRepository;
         private Mock<IAaaRequestHeaders> aaaRequestHeaders;
+        private Mock<IUserAttributeProvider> userAttributeProvider;
         private IMapper mapper;
 
         [SetUp]
@@ -35,11 +37,13 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
             mapper = mappingConfig.CreateMapper();
             userAttributeRepository = new Mock<IUserAttributeRepository>();
             aaaRequestHeaders = new Mock<IAaaRequestHeaders>();
+            userAttributeProvider = new Mock<IUserAttributeProvider>();
 
             userAttributeHelper = new UserAttributeHelper(
                 userAttributeRepository.Object,
                 mapper,
-                aaaRequestHeaders.Object
+                aaaRequestHeaders.Object,
+                userAttributeProvider.Object
                 );
         }
 

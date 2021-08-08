@@ -20,6 +20,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         private readonly IUserAttributeRepository userAttributeRepository;
         private readonly IMapper mapper;
         private readonly IAaaRequestHeaders aaaRequestHeaders;
+        private readonly IUserAttributeProvider userAttributeProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AppAccountHelper"/> class.
@@ -27,29 +28,30 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         /// <param name="userAttributeRepository">Repository used to access the data.</param>
         /// <param name="mapper">Automapper.</param>
         /// <param name="aaaRequestHeaders">Request headers.</param>
+        /// <param name="userAttributeProvider"></param>
         public UserAttributeHelper(
             IUserAttributeRepository userAttributeRepository,
             IMapper mapper,
-            IAaaRequestHeaders aaaRequestHeaders)
+            IAaaRequestHeaders aaaRequestHeaders,
+            IUserAttributeProvider userAttributeProvider)
         {
             this.userAttributeRepository = userAttributeRepository;
             this.mapper = mapper;
             this.aaaRequestHeaders = aaaRequestHeaders;
+            this.userAttributeProvider = userAttributeProvider;
         }
 
         /// <inheritdoc />
-        public Task<JObject> GetAllByUserUuidAsync(string userUuid)
+        public async Task<JObject> GetAllByUserUuidAsync(string userUuid)
         {
-            var filter = new UserAttributeFilter
-            {
-                UserUuid = userUuid
-            };
+            var userAttributes = await userAttributeProvider.GetUserAttributesAsync(userUuid);
+            var result =  GetJsonObject(userAttributes);
 
-            return InternalGetUserAttributesAsync(filter);
+            return result;
         }
 
         /// <inheritdoc />
-        public Task<JObject> GetAttributesByUserUuidAsync(string userUuid, string attributes)
+        public async Task<JObject> GetAttributesByUserUuidAsync(string userUuid, string attributes)
         {
             if (attributes == null)
             {
@@ -57,17 +59,15 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             }
 
             var attributesList = attributes.ToLower(CultureInfo.CurrentCulture).Split(',').ToList();
-            var filter = new UserAttributeFilter
-            {
-                UserUuid = userUuid,
-                Names = attributesList
-            };
 
-            return InternalGetUserAttributesAsync(filter);
+            var userAttributes = await userAttributeProvider.GetUserAttributesAsync(userUuid, attributesList);
+            var result = GetJsonObject(userAttributes);
+
+            return result;
         }
 
         /// <inheritdoc />
-        public Task<JObject> GetAttributesByUserNamespacesAndUuidAsync(string userUuid, string namespaces)
+        public async Task<JObject> GetAttributesByUserNamespacesAndUuidAsync(string userUuid, string namespaces)
         {
             if (namespaces == null)
             {
@@ -81,7 +81,11 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
                 Namespaces = namespacesList
             };
 
-            return InternalGetUserAttributesAsync(filter);
+            var userAttributesDb = await userAttributeRepository.SearchAsync(filter);
+            var userAttributesDetails = mapper.Map<IEnumerable<UserAttributeDetails>>(userAttributesDb);
+            var result = GetJsonObject(userAttributesDetails);
+
+            return result;
         }
 
         /// <inheritdoc />
@@ -164,12 +168,10 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             return userAttribute;
         }
 
-        private async Task<JObject> InternalGetUserAttributesAsync(UserAttributeFilter filter)
+        private JObject GetJsonObject(IEnumerable<UserAttributeDetails> userAttributeDetails)
         {
-            var items = await userAttributeRepository.SearchAsync(filter);
-
-            var dataToParse = items.
-                Select(x => new KeyValuePair<string, string>(x.Name, x.Value))
+            var dataToParse = userAttributeDetails
+                .Select(x => new KeyValuePair<string, string>(x.Name, x.Value))
                 .ToList();
 
             var result = NodeProcessor.BuildJsonObject(dataToParse);
