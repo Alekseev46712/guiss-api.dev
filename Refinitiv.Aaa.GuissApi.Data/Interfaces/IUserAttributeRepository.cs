@@ -20,6 +20,13 @@ namespace Refinitiv.Aaa.GuissApi.Data.Interfaces
         Task<UserAttributeDb> FindByUserUuidAndNameAsync(string userUuid, string name);
 
         /// <summary>
+        /// Get the specified user attribute item by UserUuid
+        /// </summary>
+        /// <param name="userUuid">UserUuid of the item to find.</param>
+        /// <returns></returns>
+        Task<IEnumerable<UserAttributeDb>> FindByUserUuidAsync(string userUuid);
+
+        /// <summary>
         /// Search for the UserAttributes by specified filter.
         /// </summary>
         /// <param name="filter"></param>

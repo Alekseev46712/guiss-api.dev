@@ -120,6 +120,14 @@ namespace Refinitiv.Aaa.GuissApi.Data.Tests.Repositories
                 .Should().Throw<AmazonDynamoDBException>();
         }
 
+        [Test]
+        public void FindByUserUuidAsync_WhenUserUuidIsNull_ShouldThrowArgumentNullException()
+        {
+            repository.Awaiting(r => r.FindByUserUuidAsync(null))
+                .Should().Throw<ArgumentNullException>()
+                .Which.ParamName.Should().Be("userUuid");
+        }
+
         #endregion
 
         #region SearchAsync(UserAttributeFilter filter)

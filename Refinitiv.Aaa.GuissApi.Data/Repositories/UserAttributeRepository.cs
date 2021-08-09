@@ -48,6 +48,17 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
         }
 
         /// <inheritdoc />
+        public Task<IEnumerable<UserAttributeDb>> FindByUserUuidAsync(string userUuid)
+        {
+            if (userUuid == null)
+            {
+                throw new ArgumentNullException(nameof(userUuid));
+            }
+
+            return GetUserAttributeByUuidAsync(userUuid);
+        }
+
+        /// <inheritdoc />
         public Task<UserAttributeDb> FindByUserUuidAndNameAsync(string userUuid, string name)
         {
             if (userUuid == null)
@@ -151,6 +162,23 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
             catch (AmazonDynamoDBException ex)
             {
                 logger.LogError(ex, $"{nameof(GetUserAttributeAsync)}: An exception has occurred while get UserAttribute with userUuid {userUuid} and name {name}.");
+                throw;
+            }
+        }
+
+        private async Task<IEnumerable<UserAttributeDb>> GetUserAttributeByUuidAsync(string userUuid)
+        {
+            try
+            {
+                var filter = new UserAttributeFilter
+                {
+                    UserUuid = userUuid
+                };
+                return await SearchAsync(filter);
+            }
+            catch (AmazonDynamoDBException ex)
+            {
+                logger.LogError(ex, $"{nameof(GetUserAttributeByUuidAsync)}: An exception has occurred while get UserAttribute with userUuid {userUuid}.");
                 throw;
             }
         }
