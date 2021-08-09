@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Refinitiv.Aaa.Foundation.ApiClient.Core.Models.User;
 using Refinitiv.Aaa.Foundation.ApiClient.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Models;
@@ -115,7 +116,16 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
 
         private async Task<IActionResult> InternalValidateUserUuidAsync(string userUuid)
         {
-            var exsistingFromUsersApi = await userHelper.GetUserByUuidAsync(userUuid);
+            UserResponse exsistingFromUsersApi;
+            try
+            {
+                exsistingFromUsersApi = await userHelper.GetUserByUuidAsync(userUuid);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(new { ex.Message });
+            }
+
             if (exsistingFromUsersApi == null)
             {
                 return new NotFoundObjectResult(new { Message = "The User is not found" });

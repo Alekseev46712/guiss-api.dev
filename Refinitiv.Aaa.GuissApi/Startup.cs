@@ -22,6 +22,7 @@ using Refinitiv.Aaa.Foundation.ApiClient.Constants;
 using System;
 using Refinitiv.Aaa.GuissApi.Middlewares;
 using Refinitiv.Aaa.GuissApi.Facade.Helpers;
+using Refinitiv.Aaa.Foundation.ApiClient.Helpers;
 
 namespace Refinitiv.Aaa.GuissApi
 {
@@ -85,7 +86,7 @@ namespace Refinitiv.Aaa.GuissApi
             services.AddHttpClient(ServiceNames.UserApi, c =>
             {
                 c.BaseAddress = new Uri(configuration[UserApiBaseAddress]);
-            }).AddHttpMessageHandler<GuissDelegatingHandler>();
+            }).AddHttpMessageHandler<ErrorHandlingDelegatingHandler>();
 
             if (environment.IsDevelopment())
             {
