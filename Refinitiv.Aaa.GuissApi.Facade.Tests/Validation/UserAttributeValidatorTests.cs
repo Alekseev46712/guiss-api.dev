@@ -11,6 +11,7 @@ using Refinitiv.Aaa.GuissApi.Facade.Mapping;
 using Refinitiv.Aaa.GuissApi.Facade.Validation;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
@@ -61,6 +62,16 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
             userHelper.Setup(h => h.GetUserByUuidAsync(It.IsAny<string>())).ReturnsAsync(userResponse);
             var result = await userAttributeValidator.ValidateUserUuidAsync(uuid);
             result.Should().BeOfType<AcceptedResult>();
+        }
+
+        [Test]
+        public async Task ValidateUserUuidAsyncReturnsBadRequestObjectResultIfRequestFailed()
+        {
+            var uuid = "test";
+
+            userHelper.Setup(h => h.GetUserByUuidAsync(It.IsAny<string>())).Throws(new HttpRequestException("Name or service not known"));
+            var result = await userAttributeValidator.ValidateUserUuidAsync(uuid);
+            result.Should().BeOfType<BadRequestObjectResult>();
         }
 
         [Test]
