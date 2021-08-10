@@ -8,6 +8,7 @@ using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Validation
@@ -121,9 +122,9 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
             {
                 exsistingFromUsersApi = await userHelper.GetUserByUuidAsync(userUuid);
             }
-            catch (Exception ex)
+            catch (HttpRequestException ex)
             {
-                return new BadRequestObjectResult(new { ex.Message });
+                return new BadRequestObjectResult(new { Message = "Failed to request users-api, service unavailable" });
             }
 
             if (exsistingFromUsersApi == null)
