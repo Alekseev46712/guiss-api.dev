@@ -8,7 +8,7 @@ using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 {
     /// <inheritdoc />
-    public class DynamoDbUserAttributeAccessor : IDynamoDbUserAttributeAccessor
+    public class DynamoDbUserAttributeAccessor : IUserAttributeAccessor
     {
         private readonly IUserAttributeRepository userAttributeRepository;
         private readonly IMapper mapper;

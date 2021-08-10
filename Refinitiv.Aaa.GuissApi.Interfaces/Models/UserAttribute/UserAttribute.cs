@@ -16,7 +16,7 @@ namespace Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute
         /// <summary>
         /// Gets or sets the date and time when the UserAttribute was last modified.
         /// </summary>
-        /// <value>The date and time when the UserAttribute was last modified.</value
+        /// <value>The date and time when the UserAttribute was last modified.</value>
         public DateTimeOffset UpdatedOn { get; set; }
 
         /// <summary>
