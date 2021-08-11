@@ -117,15 +117,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
 
         private async Task<IActionResult> InternalValidateUserUuidAsync(string userUuid)
         {
-            UserResponse exsistingFromUsersApi;
-            try
-            {
-                exsistingFromUsersApi = await userHelper.GetUserByUuidAsync(userUuid);
-            }
-            catch (HttpRequestException ex)
-            {
-                return new BadRequestObjectResult(new { Message = "Failed to request users-api, service unavailable" });
-            }
+            var exsistingFromUsersApi = await userHelper.GetUserByUuidAsync(userUuid);
 
             if (exsistingFromUsersApi == null)
             {

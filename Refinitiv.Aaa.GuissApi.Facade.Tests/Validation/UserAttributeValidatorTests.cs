@@ -65,16 +65,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
         }
 
         [Test]
-        public async Task ValidateUserUuidAsyncReturnsBadRequestObjectResultIfRequestFailed()
-        {
-            var uuid = "test";
-
-            userHelper.Setup(h => h.GetUserByUuidAsync(It.IsAny<string>())).Throws(new HttpRequestException("Name or service not known"));
-            var result = await userAttributeValidator.ValidateUserUuidAsync(uuid);
-            result.Should().BeOfType<BadRequestObjectResult>();
-        }
-
-        [Test]
         public async Task ValidateUserUuidAsyncReturnsBadRequestObjectResultIfUuidIsNull()
         {
             var result = await userAttributeValidator.ValidateUserUuidAsync(null);

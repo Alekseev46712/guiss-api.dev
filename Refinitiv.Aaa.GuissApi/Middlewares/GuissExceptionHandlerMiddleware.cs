@@ -7,6 +7,7 @@ using Refinitiv.Aaa.GuissApi.Facade.Exceptions;
 using System;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -19,6 +20,8 @@ namespace Refinitiv.Aaa.GuissApi.Middlewares
     {
         private readonly RequestDelegate next;
         private readonly ILogger<GuissExceptionHandlerMiddleware> logger;
+
+        private const string FAILED_TO_REQUEST_MESSAGE = "Failed to request external service";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GuissExceptionHandlerMiddleware" /> class.
@@ -46,30 +49,34 @@ namespace Refinitiv.Aaa.GuissApi.Middlewares
             }
             catch (ArgumentException ex)
             {
-                await ProcessDefaultErrorAsync(context, ex, HttpStatusCode.BadRequest);
+                await ProcessDefaultErrorAsync(context, ex, ex.Message, HttpStatusCode.BadRequest);
             }
             catch (InvalidPaginationTokenException ex)
             {
-                await ProcessDefaultErrorAsync(context, ex, HttpStatusCode.BadRequest);
+                await ProcessDefaultErrorAsync(context, ex, ex.Message, HttpStatusCode.BadRequest);
             }
             catch (InvalidHttpResponseException ex)
             {
                 if (ex.StatusCode == HttpStatusCode.Forbidden)
                 {
-                    await ProcessDefaultErrorAsync(context, ex, HttpStatusCode.Forbidden);
+                    await ProcessDefaultErrorAsync(context, ex, ex.Message, HttpStatusCode.Forbidden);
                     return;
                 }
-                await ProcessDefaultErrorAsync(context, ex, HttpStatusCode.InternalServerError);
+                await ProcessDefaultErrorAsync(context, ex, ex.Message, HttpStatusCode.InternalServerError);
+            }
+            catch (HttpRequestException ex)
+            {
+                await ProcessDefaultErrorAsync(context, ex, FAILED_TO_REQUEST_MESSAGE, HttpStatusCode.BadRequest);
             }
         }
 
-        private async Task ProcessDefaultErrorAsync(HttpContext httpContext, Exception exception, HttpStatusCode statusCode)
+        private async Task ProcessDefaultErrorAsync(HttpContext httpContext, Exception exception, string message, HttpStatusCode statusCode)
         {
             logger.LogError(exception, exception.Message);
-            await WriteErrorResponseAsync(httpContext, exception, statusCode);
+            await WriteErrorResponseAsync(httpContext, message, statusCode);
         }
 
-        private async Task WriteErrorResponseAsync(HttpContext httpContext, Exception exception, HttpStatusCode statusCode)
+        private async Task WriteErrorResponseAsync(HttpContext httpContext, string message, HttpStatusCode statusCode)
         {
             httpContext.Response.ContentType = MimeTypeNames.Application.ProblemJson;
             httpContext.Response.StatusCode = (int)statusCode;
@@ -77,7 +84,7 @@ namespace Refinitiv.Aaa.GuissApi.Middlewares
             var problem = new ProblemDetails
             {
                 Status = (int)statusCode,
-                Title = exception.Message
+                Title = message
             };
 
             var traceId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
