@@ -21,7 +21,7 @@ namespace Refinitiv.Aaa.GuissApi.Middlewares
         private readonly RequestDelegate next;
         private readonly ILogger<GuissExceptionHandlerMiddleware> logger;
 
-        private const string FAILED_TO_REQUEST_MESSAGE = "Failed to request external service";
+        private const string FailedToRequestMessage = "Failed to request external service";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GuissExceptionHandlerMiddleware" /> class.
@@ -66,7 +66,7 @@ namespace Refinitiv.Aaa.GuissApi.Middlewares
             }
             catch (HttpRequestException ex)
             {
-                await ProcessDefaultErrorAsync(context, ex, FAILED_TO_REQUEST_MESSAGE, HttpStatusCode.BadRequest);
+                await ProcessDefaultErrorAsync(context, ex, FailedToRequestMessage, HttpStatusCode.BadRequest);
             }
         }
 
