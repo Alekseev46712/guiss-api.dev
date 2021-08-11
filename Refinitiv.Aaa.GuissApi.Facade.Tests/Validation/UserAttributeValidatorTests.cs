@@ -11,6 +11,7 @@ using Refinitiv.Aaa.GuissApi.Facade.Mapping;
 using Refinitiv.Aaa.GuissApi.Facade.Validation;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
