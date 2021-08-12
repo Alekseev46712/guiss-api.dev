@@ -51,41 +51,51 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         /// <inheritdoc />
-        public async Task<JObject> GetAttributesByUserUuidAsync(string userUuid, string attributes)
+        public Task<JObject> GetAttributesByUserUuidAsync(string userUuid, string attributes)
         {
             if (attributes == null)
             {
                 throw new ArgumentNullException(nameof(attributes));
             }
 
-            var attributesList = attributes.ToLower(CultureInfo.CurrentCulture).Split(',').ToList();
+            return PerformGetAttributesByUserUuidAsync();
 
-            var userAttributes = await userAttributeProvider.GetUserAttributesAsync(userUuid, attributesList);
-            var result = GetJsonObject(userAttributes);
+            async Task<JObject> PerformGetAttributesByUserUuidAsync()
+            {
+                var attributesList = attributes.ToLower(CultureInfo.CurrentCulture).Split(',').ToList();
 
-            return result;
+                var userAttributes = await userAttributeProvider.GetUserAttributesAsync(userUuid, attributesList);
+                var result = GetJsonObject(userAttributes);
+
+                return result;
+            }
         }
 
         /// <inheritdoc />
-        public async Task<JObject> GetAttributesByUserNamespacesAndUuidAsync(string userUuid, string namespaces)
+        public Task<JObject> GetAttributesByUserNamespacesAndUuidAsync(string userUuid, string namespaces)
         {
             if (namespaces == null)
             {
                 throw new ArgumentNullException(nameof(namespaces));
             }
 
-            var namespacesList = namespaces.ToLower(CultureInfo.CurrentCulture).Split(',').ToList();
-            var filter = new UserAttributeFilter
+            return PerformGetAttributesByUserNamespacesAndUuidAsync();
+
+            async Task<JObject> PerformGetAttributesByUserNamespacesAndUuidAsync()
             {
-                UserUuid = userUuid,
-                Namespaces = namespacesList
-            };
+                var namespacesList = namespaces.ToLower(CultureInfo.CurrentCulture).Split(',').ToList();
+                var filter = new UserAttributeFilter
+                {
+                    UserUuid = userUuid,
+                    Namespaces = namespacesList
+                };
 
-            var userAttributesDb = await userAttributeRepository.SearchAsync(filter);
-            var userAttributesDetails = mapper.Map<IEnumerable<UserAttributeDetails>>(userAttributesDb);
-            var result = GetJsonObject(userAttributesDetails);
+                var userAttributesDb = await userAttributeRepository.SearchAsync(filter);
+                var userAttributesDetails = mapper.Map<IEnumerable<UserAttributeDetails>>(userAttributesDb);
+                var result = GetJsonObject(userAttributesDetails);
 
-            return result;
+                return result;
+            }
         }
 
         /// <inheritdoc />
