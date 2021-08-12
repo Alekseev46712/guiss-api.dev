@@ -6,7 +6,7 @@ resource "aws_ssm_parameter" "string" {
   for_each = toset(var.params)
 
   name     = "/a${var.asset_id}/${var.name_suffix}/${each.value}"
-  valu     = "changeme"
+  value    = "changeme"
   type     = "String"
   tags     = local.tags
 

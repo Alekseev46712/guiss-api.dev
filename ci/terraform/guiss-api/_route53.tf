@@ -7,6 +7,7 @@ module "route53_record" {
   alias_zone_id  = module.api_gateway.custom_domain_id
 }
 
+
 # Variables
 variable "route53_domain" {
   type = string
