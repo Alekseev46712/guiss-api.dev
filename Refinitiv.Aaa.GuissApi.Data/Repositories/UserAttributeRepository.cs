@@ -155,23 +155,6 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
             }
         }
 
-        private async Task<IEnumerable<UserAttributeDb>> GetUserAttributeByUuidAsync(string userUuid)
-        {
-            try
-            {
-                var filter = new UserAttributeFilter
-                {
-                    UserUuid = userUuid
-                };
-                return await SearchAsync(filter);
-            }
-            catch (AmazonDynamoDBException ex)
-            {
-                logger.LogError(ex, $"{nameof(GetUserAttributeByUuidAsync)}: An exception has occurred while get UserAttribute with userUuid {userUuid}.");
-                throw;
-            }
-        }
-
         private async Task<UserAttributeDb> PerformSaveAsync(UserAttributeDb item)
         {
             try

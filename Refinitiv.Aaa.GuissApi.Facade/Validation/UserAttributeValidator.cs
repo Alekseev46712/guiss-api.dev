@@ -92,10 +92,10 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         /// <inheritdoc/>
         public async Task<IActionResult> ValidateUserAttributesAsync(string userUuid, string name)
         {
-            var exsistingUsers = await userHelper.GetUserByUuidAsync(userUuid);
-            if (exsistingUsers == null)
+            var userValidationResult = await InternalValidateUserUuidAsync(userUuid);
+            if (!(userValidationResult is AcceptedResult))
             {
-                return new NotFoundObjectResult(new { Message = "The User is not found" });
+                return userValidationResult;
             }
 
             var exsistingFromUsersApi = await userAttributeRepository.FindByUserUuidAndNameAsync(userUuid, name);
