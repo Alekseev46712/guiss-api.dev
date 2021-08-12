@@ -29,7 +29,9 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<UserAttributeDetails>> GetUserAttributesAsync(string userUuid, IEnumerable<string> attributeNames)
+        public async Task<IEnumerable<UserAttributeDetails>> GetUserAttributesAsync(
+            string userUuid,
+            IEnumerable<string> attributeNames)
         {
             var accessorsWithAttributes = accessorsHelper.GetAccessorsWithAttributes(attributeNames);
             var attributeDetails = await GetUserAttributesAsync(userUuid, accessorsWithAttributes);
@@ -37,7 +39,9 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             return attributeDetails;
         }
 
-        private async Task<IEnumerable<UserAttributeDetails>> GetUserAttributesAsync(string userUuid, Dictionary<IUserAttributeAccessor, IEnumerable<string>> accessorsWithAttributes)
+        private async Task<IEnumerable<UserAttributeDetails>> GetUserAttributesAsync(
+            string userUuid,
+            Dictionary<IUserAttributeAccessor, List<string>> accessorsWithAttributes)
         {
             var result = new List<UserAttributeDetails>();
 

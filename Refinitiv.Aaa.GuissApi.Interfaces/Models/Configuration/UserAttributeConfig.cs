@@ -9,6 +9,12 @@ namespace Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration
     public sealed class UserAttributeConfig
     {
         /// <summary>
+        /// Gets or sets an attribute name.
+        /// </summary>
+        /// <value>The attribute name.</value>
+        public string Name { get; set; }
+
+        /// <summary>
         /// Gets or sets a response path for SelectToken operation.
         /// </summary>
         /// <value>The response path for SelectToken operation.</value>

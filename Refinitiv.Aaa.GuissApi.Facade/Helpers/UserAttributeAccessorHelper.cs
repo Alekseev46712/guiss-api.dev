@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper.Internal;
@@ -32,7 +33,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         {
             foreach (var accessor in externalApiAccessors)
             {
-                if(accessor.DefaultAttributes.Select(a => a.ToLower()).Contains(attributeName))
+                if(accessor.DefaultAttributes.Contains(attributeName, StringComparer.InvariantCultureIgnoreCase))
                 {
                     return accessor;
                 }
@@ -42,16 +43,16 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         /// <inheritdoc />
-        public Dictionary<IUserAttributeAccessor, IEnumerable<string>> GetAccessorsWithAttributes(IEnumerable<string> attributeNames)
+        public Dictionary<IUserAttributeAccessor, List<string>> GetAccessorsWithAttributes(IEnumerable<string> attributeNames)
         {
-            var accessors = new Dictionary<IUserAttributeAccessor, IEnumerable<string>>();
+            var accessors = new Dictionary<IUserAttributeAccessor, List<string>>();
 
             foreach (var attributeName in attributeNames)
             {
                 var accessor = GetAccessor(attributeName);
                 if(accessors.TryGetValue(accessor, out var names))
                 {
-                    names.Append(attributeName);
+                    names.Add(attributeName);
                 }
                 else
                 {
@@ -63,11 +64,11 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         /// <inheritdoc />
-        public Dictionary<IUserAttributeAccessor, IEnumerable<string>> GetAccessorsWithDefaultAttributes()
+        public Dictionary<IUserAttributeAccessor, List<string>> GetAccessorsWithDefaultAttributes()
         {
-            var accessors = new Dictionary<IUserAttributeAccessor, IEnumerable<string>>();
+            var accessors = new Dictionary<IUserAttributeAccessor, List<string>>();
 
-            externalApiAccessors.ForAll(p => accessors.Add(p, p.DefaultAttributes));
+            externalApiAccessors.ForAll(p => accessors.Add(p, p.DefaultAttributes.ToList()));
             accessors.Add(defaultAccessor, null);
 
             return accessors;

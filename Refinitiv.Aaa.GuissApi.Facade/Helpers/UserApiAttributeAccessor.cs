@@ -18,11 +18,9 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             IUserAttributeConfigHelper userAttributeConfigHelper,
             IHttpClientFactory httpClientFactory,
             IAaaRequestHeaders aaaRequestHeaders)
-            : base(userAttributeConfigHelper, httpClientFactory, aaaRequestHeaders)
+            : base(httpClientFactory, aaaRequestHeaders,
+                userAttributeConfigHelper.GetUserAttributeApiConfig(ServiceNames.UserApi))
         {
         }
-
-        /// <inheritdoc />
-        protected override string ApiName => ServiceNames.UserApi;
     }
 }

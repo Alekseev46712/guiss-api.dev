@@ -24,26 +24,21 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         /// <summary>
         /// Initializes a new instance of the <see cref="ExternalApiAttributeAccessor"/> class.
         /// </summary>
-        /// <param name="userAttributeConfigHelper">The user attribute config helper.</param>
         /// <param name="httpClientFactory">The HttpClientFactory.</param>
         /// <param name="aaaRequestHeaders">The AAA request headers.</param>
+        /// <param name="config"></param>
         protected ExternalApiAttributeAccessor(
-            IUserAttributeConfigHelper userAttributeConfigHelper,
             IHttpClientFactory httpClientFactory,
-            IAaaRequestHeaders aaaRequestHeaders)
+            IAaaRequestHeaders aaaRequestHeaders,
+            UserAttributeApiConfig config)
         {
-            config = userAttributeConfigHelper.GetUserAttributeApiConfig(ApiName);
+            this.config = config;
             this.httpClientFactory = httpClientFactory;
             this.aaaRequestHeaders = aaaRequestHeaders;
         }
 
-        /// <summary>
-        /// Name of the external API.
-        /// </summary>
-        protected abstract string ApiName { get; }
-
         /// <inheritdoc />
-        public IEnumerable<string> DefaultAttributes => config.Attributes.Keys;
+        public IEnumerable<string> DefaultAttributes => config.Attributes.Select(a => a.Name);
 
         /// <inheritdoc />
         public async Task<IEnumerable<UserAttributeDetails>> GetUserAttributesAsync(
@@ -61,8 +56,9 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 
             foreach (var attributeName in attributeNames)
             {
-                var attributeConfig = config.Attributes[attributeName];
-                var attributeValues = response.SelectTokens(attributeConfig.ResponsePath);
+                var attributeConfig = config.Attributes.First(a =>
+                    string.Equals(a.Name, attributeName, StringComparison.CurrentCultureIgnoreCase));
+                var attributeValues = response.SelectTokens(attributeConfig.ResponsePath).ToList();
 
                 if (!attributeValues.Any())
                 {
@@ -72,7 +68,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
                 result.Add(new UserAttributeDetails()
                 {
                     UserUuid = userUuid,
-                    Name = attributeName,
+                    Name = attributeConfig.Name,
                     Value = string.Join(" ", attributeValues)
                 });
             }

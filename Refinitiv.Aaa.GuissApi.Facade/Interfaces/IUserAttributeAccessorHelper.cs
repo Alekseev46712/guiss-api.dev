@@ -19,13 +19,13 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// </summary>
         /// <param name="attributeNames"></param>
         /// <returns></returns>
-        Dictionary<IUserAttributeAccessor, IEnumerable<string>> GetAccessorsWithAttributes(
+        Dictionary<IUserAttributeAccessor, List<string>> GetAccessorsWithAttributes(
             IEnumerable<string> attributeNames);
 
         /// <summary>
         /// Gets accessors with all the appropriate attributes.
         /// </summary>
         /// <returns></returns>
-        Dictionary<IUserAttributeAccessor, IEnumerable<string>> GetAccessorsWithDefaultAttributes();
+        Dictionary<IUserAttributeAccessor, List<string>> GetAccessorsWithDefaultAttributes();
     }
 }

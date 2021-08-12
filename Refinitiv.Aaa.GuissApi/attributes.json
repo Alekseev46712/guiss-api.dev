@@ -3,43 +3,55 @@
       "ApiName": "UserApi",
       "UrlTemplate": "https://aaa-users-dev.aaa-preprod.aws-int.thomsonreuters.com/develop/api/users?limit=50&filterBy=uuid&filterValue={0}",
       "Attributes":
-      {
-        "PROFILE.UUID": {
+      [
+        {
+          "Name": "PROFILE.UUID",
           "ResponsePath": "users[0].uuid"
         },
-        "PROFILE.LocationAccountId": {
+        {
+          "Name": "PROFILE.LocationAccountId",
           "ResponsePath": "users[0].locationAccountId"
         },
-        "PROFILE.LastName": {
+        {
+          "Name": "PROFILE.LastName",
           "ResponsePath": "users[0].lastName"
         },
-        "PROFILE.LastUpdateAAA": {
+        {
+          "Name": "PROFILE.LastUpdateAAA",
           "ResponsePath": "users[0].updatedOn"
         },
-        "PROFILE.TelephoneNumber": {
+        {
+          "Name": "PROFILE.TelephoneNumber",
           "ResponsePath": "users[0].phoneNumber"
         },
-        "PROFILE.EmailAddress": {
+        {
+          "Name": "PROFILE.EmailAddress",
           "ResponsePath": "users[0].emailAddress"
         },
-        "PROFILE.ContactTitle": {
+        {
+          "Name": "PROFILE.ContactTitle",
           "ResponsePath": "users[0].title"
         },
-        "PROFILE.FullName": {
+        {
+          "Name": "PROFILE.FullName",
           "ResponsePath": "users[*]['firstName','lastName']"
         },
-        "PROFILE.FirstName": {
+        {
+          "Name": "PROFILE.FirstName",
           "ResponsePath": "users[0].firstName"
         },
-        "PROFILE.UserId": {
+        {
+          "Name": "PROFILE.UserId",
           "ResponsePath": "users[0].userId"
         },
-        "PROFILE.PreferredLanguage": {
+        {
+          "Name": "PROFILE.PreferredLanguage",
           "ResponsePath": "users[0].preferredServiceLanguage"
         },
-        "PROFILE.JobRoleCode": {
+        {
+          "Name": "PROFILE.JobRoleCode",
           "ResponsePath": "users[0].complianceJobRole"
         }
-      }
+      ]
     }
 ]

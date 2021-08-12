@@ -25,6 +25,6 @@ namespace Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration
         /// Gets or sets an attributes config object.
         /// </summary>
         /// <value>Attributes config object.</value>
-        public Dictionary<string, UserAttributeConfig> Attributes { get; set; }
+        public List<UserAttributeConfig> Attributes { get; set; }
     }
 }
