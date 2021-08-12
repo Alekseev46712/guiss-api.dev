@@ -48,17 +48,6 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
         }
 
         /// <inheritdoc />
-        public Task<IEnumerable<UserAttributeDb>> FindByUserUuidAsync(string userUuid)
-        {
-            if (userUuid == null)
-            {
-                throw new ArgumentNullException(nameof(userUuid));
-            }
-
-            return GetUserAttributeByUuidAsync(userUuid);
-        }
-
-        /// <inheritdoc />
         public Task<UserAttributeDb> FindByUserUuidAndNameAsync(string userUuid, string name)
         {
             if (userUuid == null)
