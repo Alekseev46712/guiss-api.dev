@@ -99,15 +99,15 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         /// <inheritdoc />
-        public async Task<UserAttributeDb> FindByUserUuidAndNameAsync(string uuid, string name)
+        public async Task<UserAttributeDb> FindByUserUuidAndNameAsync(string userUuid, string name)
         {
-            return await userAttributeRepository.FindByUserUuidAndNameAsync(uuid, name);
+            return await userAttributeRepository.FindByUserUuidAndNameAsync(userUuid, name);
         }
 
         /// <inheritdoc />
-        public async Task DeleteUserAttributeAsync(string id, string name)
+        public async Task DeleteUserAttributeAsync(string userUuid, string name)
         {
-            await userAttributeRepository.DeleteAsync(id, name);
+            await userAttributeRepository.DeleteAsync(userUuid, name);
         }
 
         /// <inheritdoc />

@@ -20,16 +20,16 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <summary>
         /// Get UserAttribute by UserUuid and Name.
         /// </summary>
-        /// <param name="uuid">UserUuid of the item to get.</param>
+        /// <param name="userUuid">UserUuid of the item to get.</param>
         /// <param name="name">UserName of the item to get.</param>
         /// <returns>User attributes.</returns>
-        Task<UserAttributeDb> FindByUserUuidAndNameAsync(string uuid, string name);
+        Task<UserAttributeDb> FindByUserUuidAndNameAsync(string userUuid, string name);
 
         /// <summary>Delete UserAttribute by UserUuid and Name.</summary>
-        /// <param name="uuid">UserUuuid of the item to delete.</param>
+        /// <param name="userUuid">UserUuid of the item to delete.</param>
         /// <param name="name">UserName of the item to delete.</param>
         /// <returns>Task.</returns>
-        Task DeleteUserAttributeAsync(string uuid, string name);
+        Task DeleteUserAttributeAsync(string userUuid, string name);
 
         /// <summary>
         /// Inserts User Attribute

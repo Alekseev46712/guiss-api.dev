@@ -67,31 +67,6 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
         }
 
         /// <summary>
-        /// Deletes user attributes by UserUuid and Name.
-        /// </summary>
-        /// <param name="uuid">The attributes UserUuid to be deleted.</param>
-        /// <param name="name">The attributes Name to be deleted.</param>
-        /// <returns>IActionResult</returns>
-        [HttpDelete("{uuid}/{name}")]
-        [SwaggerResponse(StatusCodes.Status204NoContent, "User Attribute deleted")]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "User or Attribute does not exist")]
-        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal Server Error")]
-        public async Task<IActionResult> DeleteUserAttribute([FromRoute] string uuid, [FromRoute] string name)
-        {
-            // Check that the model exists
-            var attributeValidationResult = await userAttributeValidator.ValidateUserAttributesAsync(uuid, name);
-            if (!(attributeValidationResult is AcceptedResult))
-            {
-                return attributeValidationResult;
-            }
-
-            // Now delete the model
-            await userAttributeHelper.DeleteUserAttributeAsync(uuid, name);
-
-            return NoContent();
-        }
-
-        /// <summary>
         /// Gets list of selected attributes registered for the specified user.
         /// </summary>
         /// <param name="userUuid">The uuid of the user.</param>
@@ -193,6 +168,31 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
             loggerHelper.LogAuditEntry(LoggerEvent.Created, "Attribute Created", $"uuid :{savedItem.UserUuid}, name : {savedItem.Name}");
 
             return Ok(savedItem);
+        }
+
+        /// <summary>
+        /// Deletes user attributes by UserUuid and Name.
+        /// </summary>
+        /// <param name="uuid">The attributes UserUuid to be deleted.</param>
+        /// <param name="name">The attributes Name to be deleted.</param>
+        /// <returns>IActionResult</returns>
+        [HttpDelete("{uuid}/{name}")]
+        [SwaggerResponse(StatusCodes.Status204NoContent, "User Attribute deleted")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "User or Attribute does not exist")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal Server Error")]
+        public async Task<IActionResult> DeleteUserAttribute([FromRoute] string uuid, [FromRoute] string name)
+        {
+            // Check that the model exists
+            var attributeValidationResult = await userAttributeValidator.ValidateUserAttributesAsync(uuid, name);
+            if (!(attributeValidationResult is AcceptedResult))
+            {
+                return attributeValidationResult;
+            }
+
+            // Now delete the model
+            await userAttributeHelper.DeleteUserAttributeAsync(uuid, name);
+
+            return NoContent();
         }
     }
 }
