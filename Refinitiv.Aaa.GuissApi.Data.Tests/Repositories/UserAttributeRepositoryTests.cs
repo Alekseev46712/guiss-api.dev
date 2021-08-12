@@ -42,8 +42,8 @@ namespace Refinitiv.Aaa.GuissApi.Data.Tests.Repositories
             mockLogger = new Mock<ILogger<UserAttributeRepository>>();
             dynamoDbContext = new Mock<IDynamoDBContext>();
             mockQueryWrapper = new Mock<IDynamoDbDocumentQueryWrapper<UserAttributeDb, UserAttributeFilter>>();
-            var appSettings = new AppSettings { DynamoDb = new DynamoDbConfiguration { UserAttributeTableName = TableName } };
-            var appSettingsMock = new Mock<IOptions<AppSettings>>();
+            var appSettings = new AppSettingsConfig { DynamoDb = new DynamoDbConfig { UserAttributeTableName = TableName } };
+            var appSettingsMock = new Mock<IOptions<AppSettingsConfig>>();
             appSettingsMock.Setup(ap => ap.Value).Returns(appSettings);
             repository = new UserAttributeRepository(dynamoDbContext.Object, appSettingsMock.Object, mockQueryWrapper.Object, mockLogger.Object);
         }

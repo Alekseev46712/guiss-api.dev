@@ -3,15 +3,17 @@
 namespace Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration
 {
     /// <summary>
-    ///  Represents properties from appsettings file for database configuration.
+    ///  Represents properties from appsettings file.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public sealed class AppSettings
+    public sealed class AppSettingsConfig
     {
         /// <summary>
         /// Gets DynamoDb configuration.
         /// </summary>
         /// <value>DynamoDb configuration object.</value>
-        public DynamoDbConfiguration DynamoDb { get; set; }
+        public DynamoDbConfig DynamoDb { get; set; }
+
+        public CacheConfig Cache { get; set; }
     }
 }

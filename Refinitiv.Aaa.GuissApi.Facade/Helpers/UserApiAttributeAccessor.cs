@@ -14,12 +14,16 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         /// <param name="userAttributeConfigHelper">The user attribute config helper.</param>
         /// <param name="httpClientFactory">The HttpClientFactory.</param>
         /// <param name="aaaRequestHeaders">The AAA request headers.</param>
+        /// <param name="cachingManager">The caching manager.</param>
         public UserApiAttributeAccessor(
             IUserAttributeConfigHelper userAttributeConfigHelper,
             IHttpClientFactory httpClientFactory,
-            IAaaRequestHeaders aaaRequestHeaders)
-            : base(httpClientFactory, aaaRequestHeaders,
-                userAttributeConfigHelper.GetUserAttributeApiConfig(ServiceNames.UserApi))
+            IAaaRequestHeaders aaaRequestHeaders,
+            ICachingManager cachingManager)
+            : base(httpClientFactory,
+                aaaRequestHeaders,
+                userAttributeConfigHelper.GetUserAttributeApiConfig(ServiceNames.UserApi),
+                cachingManager)
         {
         }
     }

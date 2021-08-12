@@ -21,7 +21,6 @@ using Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration;
 using Refinitiv.Aaa.Foundation.ApiClient.Constants;
 using System;
 using Refinitiv.Aaa.GuissApi.Middlewares;
-using Refinitiv.Aaa.GuissApi.Facade.Helpers;
 using Refinitiv.Aaa.Foundation.ApiClient.Helpers;
 
 namespace Refinitiv.Aaa.GuissApi
@@ -70,7 +69,7 @@ namespace Refinitiv.Aaa.GuissApi
 
             services.Configure<SwaggerConfiguration>(configuration.GetSection(SwaggerSection));
             services.Configure<LoggingConfiguration>(configuration.GetSection(LoggingSection));
-            services.Configure<AppSettings>(configuration.GetSection(AppSettingsSection));
+            services.Configure<AppSettingsConfig>(configuration.GetSection(AppSettingsSection));
 
             services.AddControllers();
             services.AddRouting();

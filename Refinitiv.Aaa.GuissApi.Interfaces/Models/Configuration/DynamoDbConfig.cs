@@ -3,9 +3,9 @@
 namespace Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration
 {
     /// <summary>
-    /// Represents the AppSettings section of the configuration file.
+    /// Represents the DynamoDb section of the configuration file.
     /// </summary>
-    public sealed class DynamoDbConfiguration
+    public sealed class DynamoDbConfig
     {
         /// <summary>
         /// Gets the name of the DynamoDB table for UserAttributeTableName.

@@ -36,7 +36,7 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
         /// <param name="logger">Logger to write errors to.</param>
         public UserAttributeRepository(
             IDynamoDBContext dynamoDb,
-            IOptions<AppSettings> appSettings,
+            IOptions<AppSettingsConfig> appSettings,
             IDynamoDbDocumentQueryWrapper<UserAttributeDb, UserAttributeFilter> userAttributeQueryWrapper,
             ILogger<UserAttributeRepository> logger)
         {

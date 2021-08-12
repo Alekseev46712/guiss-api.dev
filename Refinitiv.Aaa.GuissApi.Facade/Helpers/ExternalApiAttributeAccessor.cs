@@ -20,21 +20,25 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         private readonly UserAttributeApiConfig config;
         private readonly IHttpClientFactory httpClientFactory;
         private readonly IAaaRequestHeaders aaaRequestHeaders;
+        private readonly ICachingManager cachingManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExternalApiAttributeAccessor"/> class.
         /// </summary>
         /// <param name="httpClientFactory">The HttpClientFactory.</param>
         /// <param name="aaaRequestHeaders">The AAA request headers.</param>
-        /// <param name="config"></param>
+        /// <param name="config">The user attribute api config.</param>
+        /// <param name="cachingManager">The caching manager.</param>
         protected ExternalApiAttributeAccessor(
             IHttpClientFactory httpClientFactory,
             IAaaRequestHeaders aaaRequestHeaders,
-            UserAttributeApiConfig config)
+            UserAttributeApiConfig config,
+            ICachingManager cachingManager)
         {
             this.config = config;
             this.httpClientFactory = httpClientFactory;
             this.aaaRequestHeaders = aaaRequestHeaders;
+            this.cachingManager = cachingManager;
         }
 
         /// <inheritdoc />
@@ -52,7 +56,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
                 return result;
             }
 
-            var response = await GetApiResponseAsync(userUuid);
+            var response = await GetUserDataAsync(userUuid);
 
             foreach (var attributeName in attributeNames)
             {
@@ -74,6 +78,20 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             }
 
             return result;
+        }
+
+        private async Task<JObject> GetUserDataAsync(string userUuid)
+        {
+            var cachedUserData = cachingManager.GetUserData(config.ApiName);
+            if (cachedUserData != null)
+            {
+                return cachedUserData;
+            }
+
+            var userData = await GetApiResponseAsync(userUuid);
+            cachingManager.SetUserData(config.ApiName, userData);
+
+            return userData;
         }
 
         private async Task<JObject> GetApiResponseAsync(string userUuid)
