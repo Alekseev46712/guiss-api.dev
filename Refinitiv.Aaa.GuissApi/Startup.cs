@@ -20,6 +20,7 @@ using Refinitiv.Aaa.Interfaces.Headers;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration;
 using Refinitiv.Aaa.Foundation.ApiClient.Constants;
 using System;
+using Refinitiv.Aaa.Foundation.ApiClient.Core.Models;
 using Refinitiv.Aaa.GuissApi.Middlewares;
 using Refinitiv.Aaa.Foundation.ApiClient.Helpers;
 
@@ -36,6 +37,7 @@ namespace Refinitiv.Aaa.GuissApi
         private const string SwaggerSection = "Swagger";
         private const string LoggingSection = "Logging";
         private const string AppSettingsSection = "AppSettings";
+        private const string CacheSection = "AppSettings:Cache";
         private const string PaginationStoreHashPath = "ParameterStore:PaginationParameterStorePath";
         private const string UserApiBaseAddress = "AppSettings:Services:UserApi";
 
@@ -70,6 +72,7 @@ namespace Refinitiv.Aaa.GuissApi
             services.Configure<SwaggerConfiguration>(configuration.GetSection(SwaggerSection));
             services.Configure<LoggingConfiguration>(configuration.GetSection(LoggingSection));
             services.Configure<AppSettingsConfig>(configuration.GetSection(AppSettingsSection));
+            services.Configure<CachingOptions>(configuration.GetSection(CacheSection));
 
             services.AddControllers();
             services.AddRouting();

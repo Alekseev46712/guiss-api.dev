@@ -13,7 +13,5 @@ namespace Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration
         /// </summary>
         /// <value>DynamoDb configuration object.</value>
         public DynamoDbConfig DynamoDb { get; set; }
-
-        public CacheConfig Cache { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Refinitiv.Aaa.Foundation.ApiClient.Exceptions;
 using Refinitiv.Aaa.Foundation.ApiClient.Extensions;
+using Refinitiv.Aaa.Foundation.ApiClient.Interfaces;
 using Refinitiv.Aaa.GuissApi.Facade.Exceptions;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration;
@@ -20,7 +21,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         private readonly UserAttributeApiConfig config;
         private readonly IHttpClientFactory httpClientFactory;
         private readonly IAaaRequestHeaders aaaRequestHeaders;
-        private readonly ICachingManager cachingManager;
+        private readonly IDataCacheService cacheService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExternalApiAttributeAccessor"/> class.
@@ -28,17 +29,17 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         /// <param name="httpClientFactory">The HttpClientFactory.</param>
         /// <param name="aaaRequestHeaders">The AAA request headers.</param>
         /// <param name="config">The user attribute api config.</param>
-        /// <param name="cachingManager">The caching manager.</param>
+        /// <param name="cacheService">The caching service.</param>
         protected ExternalApiAttributeAccessor(
             IHttpClientFactory httpClientFactory,
             IAaaRequestHeaders aaaRequestHeaders,
             UserAttributeApiConfig config,
-            ICachingManager cachingManager)
+            IDataCacheService cacheService)
         {
             this.config = config;
             this.httpClientFactory = httpClientFactory;
             this.aaaRequestHeaders = aaaRequestHeaders;
-            this.cachingManager = cachingManager;
+            this.cacheService = cacheService;
         }
 
         /// <inheritdoc />
@@ -56,7 +57,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
                 return result;
             }
 
-            var response = await GetUserDataAsync(userUuid);
+            var response = await cacheService.GetValue(config.ApiName, userUuid, GetApiResponseAsync);
 
             foreach (var attributeName in attributeNames)
             {
@@ -78,20 +79,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             }
 
             return result;
-        }
-
-        private async Task<JObject> GetUserDataAsync(string userUuid)
-        {
-            var cachedUserData = cachingManager.GetUserData(config.ApiName);
-            if (cachedUserData != null)
-            {
-                return cachedUserData;
-            }
-
-            var userData = await GetApiResponseAsync(userUuid);
-            cachingManager.SetUserData(config.ApiName, userData);
-
-            return userData;
         }
 
         private async Task<JObject> GetApiResponseAsync(string userUuid)

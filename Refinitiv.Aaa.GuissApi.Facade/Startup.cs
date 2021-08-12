@@ -49,7 +49,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade
                 .AddScoped<IUserAttributeConfigHelper, UserAttributeConfigHelper>()
                 .AddScoped<DynamoDbUserAttributeAccessor>()
                 .AddScoped<UserApiAttributeAccessor>()
-                .AddSingleton<ICachingManager, CachingManager>()
+                .AddSingleton<IDataCacheService, DataCacheService>()
                 .ConfigureDatabase(configuration)
                 .ConfigureAwsMessageBus(configuration);
 

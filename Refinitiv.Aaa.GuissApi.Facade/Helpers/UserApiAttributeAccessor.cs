@@ -1,5 +1,6 @@
 using System.Net.Http;
 using Refinitiv.Aaa.Foundation.ApiClient.Constants;
+using Refinitiv.Aaa.Foundation.ApiClient.Interfaces;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.Interfaces.Headers;
 
@@ -14,16 +15,16 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         /// <param name="userAttributeConfigHelper">The user attribute config helper.</param>
         /// <param name="httpClientFactory">The HttpClientFactory.</param>
         /// <param name="aaaRequestHeaders">The AAA request headers.</param>
-        /// <param name="cachingManager">The caching manager.</param>
+        /// <param name="cacheService">The caching service.</param>
         public UserApiAttributeAccessor(
             IUserAttributeConfigHelper userAttributeConfigHelper,
             IHttpClientFactory httpClientFactory,
             IAaaRequestHeaders aaaRequestHeaders,
-            ICachingManager cachingManager)
+            IDataCacheService cacheService)
             : base(httpClientFactory,
                 aaaRequestHeaders,
                 userAttributeConfigHelper.GetUserAttributeApiConfig(ServiceNames.UserApi),
-                cachingManager)
+                cacheService)
         {
         }
     }
