@@ -39,21 +39,40 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
         #region Get
 
         [Test]
-        public async Task Get_ShouldCallGetAllByUserUuidAsyncAndReturnJObject()
+        public async Task Get_WhenValidationIsSuccessful_ShouldCallGetAllByUserUuidAsyncAndReturnJObject()
         {
             var jsonData = fixture.Create<JObject>();
             var userUuid = fixture.Create<string>();
+
+            userAttributeValidator.Setup(g => g.ValidateUserUuidAsync(userUuid))
+                .ReturnsAsync(new AcceptedResult());
 
             userAttributeHelper.Setup(g => g.GetAllByUserUuidAsync(userUuid))
                 .ReturnsAsync(jsonData);
 
             var result = await userAttributeController.Get(userUuid);
 
+            userAttributeValidator.VerifyAll();
             userAttributeHelper.VerifyAll();
 
             result.Should().BeOfType<OkObjectResult>("because a result is always returned")
                 .Which.Value
                 .Should().BeEquivalentTo(jsonData);
+        }
+
+        [Test]
+        public async Task Get_WhenValidationIsUnsuccessful_ShouldReturnValidationResult()
+        {
+            var userUuid = fixture.Create<string>();
+
+            userAttributeValidator.Setup(g => g.ValidateUserUuidAsync(userUuid))
+                .ReturnsAsync(new NotFoundResult());
+
+            var result = await userAttributeController.Get(userUuid);
+
+            userAttributeHelper.VerifyAll();
+
+            result.Should().BeOfType<NotFoundResult>("because validator returns NotFoundResult");
         }
 
         [Test]
@@ -235,7 +254,7 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
 
             userAttributeValidator.VerifyAll();
 
-            result.Should().BeOfType<NotFoundObjectResult>("Because UserAttribitte in this test always not found");
+            result.Should().BeOfType<NotFoundObjectResult>("Because UserAttribute in this test always not found");
         }
 
         [Test]
@@ -252,7 +271,7 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
             userAttributeValidator.VerifyAll();
             userAttributeHelper.VerifyAll();
 
-            result.Should().BeOfType<NoContentResult> ("Because UserAttribitte succsessfully deleted");
+            result.Should().BeOfType<NoContentResult> ("Because UserAttribute successfully deleted");
         }
 
         #endregion

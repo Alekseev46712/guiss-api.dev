@@ -9,6 +9,7 @@ using Refinitiv.Aaa.GuissApi.Facade.Mapping;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using Refinitiv.Aaa.Interfaces.Headers;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture;
 using Newtonsoft.Json.Linq;
@@ -48,31 +49,32 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         }
 
         [Test]
-        public async Task GetAllByUserUuidAsync_ShouldCallSearchAsyncWithUserUuidFilterAndReturnJObject()
+        public async Task GetAllByUserUuidAsync_ShouldCallGetUserAttributesAsyncAndReturnJObject()
         {
-            var attributes = fixture.CreateMany<UserAttributeDb>();
+            var attributes = fixture.CreateMany<UserAttributeDetails>();
             var userUuid = fixture.Create<string>();
 
-            userAttributeRepository.Setup(x =>
-                    x.SearchAsync(It.Is<UserAttributeFilter>(a => a.UserUuid == userUuid)))
+            userAttributeProvider.Setup(x =>
+                    x.GetUserAttributesAsync(userUuid))
                 .ReturnsAsync(attributes);
 
             var result = await userAttributeHelper.GetAllByUserUuidAsync(userUuid);
 
-            userAttributeRepository.VerifyAll();
+            userAttributeProvider.VerifyAll();
 
             result.Should().BeOfType<JObject>("because a result is always returned");
         }
 
         [Test]
-        public async Task GetAttributesByUserUuidAsync_ShouldCallSearchAsyncWithUserUuidFilterAndReturnJObject()
+        public async Task GetAttributesByUserUuidAsync_ShouldCallGetUserAttributesAsyncAndReturnJObject()
         {
-            var attributes = fixture.CreateMany<UserAttributeDb>();
+            var attributes = fixture.CreateMany<UserAttributeDetails>();
             var userUuid = fixture.Create<string>();
             var attributesNames = "one,two,three";
+            var attributesList = new List<string> {"one", "two", "three"};
 
-            userAttributeRepository.Setup(x =>
-                    x.SearchAsync(It.IsAny<UserAttributeFilter>()))
+            userAttributeProvider.Setup(x =>
+                    x.GetUserAttributesAsync(userUuid, attributesList))
                 .ReturnsAsync(attributes);
 
             var result = await userAttributeHelper.GetAttributesByUserUuidAsync(userUuid, attributesNames);
