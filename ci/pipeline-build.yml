@@ -155,6 +155,7 @@ jobs:
     input_mapping: {input: repo}
     output_mapping: {output: build}
     params:
+      GIT_REPO: ((GIT_REPO))
       GIT_BRANCH: ((GIT_DEV))
       GIT_SSHKEY: ((vault-kv:secret.rsa_key))
       PROJECT_DIR: ((PROJECT_DIR))
@@ -213,7 +214,7 @@ jobs:
     put: gitlab-mr
     params:
       repository: repo
-      status: faile
+      status: failed
 
 
 - name: unit-tests-snapshot
@@ -234,7 +235,7 @@ jobs:
     put: gitlab-mr
     params:
       repository: repo
-      status: faile
+      status: failed
 
 
 - name: build-snapshot
@@ -250,7 +251,8 @@ jobs:
     input_mapping: {input: repo}
     output_mapping: {output: build}
     params:
-      GIT_BRANCH: ((GIT_DEV))
+      GIT_REPO: ((GIT_REPO))
+      GIT_BRANCH: ((GIT_MERGE))
       GIT_SSHKEY: ((vault-kv:secret.rsa_key))
       PROJECT_DIR: ((PROJECT_DIR))
       BAMS_DIR: ((BAMS_DIR))
@@ -267,7 +269,7 @@ jobs:
     put: gitlab-mr
     params:
       repository: repo
-      status: faile
+      status: failed
 
 
 - name: setup-deploy-snapshot
