@@ -4,7 +4,7 @@ resource "aws_cloudwatch_metric_alarm" "bells" {
   alarm_name                = "a${var.asset_id}-${each.key}-alarm-${var.name_suffix}"
   comparison_operator       = each.value.comparison_operator
   evaluation_periods        = each.value.evaluation_periods
-  metric_name               = "${each.key}-${var.name_suffix}"
+  metric_name               = each.value.metric
   namespace                 = each.value.namespace
   period                    = each.value.period
   statistic                 = each.value.statistic

@@ -61,19 +61,21 @@ route53_domain   = "aaa-preprod.aws-int.thomsonreuters.com"
 
 # API Gateway
 api_gateway_custom_domain = 1
-api_gateway_description = "Automated deployment of Guiss API-Gateway"
+api_gateway_description   = "Automated deployment of Guiss API-Gateway"
 
 # The list of IP ranges below is copied from the "WebCorp" security group in tr-fr-preprod.
 # 34.234.230.251, 3.214.233.172, 3.214.140.7 - nat gateway ips for aaa-sdlc-preprod in us-east-1
+# 34.251.88.0 54.76.122.132 52.48.210.115 - nat gateway ips of concourse ci/cd
 api_gateway_whitelist = ["10.0.0.0/8","159.220.0.0/16","159.42.0.0/16","163.231.0.0/16","164.57.0.0/16",
 "167.68.0.0/16","192.165.208.0/20","198.179.137.0/24","198.80.128.0/18","199.224.128.0/17",
 "203.191.132.0/24","206.197.182.88/32","84.18.160.0/19","34.250.63.0/24","52.31.174.229",
-"34.234.230.251","3.214.233.172","3.214.140.7"]
+"34.234.230.251","3.214.233.172","3.214.140.7","34.251.88.0","54.76.122.132","52.48.210.115"]
 
 # Alarms
 alarms = {
   "guiss-api-critical" = {
     "namespace"           = "LogMetrics"
+    "metric"              = "guiss-api-critical"
     "description"         = "A Critical issue occurred with Guiss-API Lambda"
     "comparison_operator" = "GreaterThanOrEqualToThreshold"
     "datapoints_to_alarm" = "1"
@@ -90,6 +92,75 @@ alarms = {
     "insufficient_data_actions" = []
     "treat_missing_data"        = "notBreaching"
     "dimensions"                = {}
+    "tags" = {}
+  },
+  "db-guiss-api-read-throttle" = {
+    "namespace"           = "AWS/DynamoDB"
+    "metric"              = "ReadThrottleEvents"
+    "description"         = "DynamoDB Table Read Throttle Events"
+    "comparison_operator" = "GreaterThanThreshold"
+    "datapoints_to_alarm" = "0"
+    "evaluation_periods"  = "3"
+    "period"              = "60"
+    "statistic"           = "SampleCount"
+    "threshold"           = "100"
+    "alarm_actions" = [
+      "arn:aws:sns:us-east-1:653551970210:compass-alarm-notification"
+    ]
+    "ok_actions" = [
+      "arn:aws:sns:us-east-1:653551970210:compass-alarm-notification"
+    ]
+    "insufficient_data_actions" = []
+    "treat_missing_data"        = "notBreaching"
+    "dimensions"                = {
+      "TableName" = "a250395-db-guiss-api-dev-use1"
+    }
+    "tags" = {}
+  },
+  "db-guiss-api-write-throttle" = {
+    "namespace"           = "AWS/DynamoDB"
+    "metric"              = "WriteThrottleEvents"
+    "description"         = "DynamoDB Table Write Throttle Events"
+    "comparison_operator" = "GreaterThanThreshold"
+    "datapoints_to_alarm" = "0"
+    "evaluation_periods"  = "3"
+    "period"              = "60"
+    "statistic"           = "SampleCount"
+    "threshold"           = "100"
+    "alarm_actions" = [
+      "arn:aws:sns:us-east-1:653551970210:compass-alarm-notification"
+    ]
+    "ok_actions" = [
+      "arn:aws:sns:us-east-1:653551970210:compass-alarm-notification"
+    ]
+    "insufficient_data_actions" = []
+    "treat_missing_data"        = "notBreaching"
+    "dimensions"                = {
+      "TableName" = "a250395-db-guiss-api-dev-use1"
+    }
+    "tags" = {}
+  },
+  "db-guiss-api-system-errors" = {
+    "namespace"           = "AWS/DynamoDB"
+    "metric"              = "SystemErrors"
+    "description"         = "DynamoDB Table System Errors"
+    "comparison_operator" = "GreaterThanThreshold"
+    "datapoints_to_alarm" = "0"
+    "evaluation_periods"  = "3"
+    "period"              = "60"
+    "statistic"           = "SampleCount"
+    "threshold"           = "10"
+    "alarm_actions" = [
+      "arn:aws:sns:us-east-1:653551970210:compass-alarm-notification"
+    ]
+    "ok_actions" = [
+      "arn:aws:sns:us-east-1:653551970210:compass-alarm-notification"
+    ]
+    "insufficient_data_actions" = []
+    "treat_missing_data"        = "notBreaching"
+    "dimensions"                = {
+      "TableName" = "a250395-db-guiss-api-dev-use1"
+    }
     "tags" = {}
   }
 }
