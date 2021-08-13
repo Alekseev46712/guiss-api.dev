@@ -33,6 +33,7 @@ for ENV in dev qa; do
     input_mapping: {input: repo}
     params:
       ARTIFACT_VERSION: $VERSION
+      ENV: $ENV
       <<: *parameters
 
 - name: destroy-${ENV}-${VERSION/\//-}
@@ -46,6 +47,7 @@ for ENV in dev qa; do
     input_mapping: {input: repo}
     params:
       ARTIFACT_VERSION: $VERSION
+      ENV: $ENV
       <<: *parameters" >> ci/pipeline-deploy.yml
   done
 done
