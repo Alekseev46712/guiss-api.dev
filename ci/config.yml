@@ -1,10 +1,9 @@
 ---
-ENV: "dev"
 AWS_REGION: "us-east-1"
 
 GIT_REPO: "git.sami.int.thomsonreuters.com/aaa-ciam/guiss-api.git"
 GIT_PROD: "master"
-GIT_DEV:  "develop"
+GIT_DEV: "develop"
 GIT_MERGE: "merge"
 
 PROJECT_DIR: "Refinitiv.Aaa.GuissApi"

@@ -1,6 +1,5 @@
 ---
 parameters: &parameters
-  ENV: ((ENV))
   BAMS_URL: ((BAMS_URL))
   BAMS_PATH: ((BAMS_PATH))
   BAMS_DIR: ((BAMS_DIR))

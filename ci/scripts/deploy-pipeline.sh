@@ -16,8 +16,8 @@ git pull --tags
 GIT_TAG=$(git for-each-ref refs/tags/snapshot refs/tags/develop --sort=-taggerdate --format='%(refname:short)' --count=5)
 [ ! -z "${GIT_TAG}" ] || GIT_TAG="snapshot/0.0.0.0"
 
-# Delete all deploy jobs
-sed -i '/- name: deploy-/,/<<: \*parameters/d' ci/pipeline-deploy.yml
+## Delete all deploy jobs
+#sed -i '/- name: deploy-/,/<<: \*parameters/d' ci/pipeline-deploy.yml
 
 # Add new deploy jobs
 for ENV in dev qa; do
@@ -30,6 +30,19 @@ for ENV in dev qa; do
   - task: deploy
     image: terraform
     file: repo/ci/tasks/deploy.yml
+    input_mapping: {input: repo}
+    params:
+      ARTIFACT_VERSION: $VERSION
+      <<: *parameters
+
+- name: destroy-${ENV}-${VERSION/\//-}
+  plan:
+  - get: repo
+    resource: gitlab-develop
+  - get: terraform
+  - task: deploy
+    image: terraform
+    file: repo/ci/tasks/destroy.yml
     input_mapping: {input: repo}
     params:
       ARTIFACT_VERSION: $VERSION
