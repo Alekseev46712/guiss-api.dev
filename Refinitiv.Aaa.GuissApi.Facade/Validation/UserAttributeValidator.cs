@@ -94,6 +94,12 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         /// <inheritdoc/>
         public async Task<IActionResult> ValidateUserAttributesAsync(string userUuid, string name)
         {
+            var userValidationResult = await InternalValidateUserUuidAsync(userUuid);
+            if (!(userValidationResult is AcceptedResult))
+            {
+                return userValidationResult;
+            }
+
             var exsistingFromUsersApi = await userAttributeRepository.FindByUserUuidAndNameAsync(userUuid, name);
             if (exsistingFromUsersApi == null)
             {
