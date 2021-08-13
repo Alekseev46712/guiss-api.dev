@@ -24,6 +24,7 @@ for VERSION in $GIT_TAG; do
   for ENV in dev qa; do
     echo "    - deploy-${ENV}-${VERSION/\//-}
     - destroy-${ENV}-${VERSION/\//-}" >> ci/pipeline-deploy.yml
+  done
 done
 
 # Add jobs
