@@ -139,13 +139,22 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
         }
 
         [Test]
-        public async Task ValidateUserAttributesAsync_WhenUserUuidOrNameIsNull_ReturnNotFoundObjectResult()
+        public void ValidateUserAttributesAsync_WhenUserUuidIsNull_ReturnArgumentNullException()
         {
-            userAttributeRepository.Setup(x => x.FindByUserUuidAndNameAsync(It.IsAny<string>(), It.IsAny<string>()));
+            Assert.ThrowsAsync<ArgumentNullException>(() => userAttributeValidator.ValidateUserAttributesAsync(null, null));
+        }
 
-            var result = await userAttributeValidator.ValidateUserAttributesAsync(null, null);
+        [Test]
+        public async Task ValidateUserAttributesAsync_WhenUserIsNotFound_ReturnNotFoundObjectResult()
+        {
+            var userUuid = "testUserUuid";
+            var name = "testName";
 
-            userAttributeRepository.VerifyAll();
+            userHelper.Setup(x => x.GetUserByUuidAsync(userUuid)).ReturnsAsync((UserResponse)null);
+
+            var result = await userAttributeValidator.ValidateUserAttributesAsync(userUuid, name);
+
+            userHelper.VerifyAll();
 
             result.Should().BeOfType<NotFoundObjectResult>();
         }
@@ -156,11 +165,13 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
             var userUuid = "testUserUuid";
             var name = "testName";
 
+            userHelper.Setup(x => x.GetUserByUuidAsync(userUuid)).ReturnsAsync(new UserResponse());
             userAttributeRepository.Setup(x => x.FindByUserUuidAndNameAsync(userUuid, name));
 
             var result = await userAttributeValidator.ValidateUserAttributesAsync(userUuid, name);
 
             userAttributeRepository.VerifyAll();
+            userHelper.VerifyAll();
 
             result.Should().BeOfType<NotFoundObjectResult>();
         }
@@ -171,11 +182,13 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
             var userUuid = "testUserUuid";
             var name = "testName";
 
+            userHelper.Setup(x => x.GetUserByUuidAsync(userUuid)).ReturnsAsync(new UserResponse());
             userAttributeRepository.Setup(x => x.FindByUserUuidAndNameAsync(userUuid, name)).ReturnsAsync(new UserAttributeDb());
 
             var result = await userAttributeValidator.ValidateUserAttributesAsync(userUuid, name);
 
             userAttributeRepository.VerifyAll();
+            userHelper.VerifyAll();
 
             result.Should().BeOfType<AcceptedResult>();
         }
