@@ -92,7 +92,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
             await act.Should().ThrowAsync<ArgumentNullException>();
         }
 
-            [Test]
+        [Test]
         public void InsertAsyncThrowsExceptionIfArgumentIsNull()
         {
             UserAttributeDetails userAttributeDetails = null;

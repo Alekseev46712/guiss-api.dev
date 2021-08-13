@@ -27,11 +27,9 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         private Mock<IDataCacheService> dataCacheService;
         List<UserAttributeConfig> attributes;
 
-
         [SetUp]
         public void Setup()
         {
-
             attributes = fixture.CreateMany<UserAttributeConfig>().ToList();
 
             dataCacheService = new Mock<IDataCacheService>();
@@ -46,7 +44,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         }
 
         [Test]
-        public void DefaultAttributesReturnsNames()
+        public void DefaultAttributes_ReturnsNames()
         {        
             var result = userApiAttributeAccessor.DefaultAttributes;
 
@@ -54,7 +52,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         }
 
         [Test]
-        public async Task GetUserAttributesAsyncReturnsEmptyListOfDetailsWhenAttributesNameNull()
+        public async Task GetUserAttributesAsync_WhenAttributesNameNull_ReturnsEmptyListOfDetails()
         {
             var result = await userApiAttributeAccessor.GetUserAttributesAsync(fixture.Create<string>(), null);
 
@@ -62,7 +60,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         }
 
         [Test]
-        public async Task GetUserAttributesAsyncReturnsListWhenAttributesNotNull()
+        public async Task GetUserAttributesAsync_WhenAttributesNotNull_ReturnsListOfDetails()
         {
             var JObj = fixture.Create<JObject>();
 
@@ -77,7 +75,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         }
 
         [Test]
-        public async Task GetUserAttributesAsyncThrowsInvalidResponsePathExceptionOnEmptyAttributeValues()
+        public async Task GetUserAttributesAsync_OnEmptyAttributeValues_ThrowsInvalidResponsePathException()
         {
             var JObj = fixture.Create<JObject>();
 
