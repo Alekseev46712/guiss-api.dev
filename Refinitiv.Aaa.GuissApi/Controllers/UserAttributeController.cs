@@ -62,14 +62,14 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
 
 
         /// <summary>
-        /// Deletes user attributes by UserUuid and Name.
+        /// Deletes user attributes by Uuis and by Name.
         /// </summary>
-        /// <param name="uuid">The attributes UserUuid to be deleted.</param>
-        /// <param name="name">The attributes Name to be deleted.</param>
+        /// <param name="uuid">The attributes uuid to be deleted.</param>
+        /// <param name="name">The attributes name to be deleted.</param>
         /// <returns>IActionResult</returns>
         [HttpDelete("{uuid}/{name}")]
         [SwaggerResponse(StatusCodes.Status204NoContent, "User Attribute deleted")]
-        [SwaggerResponse(StatusCodes.Status404NotFound, "User or Attribute does not exist")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Attribute does not exist")]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal Server Error")]
         public async Task<IActionResult> DeleteUserAttribute([FromRoute] string uuid, [FromRoute] string name)
         {
