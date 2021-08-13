@@ -20,8 +20,10 @@ GIT_TAG=$(git for-each-ref refs/tags/snapshot refs/tags/develop --sort=-taggerda
 echo "groups:" >> ci/pipeline-deploy.yml
 for VERSION in $GIT_TAG; do
   echo "- name: ${VERSION/\//-}
-  jobs:
-    - */${VERSION/\//-}" >> ci/pipeline-deploy.yml
+  jobs:" >> ci/pipeline-deploy.yml
+  for ENV in dev qa; do
+    echo "    - deploy-${ENV}-${VERSION/\//-}
+    - destroy-${ENV}-${VERSION/\//-}" >> ci/pipeline-deploy.yml
 done
 
 # Add jobs
