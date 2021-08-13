@@ -49,5 +49,3 @@ resources:
     password: ((vault-kv:secret.bams_pass))
     repository: bams-aws.refinitiv.com:5001/a250395/terraform
     tag: 0.12.12
-
-jobs:

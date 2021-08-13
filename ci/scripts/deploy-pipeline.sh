@@ -16,10 +16,16 @@ git pull --tags
 GIT_TAG=$(git for-each-ref refs/tags/snapshot refs/tags/develop --sort=-taggerdate --format='%(refname:short)' --count=5)
 [ ! -z "${GIT_TAG}" ] || GIT_TAG="snapshot/0.0.0.0"
 
-## Delete all deploy jobs
-#sed -i '/- name: deploy-/,/<<: \*parameters/d' ci/pipeline-deploy.yml
+# Add groups
+echo "groups:" >> ci/pipeline-deploy.yml
+for VERSION in $GIT_TAG; do
+  echo "- name: ${VERSION/\//-}
+  jobs:
+    - */${VERSION/\//-}" >> ci/pipeline-deploy.yml
+done
 
-# Add new deploy jobs
+# Add jobs
+echo "jobs:" >> ci/pipeline-deploy.yml
 for ENV in dev qa; do
   for VERSION in $GIT_TAG; do
   echo "- name: deploy-${ENV}-${VERSION/\//-}
