@@ -5,10 +5,8 @@ using NUnit.Framework;
 using Refinitiv.Aaa.GuissApi.Facade.Helpers;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
 {
@@ -20,8 +18,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         private Mock<IUserAttributeConfigHelper> userAttributeConfigHelper;
         private DynamoDbUserAttributeAccessor dynamoDbUserAttributeAccessor;
         private readonly IFixture fixture = new Fixture();
-        List<UserAttributeConfig> attributes;
-
+        private List<UserAttributeConfig> attributes;
 
         [SetUp]
         public void Setup()
@@ -36,14 +33,13 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
                 Attributes = attributes
             });
 
-            userApiAttributeAccessor = new UserApiAttributeAccessor(userAttributeConfigHelper.Object, null, null, null); 
+            userApiAttributeAccessor = new UserApiAttributeAccessor(userAttributeConfigHelper.Object, null, null, null);
 
             userAttributeAccessorHelper = new UserAttributeAccessorHelper(userApiAttributeAccessor, dynamoDbUserAttributeAccessor);
-
         }
 
         [Test]
-        public void GetAccessor_AttributeNamePresentInList_RerurnsAccessor()
+        public void GetAccessor_AttributeNamePresentInList_ReturnsAccessor()
         {
             var result = userAttributeAccessorHelper.GetAccessor(attributes.ElementAt(0).Name);
 
@@ -51,13 +47,12 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         }
 
         [Test]
-        public void GetAccessor_AttributeNameNotPresentInList_RerurnsAccessor()
+        public void GetAccessor_AttributeNameNotPresentInList_ReturnsAccessor()
         {
             var result = userAttributeAccessorHelper.GetAccessor(fixture.Create<string>());
 
             result.Should().Be(dynamoDbUserAttributeAccessor);
         }
-
 
         [Test]
         public void GetAccessorsWithAttributes_ReturnsDictionary()
