@@ -4,7 +4,6 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Refinitiv.Aaa.GuissApi.Data.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Models;
 using Refinitiv.Aaa.GuissApi.Data.Repositories;
@@ -47,24 +46,6 @@ namespace Refinitiv.Aaa.GuissApi.Data
                 .AddScoped<IDynamoDBContext, DynamoDBContext>()
                 .AddScoped<IUserAttributeRepository, UserAttributeRepository>()
                 .AddScoped<IDynamoDbDocumentQueryWrapper<UserAttributeDb, UserAttributeFilter>, UserAttributeQueryWrapper>();
-        }
-
-        /// <summary>
-        /// Method to configure dependencies.
-        /// </summary>
-        /// <param name="services">IServiceCollection parameter.</param>
-        /// <param name="configuration">IConfiguration parameter.</param>
-        /// <returns>Returns IServiceCollection.</returns>
-        public static IServiceCollection ConfigureDataDependencies(this IServiceCollection services, IConfiguration configuration)
-        {
-            var tableName = configuration["AppSettings:DynamoDb:GuissTableName"];
-
-            return services
-                .AddScoped<IGuissRepository, GuissRepository>(s => new GuissRepository(
-                    s.GetService<IDynamoDBContext>(),
-                    tableName,
-                    s.GetService<ILogger<GuissRepository>>(),
-                    s.GetService<IAmazonDynamoDB>()));
         }
     }
 }

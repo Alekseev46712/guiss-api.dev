@@ -11,7 +11,6 @@ using Refinitiv.Aaa.GuissApi.Facade.Mapping;
 using Refinitiv.Aaa.GuissApi.Facade.Validation;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
@@ -23,7 +22,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
         private Mock<IUserHelper> userHelper;
         private UserAttributeValidator userAttributeValidator;
         private IMapper mapper;
-
 
         [SetUp]
         public void Setup()
@@ -58,7 +56,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
         {
             var uuid = "test";
             var userResponse = new UserResponse { Uuid = uuid };
-            
+
             userHelper.Setup(h => h.GetUserByUuidAsync(It.IsAny<string>())).ReturnsAsync(userResponse);
             var result = await userAttributeValidator.ValidateUserUuidAsync(uuid);
             result.Should().BeOfType<AcceptedResult>();
@@ -160,7 +158,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
         }
 
         [Test]
-        public async Task ValidateUserAttributesAsync_WhenUserAttribiteNotFound_ReturnNotFoundObjectResult()
+        public async Task ValidateUserAttributesAsync_WhenUserAttributeNotFound_ReturnNotFoundObjectResult()
         {
             var userUuid = "testUserUuid";
             var name = "testName";
@@ -177,7 +175,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
         }
 
         [Test]
-        public async Task ValidateUserAttributesAsync_WhenUserAttribiteFound_ReturnAcceptedResult()
+        public async Task ValidateUserAttributesAsync_WhenUserAttributeFound_ReturnAcceptedResult()
         {
             var userUuid = "testUserUuid";
             var name = "testName";

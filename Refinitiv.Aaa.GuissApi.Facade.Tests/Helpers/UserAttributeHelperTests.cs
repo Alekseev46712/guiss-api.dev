@@ -9,11 +9,11 @@ using Refinitiv.Aaa.GuissApi.Facade.Mapping;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using Refinitiv.Aaa.Interfaces.Headers;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture;
 using Newtonsoft.Json.Linq;
-using System.Globalization;
-using System.Linq;
+using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
 {
@@ -24,6 +24,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         private UserAttributeHelper userAttributeHelper;
         private Mock<IUserAttributeRepository> userAttributeRepository;
         private Mock<IAaaRequestHeaders> aaaRequestHeaders;
+        private Mock<IUserAttributeProvider> userAttributeProvider;
         private IMapper mapper;
 
         [SetUp]
@@ -37,40 +38,43 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
             mapper = mappingConfig.CreateMapper();
             userAttributeRepository = new Mock<IUserAttributeRepository>();
             aaaRequestHeaders = new Mock<IAaaRequestHeaders>();
+            userAttributeProvider = new Mock<IUserAttributeProvider>();
 
             userAttributeHelper = new UserAttributeHelper(
                 userAttributeRepository.Object,
                 mapper,
-                aaaRequestHeaders.Object
+                aaaRequestHeaders.Object,
+                userAttributeProvider.Object
                 );
         }
 
         [Test]
-        public async Task GetAllByUserUuidAsync_ShouldCallSearchAsyncWithUserUuidFilterAndReturnJObject()
+        public async Task GetAllByUserUuidAsync_ShouldCallGetUserAttributesAsyncAndReturnJObject()
         {
-            var attributes = fixture.CreateMany<UserAttributeDb>();
+            var attributes = fixture.CreateMany<UserAttributeDetails>();
             var userUuid = fixture.Create<string>();
 
-            userAttributeRepository.Setup(x =>
-                    x.SearchAsync(It.Is<UserAttributeFilter>(a => a.UserUuid == userUuid)))
+            userAttributeProvider.Setup(x =>
+                    x.GetUserAttributesAsync(userUuid))
                 .ReturnsAsync(attributes);
 
             var result = await userAttributeHelper.GetAllByUserUuidAsync(userUuid);
 
-            userAttributeRepository.VerifyAll();
+            userAttributeProvider.VerifyAll();
 
             result.Should().BeOfType<JObject>("because a result is always returned");
         }
 
         [Test]
-        public async Task GetAttributesByUserUuidAsync_ShouldCallSearchAsyncWithUserUuidFilterAndReturnJObject()
+        public async Task GetAttributesByUserUuidAsync_ShouldCallGetUserAttributesAsyncAndReturnJObject()
         {
-            var attributes = fixture.CreateMany<UserAttributeDb>();
+            var attributes = fixture.CreateMany<UserAttributeDetails>();
             var userUuid = fixture.Create<string>();
             var attributesNames = "one,two,three";
+            var attributesList = new List<string> {"one", "two", "three"};
 
-            userAttributeRepository.Setup(x =>
-                    x.SearchAsync(It.IsAny<UserAttributeFilter>()))
+            userAttributeProvider.Setup(x =>
+                    x.GetUserAttributesAsync(userUuid, attributesList))
                 .ReturnsAsync(attributes);
 
             var result = await userAttributeHelper.GetAttributesByUserUuidAsync(userUuid, attributesNames);
@@ -88,7 +92,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
             await act.Should().ThrowAsync<ArgumentNullException>();
         }
 
-            [Test]
+        [Test]
         public void InsertAsyncThrowsExceptionIfArgumentIsNull()
         {
             UserAttributeDetails userAttributeDetails = null;

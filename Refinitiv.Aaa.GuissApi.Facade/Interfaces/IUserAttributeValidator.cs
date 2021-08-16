@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
 {
     /// <summary>
-    /// Validets requests
+    /// Validates requests
     /// </summary>
     public interface IUserAttributeValidator
     {

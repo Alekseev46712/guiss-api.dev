@@ -6,7 +6,7 @@ using Refinitiv.Aaa.Interfaces.Messaging;
 using Refinitiv.Aaa.MessageBus.Amazon.Models;
 using Refinitiv.Aaa.GuissApi.Facade.Helpers;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
-using Refinitiv.Aaa.GuissApi.Facade.Models;
+using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using Action = Refinitiv.Aaa.Interfaces.Business.Action;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
@@ -48,7 +48,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         [Test]
         public void SendMessage_WhenMessageIsNull_ThrowsException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(() => fixture.SendMessageAsync<Guiss>("Guiss", null));
+            Assert.ThrowsAsync<ArgumentNullException>(() => fixture.SendMessageAsync<UserAttribute>("Guiss", null));
         }
 
         [Test]

@@ -20,6 +20,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         private readonly IUserAttributeRepository userAttributeRepository;
         private readonly IMapper mapper;
         private readonly IAaaRequestHeaders aaaRequestHeaders;
+        private readonly IUserAttributeProvider userAttributeProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AppAccountHelper"/> class.
@@ -27,25 +28,26 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         /// <param name="userAttributeRepository">Repository used to access the data.</param>
         /// <param name="mapper">Automapper.</param>
         /// <param name="aaaRequestHeaders">Request headers.</param>
+        /// <param name="userAttributeProvider"></param>
         public UserAttributeHelper(
             IUserAttributeRepository userAttributeRepository,
             IMapper mapper,
-            IAaaRequestHeaders aaaRequestHeaders)
+            IAaaRequestHeaders aaaRequestHeaders,
+            IUserAttributeProvider userAttributeProvider)
         {
             this.userAttributeRepository = userAttributeRepository;
             this.mapper = mapper;
             this.aaaRequestHeaders = aaaRequestHeaders;
+            this.userAttributeProvider = userAttributeProvider;
         }
 
         /// <inheritdoc />
-        public Task<JObject> GetAllByUserUuidAsync(string userUuid)
+        public async Task<JObject> GetAllByUserUuidAsync(string userUuid)
         {
-            var filter = new UserAttributeFilter
-            {
-                UserUuid = userUuid
-            };
+            var userAttributes = await userAttributeProvider.GetUserAttributesAsync(userUuid);
+            var result =  GetJsonObject(userAttributes);
 
-            return InternalGetUserAttributesAsync(filter);
+            return result;
         }
 
         /// <inheritdoc />
@@ -56,14 +58,17 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
                 throw new ArgumentNullException(nameof(attributes));
             }
 
-            var attributesList = attributes.ToLower(CultureInfo.CurrentCulture).Split(',').ToList();
-            var filter = new UserAttributeFilter
-            {
-                UserUuid = userUuid,
-                Names = attributesList
-            };
+            return PerformGetAttributesByUserUuidAsync();
 
-            return InternalGetUserAttributesAsync(filter);
+            async Task<JObject> PerformGetAttributesByUserUuidAsync()
+            {
+                var attributesList = attributes.ToLower(CultureInfo.CurrentCulture).Split(',').ToList();
+
+                var userAttributes = await userAttributeProvider.GetUserAttributesAsync(userUuid, attributesList);
+                var result = GetJsonObject(userAttributes);
+
+                return result;
+            }
         }
 
         /// <inheritdoc />
@@ -74,36 +79,35 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
                 throw new ArgumentNullException(nameof(namespaces));
             }
 
-            var namespacesList = namespaces.ToLower(CultureInfo.CurrentCulture).Split(',').ToList();
-            var filter = new UserAttributeFilter
+            return PerformGetAttributesByUserNamespacesAndUuidAsync();
+
+            async Task<JObject> PerformGetAttributesByUserNamespacesAndUuidAsync()
             {
-                UserUuid = userUuid,
-                Namespaces = namespacesList
-            };
+                var namespacesList = namespaces.ToLower(CultureInfo.CurrentCulture).Split(',').ToList();
+                var filter = new UserAttributeFilter
+                {
+                    UserUuid = userUuid,
+                    Namespaces = namespacesList
+                };
 
-            return InternalGetUserAttributesAsync(filter);
+                var userAttributesDb = await userAttributeRepository.SearchAsync(filter);
+                var userAttributesDetails = mapper.Map<IEnumerable<UserAttributeDetails>>(userAttributesDb);
+                var result = GetJsonObject(userAttributesDetails);
+
+                return result;
+            }
         }
 
-        /// <summary>
-        /// Get UserAttribute by UserUuid and Name
-        /// </summary>
-        /// <param name="uuid"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public async Task<UserAttributeDb> FindByUserUuidAndNameAsync(string uuid, string name)
+        /// <inheritdoc />
+        public async Task<UserAttributeDb> FindByUserUuidAndNameAsync(string userUuid, string name)
         {
-            return await userAttributeRepository.FindByUserUuidAndNameAsync(uuid, name);
+            return await userAttributeRepository.FindByUserUuidAndNameAsync(userUuid, name);
         }
 
-        /// <summary>
-        /// Delete UserAttribute by UserUuid and Name
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public async Task DeleteUserAttributeAsync(string id, string name)
+        /// <inheritdoc />
+        public async Task DeleteUserAttributeAsync(string userUuid, string name)
         {
-            await userAttributeRepository.DeleteAsync(id, name);
+            await userAttributeRepository.DeleteAsync(userUuid, name);
         }
 
         /// <inheritdoc />
@@ -174,12 +178,10 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             return userAttribute;
         }
 
-        private async Task<JObject> InternalGetUserAttributesAsync(UserAttributeFilter filter)
+        private JObject GetJsonObject(IEnumerable<UserAttributeDetails> userAttributeDetails)
         {
-            var items = await userAttributeRepository.SearchAsync(filter);
-
-            var dataToParse = items.
-                Select(x => new KeyValuePair<string, string>(x.Name, x.Value))
+            var dataToParse = userAttributeDetails
+                .Select(x => new KeyValuePair<string, string>(x.Name, x.Value))
                 .ToList();
 
             var result = NodeProcessor.BuildJsonObject(dataToParse);

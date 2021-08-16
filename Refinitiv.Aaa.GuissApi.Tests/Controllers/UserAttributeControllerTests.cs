@@ -10,7 +10,6 @@ using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using System.Threading.Tasks;
 using AutoFixture;
 using Newtonsoft.Json.Linq;
-using System;
 
 namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
 {
@@ -40,16 +39,20 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
         #region Get
 
         [Test]
-        public async Task Get_ShouldCallGetAllByUserUuidAsyncAndReturnJObject()
+        public async Task Get_WhenValidationIsSuccessful_ShouldCallGetAllByUserUuidAsyncAndReturnJObject()
         {
             var jsonData = fixture.Create<JObject>();
             var userUuid = fixture.Create<string>();
+
+            userAttributeValidator.Setup(g => g.ValidateUserUuidAsync(userUuid))
+                .ReturnsAsync(new AcceptedResult());
 
             userAttributeHelper.Setup(g => g.GetAllByUserUuidAsync(userUuid))
                 .ReturnsAsync(jsonData);
 
             var result = await userAttributeController.Get(userUuid);
 
+            userAttributeValidator.VerifyAll();
             userAttributeHelper.VerifyAll();
 
             result.Should().BeOfType<OkObjectResult>("because a result is always returned")
@@ -58,7 +61,22 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
         }
 
         [Test]
-        public async Task GetUserAttributes_ShouldCallGetAttributesByuserUuidAsyncAndReturnJObject()
+        public async Task Get_WhenValidationIsUnsuccessful_ShouldReturnValidationResult()
+        {
+            var userUuid = fixture.Create<string>();
+
+            userAttributeValidator.Setup(g => g.ValidateUserUuidAsync(userUuid))
+                .ReturnsAsync(new NotFoundResult());
+
+            var result = await userAttributeController.Get(userUuid);
+
+            userAttributeHelper.VerifyAll();
+
+            result.Should().BeOfType<NotFoundResult>("because validator returns NotFoundResult");
+        }
+
+        [Test]
+        public async Task GetUserAttributes_ShouldCallGetAttributesByUserUuidAsyncAndReturnJObject()
         {
             var jsonData = fixture.Create<JObject>();
             var userUuid = fixture.Create<string>();
@@ -93,7 +111,7 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
         }
 
         [Test]
-        public async Task GetUserAttributes_OnNoAttributeds_ShouldReturnBadRequest()
+        public async Task GetUserAttributes_OnNoAttributes_ShouldReturnBadRequest()
         {
             var userUuid = fixture.Create<string>();
             string attributes = ",";
@@ -236,7 +254,7 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
 
             userAttributeValidator.VerifyAll();
 
-            result.Should().BeOfType<NotFoundObjectResult>("Because UserAttribitte in this test always not found");
+            result.Should().BeOfType<NotFoundObjectResult>("Because UserAttribute in this test always not found");
         }
 
         [Test]
@@ -253,7 +271,7 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Controllers
             userAttributeValidator.VerifyAll();
             userAttributeHelper.VerifyAll();
 
-            result.Should().BeOfType<NoContentResult> ("Because UserAttribitte succsessfully deleted");
+            result.Should().BeOfType<NoContentResult> ("Because UserAttribute successfully deleted");
         }
 
         #endregion

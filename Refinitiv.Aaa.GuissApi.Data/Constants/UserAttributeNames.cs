@@ -7,7 +7,7 @@ namespace Refinitiv.Aaa.GuissApi.Data.Constants
     /// Constants for the names of the attributes in DynamoDB.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class UserAttributeNames
+    public static class UserAttributeNames
     {
         /// <summary>
         /// The UserUuid attribute.

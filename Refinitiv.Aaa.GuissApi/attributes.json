@@ -1,0 +1,57 @@
+[
+    {
+      "ApiName": "UserApi",
+      "UrlTemplate": "https://aaa-users-dev.aaa-preprod.aws-int.thomsonreuters.com/develop/api/users?limit=50&filterBy=uuid&filterValue={0}",
+      "Attributes":
+      [
+        {
+          "Name": "PROFILE.UUID",
+          "ResponsePath": "users[0].uuid"
+        },
+        {
+          "Name": "PROFILE.LocationAccountId",
+          "ResponsePath": "users[0].locationAccountId"
+        },
+        {
+          "Name": "PROFILE.LastName",
+          "ResponsePath": "users[0].lastName"
+        },
+        {
+          "Name": "PROFILE.LastUpdateAAA",
+          "ResponsePath": "users[0].updatedOn"
+        },
+        {
+          "Name": "PROFILE.TelephoneNumber",
+          "ResponsePath": "users[0].phoneNumber"
+        },
+        {
+          "Name": "PROFILE.EmailAddress",
+          "ResponsePath": "users[0].emailAddress"
+        },
+        {
+          "Name": "PROFILE.ContactTitle",
+          "ResponsePath": "users[0].title"
+        },
+        {
+          "Name": "PROFILE.FullName",
+          "ResponsePath": "users[*]['firstName','lastName']"
+        },
+        {
+          "Name": "PROFILE.FirstName",
+          "ResponsePath": "users[0].firstName"
+        },
+        {
+          "Name": "PROFILE.UserId",
+          "ResponsePath": "users[0].userId"
+        },
+        {
+          "Name": "PROFILE.PreferredLanguage",
+          "ResponsePath": "users[0].preferredServiceLanguage"
+        },
+        {
+          "Name": "PROFILE.JobRoleCode",
+          "ResponsePath": "users[0].complianceJobRole"
+        }
+      ]
+    }
+]
