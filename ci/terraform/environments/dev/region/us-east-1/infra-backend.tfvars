@@ -1,5 +1,5 @@
 # Backend
-bucket         = "a250395-terraform-state"
+bucket         = "a250395-terraform-state-use1"
 key            = "region/us-east-1/services/guiss-api-dev/terraform.tfstate"
 region         = "us-east-1"
 profile        = "aaa-sdlc-preprod"
