@@ -28,3 +28,8 @@ variable "alias_target_health" {
   type        = "string"
   default     = false
 }
+
+variable "aws_region" {
+  description = "AWS Region."
+  type        = "string"
+}

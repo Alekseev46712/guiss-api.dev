@@ -5,6 +5,7 @@ module "route53_record" {
   type           = "A"
   alias_name     = module.api_gateway.targeted_domain_name
   alias_zone_id  = module.api_gateway.custom_domain_id
+  aws_region     = var.aws_region
 }
 
 

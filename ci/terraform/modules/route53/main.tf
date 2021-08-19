@@ -12,4 +12,8 @@ resource "aws_route53_record" "route53_record" {
     zone_id                = var.alias_zone_id
     evaluate_target_health = var.alias_target_health
   }
+  latency_routing_policy {
+    region = var.aws_region
+  }
+  set_identifier           = var.aws_region
 }
