@@ -1,10 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Refinitiv.Aaa.Ciam.SharedLibrary.Services.Interfaces;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 {
@@ -12,30 +13,31 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
     public class UserAttributeConfigHelper : IUserAttributeConfigHelper
     {
         private IEnumerable<UserAttributeApiConfig> configs;
-        private readonly string configFilePath;
+        private readonly IConfiguration configuration;
+        private readonly IParameterStoreService parameterStoreService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserAttributeConfigHelper"/> class.
         /// </summary>
-        public UserAttributeConfigHelper()
+        /// <param name="configuration">The application configuration.</param>
+        /// <param name="parameterStoreService">Parameter store service.</param>
+        public UserAttributeConfigHelper(IConfiguration configuration, IParameterStoreService parameterStoreService)
         {
-            configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "attributes.json");
-            LoadConfigFile();
+            this.configuration = configuration;
+            this.parameterStoreService = parameterStoreService;
         }
 
         /// <inheritdoc />
-        public UserAttributeApiConfig GetUserAttributeApiConfig(string apiName)
+        public async Task<UserAttributeApiConfig> GetUserAttributeApiConfig(string apiName)
         {
+            await GetParameterStoreValue();
             return configs.FirstOrDefault(c => c.ApiName == apiName);
         }
 
-        private void LoadConfigFile()
+        private async Task GetParameterStoreValue()
         {
-            using (var r = new StreamReader(configFilePath))
-            {
-                var json = r.ReadToEnd();
-                configs = JsonConvert.DeserializeObject<IEnumerable<UserAttributeApiConfig>>(json);
-            }
+            var jsonParameter = await parameterStoreService.GetParameterAsync(configuration["ParameterStore:UserAttributeApiConfigParameterStorePath"]);
+            configs = JsonConvert.DeserializeObject<IEnumerable<UserAttributeApiConfig>>(jsonParameter);
         }
     }
 }

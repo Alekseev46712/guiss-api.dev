@@ -33,7 +33,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
             dataCacheService = new Mock<IDataCacheService>();
 
             userAttributeConfigHelper = new Mock<IUserAttributeConfigHelper>();
-            userAttributeConfigHelper.Setup(x => x.GetUserAttributeApiConfig(It.IsAny<string>())).Returns(new UserAttributeApiConfig
+            userAttributeConfigHelper.Setup(x => x.GetUserAttributeApiConfig(It.IsAny<string>())).ReturnsAsync(new UserAttributeApiConfig
             {
                 Attributes = attributes
             });

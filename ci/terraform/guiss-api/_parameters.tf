@@ -29,6 +29,16 @@ resource "aws_ssm_parameter" "secure_string" {
   }
 }
 
+resource "aws_ssm_parameter" "user_attribute_api_config" {
+    name      = "/a${var.asset_id}/${var.name_suffix}/Refinitiv.Aaa.GuissApi/UserAttributeApiConfig"
+    value     = "changeme"
+    type      = "String"
+    tags      = local.tags
+	
+	lifecycle {
+		ignore_changes = [ value ]
+  }
+}
 
 # Variables
 variable "kms_alias" {

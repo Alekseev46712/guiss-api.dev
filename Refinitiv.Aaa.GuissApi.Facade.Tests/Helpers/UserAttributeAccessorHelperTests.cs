@@ -28,7 +28,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
             dynamoDbUserAttributeAccessor = new DynamoDbUserAttributeAccessor(null,null);
 
             userAttributeConfigHelper = new Mock<IUserAttributeConfigHelper>();
-            userAttributeConfigHelper.Setup(x => x.GetUserAttributeApiConfig(It.IsAny<string>())).Returns(new UserAttributeApiConfig
+            userAttributeConfigHelper.Setup(x => x.GetUserAttributeApiConfig(It.IsAny<string>())).ReturnsAsync(new UserAttributeApiConfig
             {
                 Attributes = attributes
             });
