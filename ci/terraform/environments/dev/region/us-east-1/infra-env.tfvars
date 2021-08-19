@@ -55,6 +55,11 @@ db_global_secondary_indexes = [
     { name = "Namespace-index", hash_key = "Namespace", write_capacity = 0, read_capacity = 0, projection_type = "ALL" }
   ]
 
+# Elasticache
+ec_type            = "cache.t3.micro"
+ec_subnet_group    = "els-subnetgroup-aaa-sdlc-preprod-us-east-1"
+ec_security_groups = ["fromBastionMemCached"]
+
 # Route53
 route53_hostname = "aaa-guiss-dev"
 route53_domain   = "aaa-preprod.aws-int.thomsonreuters.com"
