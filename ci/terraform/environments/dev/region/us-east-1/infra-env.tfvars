@@ -83,7 +83,7 @@ api_gateway_whitelist = ["10.0.0.0/8","159.220.0.0/16","159.42.0.0/16","163.231.
 alarms = {
   "guiss-api-critical" = {
     "namespace"           = "LogMetrics"
-    "metric"              = "guiss-api-critical"
+    "metric"              = "guiss-api-critical-dev"
     "description"         = "A Critical issue occurred with Guiss-API Lambda"
     "comparison_operator" = "GreaterThanOrEqualToThreshold"
     "datapoints_to_alarm" = "1"
@@ -199,6 +199,7 @@ alarms = {
 # Filters
 filters = {
   "guiss-api-critical" = {
+    "name"      = "guiss-api-critical-dev"
     "pattern"   = "Critical"
     "value"     = "1"
     "namespace" = "LogMetrics"

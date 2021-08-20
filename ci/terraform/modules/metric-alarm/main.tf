@@ -26,7 +26,7 @@ resource "aws_cloudwatch_log_metric_filter" "records" {
   log_group_name = var.group_name
 
   metric_transformation {
-    name      = "${each.key}-${var.name_suffix}"
+    name      = each.value.name
     namespace = each.value.namespace
     value     = each.value.value
   }
