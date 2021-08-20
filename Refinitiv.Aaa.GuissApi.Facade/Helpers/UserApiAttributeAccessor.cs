@@ -23,7 +23,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             IDataCacheService cacheService)
             : base(httpClientFactory,
                 aaaRequestHeaders,
-                userAttributeConfigHelper.GetUserAttributeApiConfig(ServiceNames.UserApi).Result,
+                userAttributeConfigHelper,
+                ServiceNames.UserApi,
                 cacheService)
         {
         }

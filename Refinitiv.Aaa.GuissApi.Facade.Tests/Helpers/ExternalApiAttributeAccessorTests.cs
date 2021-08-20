@@ -42,9 +42,9 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         }
 
         [Test]
-        public void DefaultAttributes_ReturnsNames()
+        public async Task GetDefaultAttributesAsync_ReturnsNames()
         {
-            var result = userApiAttributeAccessor.DefaultAttributes;
+            var result = await userApiAttributeAccessor.GetDefaultAttributesAsync();
 
             result.Should().BeEquivalentTo(attributes.Select(x => x.Name));
         }

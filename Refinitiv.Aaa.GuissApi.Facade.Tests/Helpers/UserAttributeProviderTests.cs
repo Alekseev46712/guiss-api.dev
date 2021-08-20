@@ -28,7 +28,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         [Test]
         public async Task GetUserAttributesAsyncWithStringParam_ReturnsListOfDetails()
         {
-            accessorsHelper.Setup(x => x.GetAccessorsWithDefaultAttributes()).Returns(new Dictionary<IUserAttributeAccessor, List<string>>());
+            accessorsHelper.Setup(x => x.GetAccessorsWithDefaultAttributesAsync()).ReturnsAsync(new Dictionary<IUserAttributeAccessor, List<string>>());
 
             var result = await userAttributeProvider.GetUserAttributesAsync(fixture.Create<string>());
 
@@ -46,8 +46,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
                 .ReturnsAsync(new List<UserAttributeDetails>());
             dict.Add(testAccessor.Object, new List<string>());
             accessorsHelper.Setup(x => x
-                    .GetAccessorsWithAttributes(It.IsAny<IEnumerable<string>>()))
-                .Returns(dict);
+                    .GetAccessorsWithAttributesAsync(It.IsAny<IEnumerable<string>>()))
+                .ReturnsAsync(dict);
 
             var result = await userAttributeProvider.GetUserAttributesAsync(fixture.Create<string>(), fixture.CreateMany<string>());
 

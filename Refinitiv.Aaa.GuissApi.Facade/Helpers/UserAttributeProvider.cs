@@ -22,7 +22,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         /// <inheritdoc />
         public async Task<IEnumerable<UserAttributeDetails>> GetUserAttributesAsync(string userUuid)
         {
-            var accessorsWithAttributes = accessorsHelper.GetAccessorsWithDefaultAttributes();
+            var accessorsWithAttributes = await accessorsHelper.GetAccessorsWithDefaultAttributesAsync();
             var attributeDetails = await GetUserAttributesAsync(userUuid, accessorsWithAttributes);
 
             return attributeDetails;
@@ -33,7 +33,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             string userUuid,
             IEnumerable<string> attributeNames)
         {
-            var accessorsWithAttributes = accessorsHelper.GetAccessorsWithAttributes(attributeNames);
+            var accessorsWithAttributes = await accessorsHelper.GetAccessorsWithAttributesAsync(attributeNames);
             var attributeDetails = await GetUserAttributesAsync(userUuid, accessorsWithAttributes);
 
             return attributeDetails;
