@@ -137,7 +137,7 @@ resource "aws_api_gateway_base_path_mapping" "gateway_base_path_mapping" {
   count                           = "${var.api_gateway_custom_domain ? 1 : 0}"
 
   api_id                          = aws_api_gateway_rest_api.api_gateway.id
-#  stage_name                      = var.deploy_name
+  stage_name                      = var.deploy_name
   domain_name                     = aws_api_gateway_domain_name.gateway_domain_name[0].domain_name
   depends_on                      = [
         "aws_api_gateway_domain_name.gateway_domain_name"
