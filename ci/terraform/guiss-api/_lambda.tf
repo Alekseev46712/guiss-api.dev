@@ -14,8 +14,13 @@ data "aws_subnet_ids" "config" {
 
 data "aws_security_groups" "config" {
   filter {
-    name   = "tag:Name"
+    name   = "group-name"
     values = var.lambda_security_groups
+  }
+
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.main.id]
   }
 }
 
@@ -45,7 +50,6 @@ module "lambda" {
 
   environment_variables           = merge(var.lambda_env_vars, {
      "AWS__ParameterStorePath"                       = "/${local.prefix}/${var.name_suffix}/${var.param_path}",
-     "AppSettings__DynamoDb__UserAttributeTableName" = module.dynamodb.name,
      "Version"                                       = var.app_version_number,
                                     })
 
@@ -98,7 +102,10 @@ resource "aws_iam_role_policy" "dynabodb_access" {
           "dynamodb:GetItem",
         ]
         Effect   = "Allow"
-        Resource = module.dynamodb.arn
+        Resource = [
+          "arn:aws:dynamodb:${var.aws_region}:${data.aws_caller_identity.current.account_id}:table/${local.prefix}-db-${var.lambda_name}-${var.name_suffix}-${local.abbreviations}",
+          "arn:aws:dynamodb:${var.aws_region}:${data.aws_caller_identity.current.account_id}:table/${local.prefix}-db-${var.lambda_name}-${var.name_suffix}",
+        ]
       },
       {
         Action = [
@@ -107,8 +114,10 @@ resource "aws_iam_role_policy" "dynabodb_access" {
         ]
         Effect   = "Allow"
         Resource = [
-          module.dynamodb.arn,
-          "${module.dynamodb.arn}/index/*",
+          "arn:aws:dynamodb:${var.aws_region}:${data.aws_caller_identity.current.account_id}:table/${local.prefix}-db-${var.lambda_name}-${var.name_suffix}-${local.abbreviations}",
+          "arn:aws:dynamodb:${var.aws_region}:${data.aws_caller_identity.current.account_id}:table/${local.prefix}-db-${var.lambda_name}-${var.name_suffix}-${local.abbreviations}/index/*",
+          "arn:aws:dynamodb:${var.aws_region}:${data.aws_caller_identity.current.account_id}:table/${local.prefix}-db-${var.lambda_name}-${var.name_suffix}",
+          "arn:aws:dynamodb:${var.aws_region}:${data.aws_caller_identity.current.account_id}:table/${local.prefix}-db-${var.lambda_name}-${var.name_suffix}/index/*",
         ]
       },
     ]
