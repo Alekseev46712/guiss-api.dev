@@ -7,7 +7,6 @@ using Refinitiv.Aaa.Api.Common.Attributes;
 using Refinitiv.Aaa.Foundation.ApiClient.Core.Enums;
 using Refinitiv.Aaa.Foundation.ApiClient.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Exceptions;
-using Refinitiv.Aaa.GuissApi.Facade.Helpers;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using Swashbuckle.AspNetCore.Annotations;
@@ -27,7 +26,6 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
         private readonly IUserAttributeHelper userAttributeHelper;
         private readonly IUserAttributeValidator userAttributeValidator;
         private readonly ILoggerHelper<UserAttributeController> loggerHelper;
-        private readonly CacheHelper cacheHelper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserAttributeController"/> class.
@@ -39,12 +37,11 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
         public UserAttributeController(
             IUserAttributeHelper userAttributeHelper,
             IUserAttributeValidator userAttributeValidator,
-            ILoggerHelper<UserAttributeController> loggerHelper, CacheHelper cacheHelper)
+            ILoggerHelper<UserAttributeController> loggerHelper)
         {
             this.userAttributeHelper = userAttributeHelper;
             this.userAttributeValidator = userAttributeValidator;
             this.loggerHelper = loggerHelper;
-            this.cacheHelper = cacheHelper;
         }
 
         /// <summary>

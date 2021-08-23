@@ -24,6 +24,7 @@ using Refinitiv.Aaa.Foundation.ApiClient.Core.Models;
 using Refinitiv.Aaa.GuissApi.Middlewares;
 using Refinitiv.Aaa.Foundation.ApiClient.Helpers;
 using Refinitiv.Aaa.GuissApi.Facade.Helpers;
+using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 
 namespace Refinitiv.Aaa.GuissApi
 {
@@ -71,10 +72,7 @@ namespace Refinitiv.Aaa.GuissApi
             services.AddSwaggerGenNewtonsoftSupport();
             services.UseAaaRequestHeaders();
      
-
-            services.AddSingleton<CacheHelper>(x => new CacheHelper(configuration.GetValue<string>(ElasticacheServerAddress), configuration.GetValue<int>(ElasticacheServerPort)));
-
-  
+            services.AddScoped<ICacheHelper,CacheHelper>(x => new CacheHelper(configuration.GetValue<string>(ElasticacheServerAddress), configuration.GetValue<int>(ElasticacheServerPort)));
 
             services.Configure<SwaggerConfiguration>(configuration.GetSection(SwaggerSection));
             services.Configure<LoggingConfiguration>(configuration.GetSection(LoggingSection));
