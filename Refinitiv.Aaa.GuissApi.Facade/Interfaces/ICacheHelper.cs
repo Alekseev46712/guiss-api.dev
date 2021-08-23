@@ -36,7 +36,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <param name="cacheSeconds">Seconds for which the item will be stored.</param>
         /// <param name="value">Value to add.</param>
         /// <returns>true if operations was successful, false otherwise.</returns>
-        bool Add(string key, string value, int cacheSeconds);
+        bool Add<T>(string key, T value, int cacheSeconds);
 
         /// <summary>
         /// Replace value for the key
@@ -45,7 +45,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <param name="cacheSeconds">Seconds for which the item will be stored.</param>
         /// <param name="value">Value replace.</param>
         /// <returns>true if operation was successful, false otherwise.</returns>
-        bool Replace(string key, string value, int cacheSeconds);
+        bool Replace<T>(string key, T value, int cacheSeconds);
 
         /// <summary>
         /// Remove item

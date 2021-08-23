@@ -80,7 +80,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         /// <inheritdoc />
-        public bool Add(string key, string value, int cacheSeconds)
+        public bool Add<T>(string key, T value, int cacheSeconds)
         {
             using (MemcachedClient client = new MemcachedClient(configuration))
             {
@@ -90,7 +90,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         /// <inheritdoc />
-        public bool Replace(string key, string value, int cacheSeconds)
+        public bool Replace<T>(string key, T value, int cacheSeconds)
         {
             using (MemcachedClient client = new MemcachedClient(configuration))
             {
