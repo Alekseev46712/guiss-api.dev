@@ -17,7 +17,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <param name="cacheSeconds">Seconds for which the item will be stored.</param>
         /// <param name="generator">Method that returns value.</param>
         /// <returns>Value if it already exist, true if value was added successfully, false otherwise.</returns>
-        Task<T> GetValueOrCreateAsync<T>(string key, int cacheSeconds, Func<Task<T>> generator);
+        Task<T> GetValueOrCreateAsync<T>(string key, Func<Task<T>> generator, int? cacheSeconds = null);
 
         /// <summary>
         /// Added new item to cache, or replace for the key if key already exist
@@ -26,7 +26,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <param name="cacheSeconds">Seconds for which the item will be stored.</param>
         /// <param name="value">Value to add.</param>
         /// <returns>true if one of operations(add,set) was successful, false otherwise.</returns>
-        bool CreateOrReplace<T>(string key, T value, int cacheSeconds);
+        bool CreateOrReplace<T>(string key, T value, int? cacheSeconds = null);
 
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <param name="cacheSeconds">Seconds for which the item will be stored.</param>
         /// <param name="value">Value to add.</param>
         /// <returns>true if operations was successful, false otherwise.</returns>
-        bool Add<T>(string key, T value, int cacheSeconds);
+        bool Add<T>(string key, T value, int? cacheSeconds = null);
 
         /// <summary>
         /// Replace value for the key
@@ -45,7 +45,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// <param name="cacheSeconds">Seconds for which the item will be stored.</param>
         /// <param name="value">Value replace.</param>
         /// <returns>true if operation was successful, false otherwise.</returns>
-        bool Replace<T>(string key, T value, int cacheSeconds);
+        bool Replace<T>(string key, T value, int? cacheSeconds = null);
 
         /// <summary>
         /// Remove item

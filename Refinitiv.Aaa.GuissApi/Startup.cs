@@ -44,6 +44,9 @@ namespace Refinitiv.Aaa.GuissApi
         private const string UserApiBaseAddress = "AppSettings:Services:UserApi";
         private const string ElasticacheServerAddress = "AppSettings:Elasticache:Hostname";
         private const string ElasticacheServerPort = "AppSettings:Elasticache:Port";
+        private const string ElasticacheExpirationSeconds= "AppSettings:Elasticache:DefaultExpirationInSeconds";
+        private const string ElasticacheEnabled = "AppSettings:Elasticache:Enabled";
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
@@ -71,13 +74,17 @@ namespace Refinitiv.Aaa.GuissApi
                 });
             services.AddSwaggerGenNewtonsoftSupport();
             services.UseAaaRequestHeaders();
-     
-            services.AddScoped<ICacheHelper,CacheHelper>(x => new CacheHelper(configuration.GetValue<string>(ElasticacheServerAddress), configuration.GetValue<int>(ElasticacheServerPort)));
+
+            services.AddScoped<ICacheHelper, CacheHelper>(x => new CacheHelper(
+                 configuration.GetValue<string>(ElasticacheServerAddress),
+                 configuration.GetValue<int>(ElasticacheServerPort),
+                 configuration.GetValue<int>(ElasticacheExpirationSeconds),
+                 configuration.GetValue<bool>(ElasticacheEnabled))); 
 
             services.Configure<SwaggerConfiguration>(configuration.GetSection(SwaggerSection));
             services.Configure<LoggingConfiguration>(configuration.GetSection(LoggingSection));
             services.Configure<AppSettingsConfig>(configuration.GetSection(AppSettingsSection));
-            services.Configure<CachingOptions>(configuration.GetSection(CacheSection));
+            services.Configure<CachingOptions>(configuration.GetSection(ElasticacheEnabled));
 
             services.AddControllers();
             services.AddRouting();
