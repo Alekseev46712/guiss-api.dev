@@ -47,8 +47,6 @@ namespace Refinitiv.Aaa.GuissApi.Middlewares
             try
             {
                 await next.Invoke(context);
-                //for testing
-                throw new Exception("test exception");
             }
             catch (ArgumentException ex)
             {
