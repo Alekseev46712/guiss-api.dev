@@ -24,13 +24,14 @@ aws_vpc                     = "fr-vpc-1"
 lambda_subnets              = ["aaa-sdlc-preprod-enterprise-us-east-1b"]
 lambda_security_groups      = ["default"]
 lambda_env_vars             = {
-  "AppSettings__DynamoDb__DefaultQueryLimit"     = "50",
-  "AppSettings__Services__UserApi"               = "https://aaa-users-dev.aaa-preprod.aws-int.thomsonreuters.com/develop"
-  "Logging__IdentityPoolId"                      = "us-east-1:5e737732-975a-4c30-8b4b-1b31da87044d",
-  "Logging__Target"                              = "CloudWatch",
-  "Logging__LogLevel__Default"                   = "Debug",
-  "ParameterStore__PaginationParameterStorePath" = "/Refinitiv.Aaa.GuissApi/DataProtection",
-  "Swagger__Endpoint"                            = "/main/swagger/v1/swagger.json"
+  "AppSettings__DynamoDb__UserAttributeTableName" = "a250395-db-guiss-api-dev-use1",
+  "AppSettings__DynamoDb__DefaultQueryLimit"      = "50",
+  "AppSettings__Services__UserApi"                = "https://aaa-users-dev.aaa-preprod.aws-int.thomsonreuters.com/develop"
+  "Logging__IdentityPoolId"                       = "us-east-1:5e737732-975a-4c30-8b4b-1b31da87044d",
+  "Logging__Target"                               = "CloudWatch",
+  "Logging__LogLevel__Default"                    = "Debug",
+  "ParameterStore__PaginationParameterStorePath"  = "/Refinitiv.Aaa.GuissApi/DataProtection",
+  "Swagger__Endpoint"                             = "/swagger/v1/swagger.json"
 }
 
 # Parameters
