@@ -31,7 +31,7 @@ lambda_env_vars             = {
   "Logging__Target"                               = "CloudWatch",
   "Logging__LogLevel__Default"                    = "Debug",
   "ParameterStore__PaginationParameterStorePath"  = "/Refinitiv.Aaa.GuissApi/DataProtection",
-  "Swagger__Endpoint"                             = "/main/swagger/v1/swagger.json"
+  "Swagger__Endpoint"                             = "/swagger/v1/swagger.json"
 }
 
 # Parameters

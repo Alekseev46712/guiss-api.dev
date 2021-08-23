@@ -22,6 +22,7 @@ namespace Refinitiv.Aaa.GuissApi.Middlewares
         private readonly ILogger<GuissExceptionHandlerMiddleware> logger;
 
         private const string FailedToRequestMessage = "Failed to request external service";
+        private const string InternalErrorMessage = "Failed to proccess the request due to internal error";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GuissExceptionHandlerMiddleware" /> class.
@@ -55,19 +56,28 @@ namespace Refinitiv.Aaa.GuissApi.Middlewares
             {
                 await ProcessDefaultErrorAsync(context, ex, ex.Message, HttpStatusCode.BadRequest);
             }
+            catch (InvalidHttpResponseException ex) when (ex.StatusCode == HttpStatusCode.Forbidden)
+            {
+                await ProcessDefaultErrorAsync(context, ex, ex.Message, HttpStatusCode.Forbidden);   
+            }
             catch (InvalidHttpResponseException ex)
             {
-                if (ex.StatusCode == HttpStatusCode.Forbidden)
-                {
-                    await ProcessDefaultErrorAsync(context, ex, ex.Message, HttpStatusCode.Forbidden);
-                    return;
-                }
                 await ProcessDefaultErrorAsync(context, ex, ex.Message, HttpStatusCode.InternalServerError);
             }
             catch (HttpRequestException ex)
             {
                 await ProcessDefaultErrorAsync(context, ex, FailedToRequestMessage, HttpStatusCode.BadRequest);
             }
+            catch (Exception ex)
+            {
+                await ProcessCriticalErrorAsync(context, ex, InternalErrorMessage);
+            }
+        }
+
+        private async Task ProcessCriticalErrorAsync(HttpContext httpContext, Exception exception, string message)
+        {
+            logger.LogCritical(exception, exception.Message);
+            await WriteErrorResponseAsync(httpContext, message, HttpStatusCode.InternalServerError);
         }
 
         private async Task ProcessDefaultErrorAsync(HttpContext httpContext, Exception exception, string message, HttpStatusCode statusCode)
