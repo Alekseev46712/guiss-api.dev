@@ -1,36 +1,113 @@
 ﻿using Enyim.Caching;
 using Enyim.Caching.Configuration;
 using Enyim.Caching.Memcached;
+using Refinitiv.Aaa.GuissApi.Facade.Interfaces; 
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 {
-    public class CacheHelper
+    /// <inheritdoc />
+    public class CacheHelper : ICacheHelper
     {
-        MemcachedClientConfiguration local;
+        private readonly MemcachedClientConfiguration configuration;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CacheHelper"/> class.
+        /// </summary>
+        /// <param name="hostname">Hostname of the cache node.</param>
+        /// <param name="port">Port of the cache node.</param>
         public CacheHelper(string hostname, int port)
         {
-            //config = new ElastiCacheClusterConfig(hostname, port);
-            local = new MemcachedClientConfiguration();
-            local.AddServer(hostname, port);
+            configuration = new MemcachedClientConfiguration();
+            configuration.AddServer(hostname, port);
         }
 
-        public string CreateSomeData()
+        /// <inheritdoc />
+        public async Task<T> GetValueOrCreateAsync<T>(string key, int cacheSeconds, Func<Task<T>> generator)
         {
-            using (MemcachedClient client = new MemcachedClient(local))
+            using (MemcachedClient client = new MemcachedClient(configuration))
             {
+                var result = client.ExecuteGet(key);
 
-                bool results = client.Store(StoreMode.Add, "custom_key1", "custom_value");
+                if (result.Success)
+                {
+                    return (T)result.Value;
+                }
 
-                return results.ToString();         
+                var value = await generator?.Invoke();
+
+                if (value != null)
+                {
+                    client.Store(StoreMode.Add, key, value, TimeSpan.FromSeconds(cacheSeconds));                   
+                }
+
+                return value;
             }
         }
 
+        /// <inheritdoc />
+        public bool CreateOrReplace<T>(string key, T value, int cacheSeconds)
+        {
+            using (MemcachedClient client = new MemcachedClient(configuration))
+            {
+                bool result;
 
+                var item = client.ExecuteGet(key);
 
+                if (item.Success)
+                {
+                    result = client.Store(StoreMode.Set, key, value, TimeSpan.FromSeconds(cacheSeconds));
+
+                    return result;
+                }
+
+                result = client.Store(StoreMode.Add, key, value, TimeSpan.FromSeconds(cacheSeconds));
+
+                return result;
+            }
+        }
+
+        /// <inheritdoc />
+        public bool Add(string key, string value, int cacheSeconds)
+        {
+            using (MemcachedClient client = new MemcachedClient(configuration))
+            {
+                bool result = client.Store(StoreMode.Add, key, value, TimeSpan.FromSeconds(cacheSeconds));
+                return result;
+            }
+        }
+
+        /// <inheritdoc />
+        public bool Replace(string key, string value, int cacheSeconds)
+        {
+            using (MemcachedClient client = new MemcachedClient(configuration))
+            {
+                bool result = client.Store(StoreMode.Set, key, value, TimeSpan.FromSeconds(cacheSeconds));
+                return result;
+            }
+        }
+
+        /// <inheritdoc />
+        public bool Remove(string key)
+        {
+            using (MemcachedClient client = new MemcachedClient(configuration))
+            {
+                bool result = client.Remove(key);
+                return result;
+            }
+        }
+
+        /// <inheritdoc />
+        public T Get<T>(string key)
+        {
+            using (MemcachedClient client = new MemcachedClient(configuration))
+            {
+                return client.Get<T>(key);
+            }
+        }
 
 
     }
