@@ -199,7 +199,6 @@ alarms = {
 # Filters
 filters = {
   "guiss-api-critical" = {
-    "name"      = "guiss-api-critical-dev"
     "pattern"   = "Critical"
     "value"     = "1"
     "namespace" = "LogMetrics"
