@@ -13,21 +13,31 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
     public class CacheHelper : ICacheHelper
     {
         private readonly MemcachedClientConfiguration configuration;
+        private readonly int DefaultExpirationInSeconds;
+        private readonly bool Enabled;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CacheHelper"/> class.
         /// </summary>
         /// <param name="hostname">Hostname of the cache node.</param>
         /// <param name="port">Port of the cache node.</param>
-        public CacheHelper(string hostname, int port)
+        /// <param name="DefaultExpirationInSeconds">Time that cache lives.</param>
+        /// <param name="Enabled">Enable or disable caching.</param>
+        public CacheHelper(string hostname, int port, int DefaultExpirationInSeconds, bool Enabled)
         {
             configuration = new MemcachedClientConfiguration();
             configuration.AddServer(hostname, port);
+            this.DefaultExpirationInSeconds = DefaultExpirationInSeconds;
+            this.Enabled = Enabled;
         }
 
         /// <inheritdoc />
-        public async Task<T> GetValueOrCreateAsync<T>(string key, int cacheSeconds, Func<Task<T>> generator)
+        public async Task<T> GetValueOrCreateAsync<T>(string key, Func<Task<T>> generator, int? cacheSeconds = null)
         {
+            if (!Enabled)
+            {
+                return await generator?.Invoke();
+            }
             using (MemcachedClient client = new MemcachedClient(configuration))
             {
                 var result = client.ExecuteGet(key);
@@ -41,7 +51,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 
                 if (value != null)
                 {
-                    client.Store(StoreMode.Add, key, value, TimeSpan.FromSeconds(cacheSeconds));                   
+                    client.Store(StoreMode.Add, key, value, TimeSpan.FromSeconds(cacheSeconds ?? DefaultExpirationInSeconds));                   
                 }
 
                 return value;
@@ -58,7 +68,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         /// <inheritdoc />
-        public bool CreateOrReplace<T>(string key, T value, int cacheSeconds)
+        public bool CreateOrReplace<T>(string key, T value, int? cacheSeconds = null)
         {
             using (MemcachedClient client = new MemcachedClient(configuration))
             {
@@ -68,33 +78,33 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 
                 if (item.Success)
                 {
-                    result = client.Store(StoreMode.Set, key, value, TimeSpan.FromSeconds(cacheSeconds));
+                    result = client.Store(StoreMode.Set, key, value, TimeSpan.FromSeconds(cacheSeconds ?? DefaultExpirationInSeconds));
 
                     return result;
                 }
 
-                result = client.Store(StoreMode.Add, key, value, TimeSpan.FromSeconds(cacheSeconds));
+                result = client.Store(StoreMode.Add, key, value, TimeSpan.FromSeconds(cacheSeconds ?? DefaultExpirationInSeconds));
 
                 return result;
             }
         }
 
         /// <inheritdoc />
-        public bool Add<T>(string key, T value, int cacheSeconds)
+        public bool Add<T>(string key, T value, int? cacheSeconds = null)
         {
             using (MemcachedClient client = new MemcachedClient(configuration))
             {
-                bool result = client.Store(StoreMode.Add, key, value, TimeSpan.FromSeconds(cacheSeconds));
+                bool result = client.Store(StoreMode.Add, key, value, TimeSpan.FromSeconds(cacheSeconds ?? DefaultExpirationInSeconds));
                 return result;
             }
         }
 
         /// <inheritdoc />
-        public bool Replace<T>(string key, T value, int cacheSeconds)
+        public bool Replace<T>(string key, T value, int? cacheSeconds = null)
         {
             using (MemcachedClient client = new MemcachedClient(configuration))
             {
-                bool result = client.Store(StoreMode.Set, key, value, TimeSpan.FromSeconds(cacheSeconds));
+                bool result = client.Store(StoreMode.Set, key, value, TimeSpan.FromSeconds(cacheSeconds ?? DefaultExpirationInSeconds));
                 return result;
             }
         }
