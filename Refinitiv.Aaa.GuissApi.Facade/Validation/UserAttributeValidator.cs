@@ -17,7 +17,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         private readonly IUserHelper userHelper;
         private readonly IMapper mapper;
         private readonly IUserAttributeRepository userAttributeRepository;
-        private readonly ICacheHelper cacheHelper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserAttributeValidator"/> class.
@@ -28,12 +27,11 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         public UserAttributeValidator(
             IUserHelper userHelper,
             IUserAttributeRepository userAttributeRepository,
-            IMapper mapper, ICacheHelper cacheHelper)
+            IMapper mapper)
         {
             this.userHelper = userHelper;
             this.userAttributeRepository = userAttributeRepository;
             this.mapper = mapper;
-            this.cacheHelper = cacheHelper;
         }
 
         /// <inheritdoc />
@@ -128,7 +126,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
                 throw new ArgumentNullException(nameof(userUuid));
             }
 
-            var existingFromUsersApi = cacheHelper.GetValueOrCreateAsync(userUuid, async () => await userHelper.GetUserByUuidAsync(userUuid));
+            var existingFromUsersApi = await userHelper.GetUserByUuidAsync(userUuid);
             if (existingFromUsersApi == null)
             {
                 return new NotFoundObjectResult(new { Message = "The User is not found" });

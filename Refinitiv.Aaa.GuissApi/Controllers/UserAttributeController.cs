@@ -143,31 +143,31 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
         {
             var attributeValidationResult = await userAttributeValidator.ValidateAttributeAsync(details);
 
-            //if (!(attributeValidationResult is AcceptedResult))
-            //{
-            //    return attributeValidationResult;
-            //}
+            if (!(attributeValidationResult is AcceptedResult))
+            {
+                return attributeValidationResult;
+            }
 
-            //var userAttribute = await userAttributeValidator.ValidatePutRequestAsync(details);
+            var userAttribute = await userAttributeValidator.ValidatePutRequestAsync(details);
 
-            //if (userAttribute != null)
-            //{
-            //    try
-            //    {
-            //        var updatedAttribute = await userAttributeHelper.UpdateAsync(userAttribute, details.Value);
-            //        loggerHelper.LogAuditEntry(LoggerEvent.Updated, "Attribute Updated", $"uuid :{updatedAttribute.UserUuid}, name : {updatedAttribute.Name}");
-            //        return Ok(updatedAttribute);
-            //    }
-            //    catch (UpdateConflictException)
-            //    {
-            //        return Conflict();
-            //    }
-            //}
+            if (userAttribute != null)
+            {
+                try
+                {
+                    var updatedAttribute = await userAttributeHelper.UpdateAsync(userAttribute, details.Value);
+                    loggerHelper.LogAuditEntry(LoggerEvent.Updated, "Attribute Updated", $"uuid :{updatedAttribute.UserUuid}, name : {updatedAttribute.Name}");
+                    return Ok(updatedAttribute);
+                }
+                catch (UpdateConflictException)
+                {
+                    return Conflict();
+                }
+            }
 
-            //var savedItem = await userAttributeHelper.InsertAsync(details);
-            //loggerHelper.LogAuditEntry(LoggerEvent.Created, "Attribute Created", $"uuid :{savedItem.UserUuid}, name : {savedItem.Name}");
+            var savedItem = await userAttributeHelper.InsertAsync(details);
+            loggerHelper.LogAuditEntry(LoggerEvent.Created, "Attribute Created", $"uuid :{savedItem.UserUuid}, name : {savedItem.Name}");
 
-            return Ok(attributeValidationResult);
+            return Ok(savedItem);
         }
 
         /// <summary>

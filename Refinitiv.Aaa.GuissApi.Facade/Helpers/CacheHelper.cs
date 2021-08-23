@@ -41,7 +41,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             using (MemcachedClient client = new MemcachedClient(configuration))
             {
                 var result = client.ExecuteGet(key);
-
+                
                 if (result.Success)
                 {
                     return (T)result.Value;
