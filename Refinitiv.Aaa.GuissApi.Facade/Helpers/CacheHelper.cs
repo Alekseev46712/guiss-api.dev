@@ -49,6 +49,15 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         /// <inheritdoc />
+        public T Get<T>(string key)
+        {
+            using (MemcachedClient client = new MemcachedClient(configuration))
+            {
+                return client.Get<T>(key);
+            }
+        }
+
+        /// <inheritdoc />
         public bool CreateOrReplace<T>(string key, T value, int cacheSeconds)
         {
             using (MemcachedClient client = new MemcachedClient(configuration))
@@ -99,16 +108,5 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
                 return result;
             }
         }
-
-        /// <inheritdoc />
-        public T Get<T>(string key)
-        {
-            using (MemcachedClient client = new MemcachedClient(configuration))
-            {
-                return client.Get<T>(key);
-            }
-        }
-
-
     }
 }
