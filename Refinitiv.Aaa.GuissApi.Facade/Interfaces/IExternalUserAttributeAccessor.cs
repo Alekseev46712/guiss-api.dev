@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
 {
@@ -8,8 +9,9 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
     public interface IExternalUserAttributeAccessor : IUserAttributeAccessor
     {
         /// <summary>
-        /// All the user attributes related to current API.
+        /// Gets all the user attributes related to current API.
         /// </summary>
-        IEnumerable<string> DefaultAttributes { get; }
+        /// <returns>The user attributes related to current API.</returns>
+        Task<IEnumerable<string>> GetDefaultAttributesAsync();
     }
 }

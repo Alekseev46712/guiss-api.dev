@@ -18,6 +18,11 @@ variable "name_suffix" {
     type = "string"
 }
 
+variable "abbreviations" {
+    description = "Region abbreviation to add to the alarm name"
+    type = "string"
+}
+
 variable "tags" {
     description = "Tags to add to the alarms"
     type = "map"

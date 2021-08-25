@@ -1,7 +1,7 @@
 resource "aws_cloudwatch_metric_alarm" "bells" {
   for_each = var.alarms
 
-  alarm_name                = "a${var.asset_id}-${each.key}-alarm-${var.name_suffix}"
+  alarm_name                = "a${var.asset_id}-${each.key}-alarm-${var.name_suffix}-${var.abbreviations}"
   comparison_operator       = each.value.comparison_operator
   evaluation_periods        = each.value.evaluation_periods
   metric_name               = each.value.metric
@@ -21,7 +21,7 @@ resource "aws_cloudwatch_metric_alarm" "bells" {
 resource "aws_cloudwatch_log_metric_filter" "records" {
   for_each       = var.filters
 
-  name           = "a${var.asset_id}-${each.key}-filter-${var.name_suffix}"
+  name           = "a${var.asset_id}-${each.key}-filter-${var.name_suffix}-${var.abbreviations}"
   pattern        = each.value.pattern
   log_group_name = var.group_name
 
