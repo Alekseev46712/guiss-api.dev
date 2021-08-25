@@ -25,6 +25,9 @@ using Refinitiv.Aaa.GuissApi.Middlewares;
 using Refinitiv.Aaa.Foundation.ApiClient.Helpers;
 using Refinitiv.Aaa.GuissApi.Facade.Helpers;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
+using Refinitiv.Aaa.GuissApi.Facade.Models;
+using Enyim.Caching.Configuration;
+using Enyim.Caching;
 
 namespace Refinitiv.Aaa.GuissApi
 {
@@ -36,17 +39,16 @@ namespace Refinitiv.Aaa.GuissApi
     {
         private readonly IWebHostEnvironment environment;
         private readonly IConfiguration configuration;
+        private readonly MemcachedClientConfiguration clientConfiguration = new MemcachedClientConfiguration();
         private const string SwaggerSection = "Swagger";
         private const string LoggingSection = "Logging";
         private const string AppSettingsSection = "AppSettings";
         private const string CacheSection = "AppSettings:Cache";
+        private const string ElasticacheSection = "AppSettings:Elasticache";
         private const string PaginationStoreHashPath = "ParameterStore:PaginationParameterStorePath";
         private const string UserApiBaseAddress = "AppSettings:Services:UserApi";
         private const string ElasticacheServerAddress = "AppSettings:Elasticache:Hostname";
-        private const string ElasticacheServerPort = "AppSettings:Elasticache:Port";
-        private const string ElasticacheExpirationSeconds= "AppSettings:Elasticache:DefaultExpirationInSeconds";
-        private const string ElasticacheEnabled = "AppSettings:Elasticache:Enabled";
-
+        private const string ElasticacheServerPort = "AppSettings:Elasticache:Port";    
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
@@ -75,16 +77,18 @@ namespace Refinitiv.Aaa.GuissApi
             services.AddSwaggerGenNewtonsoftSupport();
             services.UseAaaRequestHeaders();
 
-            services.AddScoped<ICacheHelper, CacheHelper>(x => new CacheHelper(
-                 configuration.GetValue<string>(ElasticacheServerAddress),
-                 configuration.GetValue<int>(ElasticacheServerPort),
-                 configuration.GetValue<int>(ElasticacheExpirationSeconds),
-                 configuration.GetValue<bool>(ElasticacheEnabled))); 
+            services.Configure<CacheHelperOptions>(configuration.GetSection(ElasticacheSection));
+            
+
+            clientConfiguration.AddServer(configuration.GetValue<string>(ElasticacheServerAddress), configuration.GetValue<int>(ElasticacheServerPort));
+            services.AddScoped<IMemcachedClient, MemcachedClient>(x => new MemcachedClient(clientConfiguration));
+            services.AddScoped<IMemcachedResultsClient, MemcachedClient>(x => new MemcachedClient(clientConfiguration));
+            services.AddScoped<ICacheHelper, CacheHelper>(); 
 
             services.Configure<SwaggerConfiguration>(configuration.GetSection(SwaggerSection));
             services.Configure<LoggingConfiguration>(configuration.GetSection(LoggingSection));
             services.Configure<AppSettingsConfig>(configuration.GetSection(AppSettingsSection));
-            services.Configure<CachingOptions>(configuration.GetSection(ElasticacheEnabled));
+            services.Configure<CachingOptions>(configuration.GetSection(CacheSection));
 
             services.AddControllers();
             services.AddRouting();
