@@ -77,9 +77,7 @@ namespace Refinitiv.Aaa.GuissApi
             services.AddSwaggerGenNewtonsoftSupport();
             services.UseAaaRequestHeaders();
 
-            services.Configure<CacheHelperOptions>(configuration.GetSection(ElasticacheSection));
-            
-
+            services.Configure<CacheHelperOptions>(configuration.GetSection(ElasticacheSection));          
             clientConfiguration.AddServer(configuration.GetValue<string>(ElasticacheServerAddress), configuration.GetValue<int>(ElasticacheServerPort));
             services.AddScoped<IMemcachedClient, MemcachedClient>(x => new MemcachedClient(clientConfiguration));
             services.AddScoped<IMemcachedResultsClient, MemcachedClient>(x => new MemcachedClient(clientConfiguration));
