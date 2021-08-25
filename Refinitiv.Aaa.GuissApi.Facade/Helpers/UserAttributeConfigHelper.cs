@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Refinitiv.Aaa.Ciam.SharedLibrary.Services.Interfaces;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
@@ -6,6 +5,7 @@ using Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 {
@@ -13,30 +13,33 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
     public class UserAttributeConfigHelper : IUserAttributeConfigHelper
     {
         private IEnumerable<UserAttributeApiConfig> configs;
-        private readonly IConfiguration configuration;
+        private readonly ParameterStoreConfig parameterStoreConfig;
         private readonly IParameterStoreService parameterStoreService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserAttributeConfigHelper"/> class.
         /// </summary>
-        /// <param name="configuration">The application configuration.</param>
+        /// <param name="parameterStoreConfig">The parameter store configuration.</param>
         /// <param name="parameterStoreService">Parameter store service.</param>
-        public UserAttributeConfigHelper(IConfiguration configuration, IParameterStoreService parameterStoreService)
+        public UserAttributeConfigHelper(
+            IOptions<ParameterStoreConfig> parameterStoreConfig,
+            IParameterStoreService parameterStoreService)
         {
-            this.configuration = configuration;
+            this.parameterStoreConfig = parameterStoreConfig.Value;
             this.parameterStoreService = parameterStoreService;
         }
 
         /// <inheritdoc />
-        public async Task<UserAttributeApiConfig> GetUserAttributeApiConfig(string apiName)
+        public async Task<UserAttributeApiConfig> GetUserAttributeApiConfigAsync(string apiName)
         {
-            await GetParameterStoreValue();
+            await GetParameterStoreValueAsync();
             return configs.FirstOrDefault(c => c.ApiName == apiName);
         }
 
-        private async Task GetParameterStoreValue()
+        private async Task GetParameterStoreValueAsync()
         {
-            var jsonParameter = await parameterStoreService.GetParameterAsync(configuration["ParameterStore:UserAttributeApiConfigParameterStorePath"]);
+            var jsonParameter = await parameterStoreService
+                .GetParameterAsync(parameterStoreConfig.UserAttributeApiConfigParameterStorePath);
             configs = JsonConvert.DeserializeObject<IEnumerable<UserAttributeApiConfig>>(jsonParameter);
         }
     }

@@ -38,6 +38,7 @@ namespace Refinitiv.Aaa.GuissApi
         private const string LoggingSection = "Logging";
         private const string AppSettingsSection = "AppSettings";
         private const string CacheSection = "AppSettings:Cache";
+        private const string ParameterStoreSection = "ParameterStore";
         private const string ParameterStoreCacheSection = "ParameterStore:CacheSettings";
         private const string PaginationStoreHashPath = "ParameterStore:PaginationParameterStorePath";
         private const string UserApiBaseAddress = "AppSettings:Services:UserApi";
@@ -73,6 +74,7 @@ namespace Refinitiv.Aaa.GuissApi
             services.Configure<SwaggerConfiguration>(configuration.GetSection(SwaggerSection));
             services.Configure<LoggingConfiguration>(configuration.GetSection(LoggingSection));
             services.Configure<AppSettingsConfig>(configuration.GetSection(AppSettingsSection));
+            services.Configure<ParameterStoreConfig>(configuration.GetSection(ParameterStoreSection));
             services.Configure<CachingOptions>(configuration.GetSection(CacheSection));
 
             services.Configure<Ciam.SharedLibrary.Services.Models.CachingOptions>(configuration.GetSection(ParameterStoreCacheSection));

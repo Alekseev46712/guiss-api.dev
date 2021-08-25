@@ -51,7 +51,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         /// <inheritdoc />
         public async Task<IEnumerable<string>> GetDefaultAttributesAsync()
         {
-            var config = await userAttributeConfigHelper.GetUserAttributeApiConfig(apiName);
+            var config = await userAttributeConfigHelper.GetUserAttributeApiConfigAsync(apiName);
 
             return config.Attributes.Select(a => a.Name);
         }
@@ -68,7 +68,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
                 return result;
             }
 
-            config = await userAttributeConfigHelper.GetUserAttributeApiConfig(apiName);
+            config = await userAttributeConfigHelper.GetUserAttributeApiConfigAsync(apiName);
 
             var response = await cacheService.GetValue(config.ApiName, userUuid, GetApiResponseAsync);
 

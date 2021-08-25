@@ -12,6 +12,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// Gets UserAttributeApiConfig from Parameter Store.
         /// </summary>
         /// <param name="apiName">Name of the API.</param>
-        Task<UserAttributeApiConfig> GetUserAttributeApiConfig(string apiName);
+        Task<UserAttributeApiConfig> GetUserAttributeApiConfigAsync(string apiName);
     }
 }

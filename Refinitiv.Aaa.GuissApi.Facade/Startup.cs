@@ -16,7 +16,6 @@ using Amazon.SimpleSystemsManagement;
 using Refinitiv.Aaa.Ciam.SharedLibrary.Services.Interfaces;
 using Refinitiv.Aaa.Ciam.SharedLibrary.Services.Services;
 using Refinitiv.Aaa.Ciam.SharedLibrary.Services.Extensions;
-using Refinitiv.Aaa.Ciam.SharedLibrary.Services.Models;
 
 namespace Refinitiv.Aaa.GuissApi.Facade
 {
