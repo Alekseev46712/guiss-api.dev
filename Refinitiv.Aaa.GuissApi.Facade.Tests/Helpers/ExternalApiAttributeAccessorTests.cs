@@ -33,7 +33,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
             dataCacheService = new Mock<IDataCacheService>();
 
             userAttributeConfigHelper = new Mock<IUserAttributeConfigHelper>();
-            userAttributeConfigHelper.Setup(x => x.GetUserAttributeApiConfig(It.IsAny<string>())).Returns(new UserAttributeApiConfig
+            userAttributeConfigHelper.Setup(x => x.GetUserAttributeApiConfigAsync(It.IsAny<string>())).ReturnsAsync(new UserAttributeApiConfig
             {
                 Attributes = attributes
             });
@@ -42,9 +42,9 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         }
 
         [Test]
-        public void DefaultAttributes_ReturnsNames()
+        public async Task GetDefaultAttributesAsync_ReturnsNames()
         {
-            var result = userApiAttributeAccessor.DefaultAttributes;
+            var result = await userApiAttributeAccessor.GetDefaultAttributesAsync();
 
             result.Should().BeEquivalentTo(attributes.Select(x => x.Name));
         }

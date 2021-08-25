@@ -1,4 +1,5 @@
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration;
+using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
 {
@@ -8,9 +9,9 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
     public interface IUserAttributeConfigHelper
     {
         /// <summary>
-        /// Gets UserAttributeApiConfig.
+        /// Gets UserAttributeApiConfig from Parameter Store.
         /// </summary>
         /// <param name="apiName">Name of the API.</param>
-        UserAttributeApiConfig GetUserAttributeApiConfig(string apiName);
+        Task<UserAttributeApiConfig> GetUserAttributeApiConfigAsync(string apiName);
     }
 }

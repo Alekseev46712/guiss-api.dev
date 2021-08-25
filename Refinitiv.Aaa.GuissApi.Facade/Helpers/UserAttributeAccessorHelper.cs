@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper.Internal;
+using System.Threading.Tasks;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
@@ -29,11 +29,12 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         /// <inheritdoc />
-        public IUserAttributeAccessor GetAccessor(string attributeName)
+        public async Task<IUserAttributeAccessor> GetAccessorAsync(string attributeName)
         {
             foreach (var accessor in externalApiAccessors)
             {
-                if(accessor.DefaultAttributes.Contains(attributeName, StringComparer.InvariantCultureIgnoreCase))
+                var defaultAttributes = await accessor.GetDefaultAttributesAsync();
+                if (defaultAttributes.Contains(attributeName, StringComparer.InvariantCultureIgnoreCase))
                 {
                     return accessor;
                 }
@@ -43,13 +44,13 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         /// <inheritdoc />
-        public Dictionary<IUserAttributeAccessor, List<string>> GetAccessorsWithAttributes(IEnumerable<string> attributeNames)
+        public async Task<Dictionary<IUserAttributeAccessor, List<string>>> GetAccessorsWithAttributesAsync(IEnumerable<string> attributeNames)
         {
             var accessors = new Dictionary<IUserAttributeAccessor, List<string>>();
 
             foreach (var attributeName in attributeNames)
             {
-                var accessor = GetAccessor(attributeName);
+                var accessor = await GetAccessorAsync(attributeName);
                 if(accessors.TryGetValue(accessor, out var names))
                 {
                     names.Add(attributeName);
@@ -64,11 +65,15 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         /// <inheritdoc />
-        public Dictionary<IUserAttributeAccessor, List<string>> GetAccessorsWithDefaultAttributes()
+        public async Task<Dictionary<IUserAttributeAccessor, List<string>>> GetAccessorsWithDefaultAttributesAsync()
         {
             var accessors = new Dictionary<IUserAttributeAccessor, List<string>>();
 
-            externalApiAccessors.ForAll(p => accessors.Add(p, p.DefaultAttributes.ToList()));
+            foreach (var accessor in externalApiAccessors)
+            {
+                var defaultAttributes = await accessor.GetDefaultAttributesAsync();
+                accessors.Add(accessor, defaultAttributes.ToList());
+            }
             accessors.Add(defaultAccessor, null);
 
             return accessors;

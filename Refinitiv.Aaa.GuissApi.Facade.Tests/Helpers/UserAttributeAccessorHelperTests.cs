@@ -7,6 +7,7 @@ using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
 {
@@ -28,7 +29,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
             dynamoDbUserAttributeAccessor = new DynamoDbUserAttributeAccessor(null,null);
 
             userAttributeConfigHelper = new Mock<IUserAttributeConfigHelper>();
-            userAttributeConfigHelper.Setup(x => x.GetUserAttributeApiConfig(It.IsAny<string>())).Returns(new UserAttributeApiConfig
+            userAttributeConfigHelper.Setup(x => x.GetUserAttributeApiConfigAsync(It.IsAny<string>())).ReturnsAsync(new UserAttributeApiConfig
             {
                 Attributes = attributes
             });
@@ -39,33 +40,33 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         }
 
         [Test]
-        public void GetAccessor_AttributeNamePresentInList_ReturnsAccessor()
+        public async Task GetAccessor_AttributeNamePresentInList_ReturnsAccessor()
         {
-            var result = userAttributeAccessorHelper.GetAccessor(attributes.ElementAt(0).Name);
+            var result = await userAttributeAccessorHelper.GetAccessorAsync(attributes.ElementAt(0).Name);
 
             result.Should().Be(userApiAttributeAccessor);
         }
 
         [Test]
-        public void GetAccessor_AttributeNameNotPresentInList_ReturnsAccessor()
+        public async Task GetAccessor_AttributeNameNotPresentInList_ReturnsAccessor()
         {
-            var result = userAttributeAccessorHelper.GetAccessor(fixture.Create<string>());
+            var result = await userAttributeAccessorHelper.GetAccessorAsync(fixture.Create<string>());
 
             result.Should().Be(dynamoDbUserAttributeAccessor);
         }
 
         [Test]
-        public void GetAccessorsWithAttributes_ReturnsDictionary()
+        public async Task GetAccessorsWithAttributes_ReturnsDictionary()
         {
-            var result = userAttributeAccessorHelper.GetAccessorsWithAttributes(attributes.Select(x => x.Name));
+            var result = await userAttributeAccessorHelper.GetAccessorsWithAttributesAsync(attributes.Select(x => x.Name));
 
             result.Should().BeOfType<Dictionary<IUserAttributeAccessor, List<string>>>();
         }
 
         [Test]
-        public void GetAccessorsWithDefaultAttributes_ReturnsDictionary()
+        public async Task GetAccessorsWithDefaultAttributes_ReturnsDictionary()
         {
-            var result = userAttributeAccessorHelper.GetAccessorsWithDefaultAttributes();
+            var result = await userAttributeAccessorHelper.GetAccessorsWithDefaultAttributesAsync();
 
             result.Should().BeOfType<Dictionary<IUserAttributeAccessor, List<string>>>();
         }

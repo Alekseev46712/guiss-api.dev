@@ -12,6 +12,10 @@ using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.MessageBus.Amazon;
 using Refinitiv.Aaa.GuissApi.Facade.Validation;
 using Refinitiv.Aaa.GuissApi.Facade.Mapping;
+using Amazon.SimpleSystemsManagement;
+using Refinitiv.Aaa.Ciam.SharedLibrary.Services.Interfaces;
+using Refinitiv.Aaa.Ciam.SharedLibrary.Services.Services;
+using Refinitiv.Aaa.Ciam.SharedLibrary.Services.Extensions;
 
 namespace Refinitiv.Aaa.GuissApi.Facade
 {
@@ -54,6 +58,11 @@ namespace Refinitiv.Aaa.GuissApi.Facade
                 .ConfigureAwsMessageBus(configuration);
 
             services.AddScoped<ErrorHandlingDelegatingHandler>();
+
+            services
+                .AddMemoryCacheService()
+                .AddScoped<IAmazonSimpleSystemsManagement, AmazonSimpleSystemsManagementClient>((provider) => new AmazonSimpleSystemsManagementClient(new AmazonSimpleSystemsManagementConfig()))
+                .AddScoped<IParameterStoreService, SimpleParameterStoreCachedService>();
 
             return services;
         }

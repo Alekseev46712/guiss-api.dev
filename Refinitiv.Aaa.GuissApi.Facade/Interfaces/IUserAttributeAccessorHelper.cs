@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
 {
@@ -12,20 +13,20 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// </summary>
         /// <param name="attributeName"></param>
         /// <returns></returns>
-        IUserAttributeAccessor GetAccessor(string attributeName);
+        Task<IUserAttributeAccessor> GetAccessorAsync(string attributeName);
 
         /// <summary>
         /// Gets accessors with appropriate attributes from the giving list.
         /// </summary>
         /// <param name="attributeNames"></param>
         /// <returns></returns>
-        Dictionary<IUserAttributeAccessor, List<string>> GetAccessorsWithAttributes(
+        Task<Dictionary<IUserAttributeAccessor, List<string>>> GetAccessorsWithAttributesAsync(
             IEnumerable<string> attributeNames);
 
         /// <summary>
         /// Gets accessors with all the appropriate attributes.
         /// </summary>
         /// <returns></returns>
-        Dictionary<IUserAttributeAccessor, List<string>> GetAccessorsWithDefaultAttributes();
+        Task<Dictionary<IUserAttributeAccessor, List<string>>> GetAccessorsWithDefaultAttributesAsync();
     }
 }

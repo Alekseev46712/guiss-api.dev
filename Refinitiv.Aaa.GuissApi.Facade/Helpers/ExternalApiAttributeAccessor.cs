@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Refinitiv.Aaa.Foundation.ApiClient.Exceptions;
 using Refinitiv.Aaa.Foundation.ApiClient.Extensions;
@@ -12,13 +7,21 @@ using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using Refinitiv.Aaa.Interfaces.Headers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 {
     /// <inheritdoc />
     public abstract class ExternalApiAttributeAccessor : IExternalUserAttributeAccessor
     {
-        private readonly UserAttributeApiConfig config;
+        private UserAttributeApiConfig config;
+
+        private readonly string apiName;
+        private readonly IUserAttributeConfigHelper userAttributeConfigHelper;
         private readonly IHttpClientFactory httpClientFactory;
         private readonly IAaaRequestHeaders aaaRequestHeaders;
         private readonly IDataCacheService cacheService;
@@ -28,22 +31,30 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         /// </summary>
         /// <param name="httpClientFactory">The HttpClientFactory.</param>
         /// <param name="aaaRequestHeaders">The AAA request headers.</param>
-        /// <param name="config">The user attribute api config.</param>
+        /// <param name="userAttributeConfigHelper">The user attribute config helper.</param>
+        /// <param name="apiName">The api name.</param>
         /// <param name="cacheService">The caching service.</param>
         protected ExternalApiAttributeAccessor(
             IHttpClientFactory httpClientFactory,
             IAaaRequestHeaders aaaRequestHeaders,
-            UserAttributeApiConfig config,
+            IUserAttributeConfigHelper userAttributeConfigHelper,
+            string apiName,
             IDataCacheService cacheService)
         {
-            this.config = config;
+            this.apiName = apiName;
+            this.userAttributeConfigHelper = userAttributeConfigHelper;
             this.httpClientFactory = httpClientFactory;
             this.aaaRequestHeaders = aaaRequestHeaders;
             this.cacheService = cacheService;
         }
 
         /// <inheritdoc />
-        public IEnumerable<string> DefaultAttributes => config.Attributes.Select(a => a.Name);
+        public async Task<IEnumerable<string>> GetDefaultAttributesAsync()
+        {
+            var config = await userAttributeConfigHelper.GetUserAttributeApiConfigAsync(apiName);
+
+            return config.Attributes.Select(a => a.Name);
+        }
 
         /// <inheritdoc />
         public async Task<IEnumerable<UserAttributeDetails>> GetUserAttributesAsync(
@@ -56,6 +67,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             {
                 return result;
             }
+
+            config = await userAttributeConfigHelper.GetUserAttributeApiConfigAsync(apiName);
 
             var response = await cacheService.GetValue(config.ApiName, userUuid, GetApiResponseAsync);
 

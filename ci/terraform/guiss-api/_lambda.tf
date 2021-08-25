@@ -49,8 +49,9 @@ module "lambda" {
   security_group_ids              = data.aws_security_groups.config.ids
 
   environment_variables           = merge(var.lambda_env_vars, {
-     "AWS__ParameterStorePath"                       = "/${local.prefix}/${var.name_suffix}/${var.param_path}",
-     "Version"                                       = var.app_version_number,
+     "AWS__ParameterStorePath"                                       = "/${local.prefix}/${var.name_suffix}/${var.param_path}",
+     "ParameterStore__UserAttributeApiConfigParameterStorePath"   	 = aws_ssm_parameter.user_attribute_api_config.name
+     "Version"                                                       = var.app_version_number,
                                     })
 
   tags                            = local.tags
