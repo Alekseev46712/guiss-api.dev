@@ -48,7 +48,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 
             if (value != null)
             {
-                client.ExecuteStore(StoreMode.Add, key, value, TimeSpan.FromSeconds(cacheSeconds ?? options.DefaultExpirationInSeconds));
+                client.ExecuteStore(StoreMode.Add, key, value, GetValidFor(cacheSeconds));
             }
 
             return value;
@@ -69,12 +69,12 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 
             if (item.Success)
             {
-                result = client.ExecuteStore(StoreMode.Set, key, value, TimeSpan.FromSeconds(cacheSeconds ?? options.DefaultExpirationInSeconds));
+                result = client.ExecuteStore(StoreMode.Set, key, value, GetValidFor(cacheSeconds));
 
                 return result.Success;
             }
 
-            result = client.ExecuteStore(StoreMode.Add, key, value, TimeSpan.FromSeconds(cacheSeconds ?? options.DefaultExpirationInSeconds));
+            result = client.ExecuteStore(StoreMode.Add, key, value, GetValidFor(cacheSeconds));
 
             return result.Success;
         }
@@ -82,14 +82,14 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         /// <inheritdoc />
         public bool Add<T>(string key, T value, int? cacheSeconds = null)
         {
-            IStoreOperationResult result = client.ExecuteStore(StoreMode.Add, key, value, TimeSpan.FromSeconds(cacheSeconds ?? options.DefaultExpirationInSeconds));
+            IStoreOperationResult result = client.ExecuteStore(StoreMode.Add, key, value, GetValidFor(cacheSeconds));
             return result.Success;
         }
 
         /// <inheritdoc />
         public bool Replace<T>(string key, T value, int? cacheSeconds = null)
         {
-            IStoreOperationResult result = client.ExecuteStore(StoreMode.Set, key, value, TimeSpan.FromSeconds(cacheSeconds ?? options.DefaultExpirationInSeconds));
+            IStoreOperationResult result = client.ExecuteStore(StoreMode.Set, key, value, GetValidFor(cacheSeconds));
             return result.Success;
         }
 
@@ -98,6 +98,11 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         {
             IRemoveOperationResult result = client.ExecuteRemove(key);
             return result.Success;
+        }
+
+        private TimeSpan GetValidFor(int? cacheSeconds) 
+        {
+            return TimeSpan.FromSeconds(cacheSeconds ?? options.DefaultExpirationInSeconds);
         }
     }
 }
