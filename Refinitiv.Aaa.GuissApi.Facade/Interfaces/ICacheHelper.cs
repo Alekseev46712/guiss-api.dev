@@ -58,7 +58,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// Returns value for the key
         /// </summary>
         /// <param name="key">Key of item to get.</param>
-        /// <returns>Value for the key.</returns>
+        /// <returns>Value for the key if there is pair, returns default value otherwise.</returns>
         T Get<T>(string key);       
     }
 }
