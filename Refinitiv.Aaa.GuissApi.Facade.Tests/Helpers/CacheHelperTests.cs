@@ -24,8 +24,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         private CacheHelper disabledCacheHelper;
         private IFixture fixture;
 
-
-
         [SetUp]
         public void Setup()
         {
