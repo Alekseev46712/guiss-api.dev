@@ -12,7 +12,8 @@ dotnet /sonar-scanner/SonarScanner.MSBuild.dll begin \
   /d:sonar.host.url="https://sonarqube.refinitiv.com" \
   /d:sonar.login=${SONAR_TOKEN} \
   /d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx" \
-  /d:sonar.cs.opencover.reportsPaths="**/CoverageResults/coverage.opencover.xml"
+  /d:sonar.cs.opencover.reportsPaths="**/CoverageResults/coverage.opencover.xml" \
+  /d:sonar.qualitygate.wait=true
 dotnet restore
 dotnet build --configuration Release
 dotnet test \
