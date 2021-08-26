@@ -50,6 +50,17 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             return result;
         }
 
+        public async Task<IEnumerable<string>> GetAllAtributesNamesByUserUuidAsync(string userUuid)
+        {
+            var filter = new UserAttributeFilter
+            {
+                UserUuid = userUuid,
+                Names = null
+            };
+            var userAttributesDb = (await userAttributeRepository.SearchAsync(filter)).Select(s => s.Name).ToList();
+
+            return userAttributesDb;
+        }
         /// <inheritdoc />
         public Task<JObject> GetAttributesByUserUuidAsync(string userUuid, string attributes)
         {
