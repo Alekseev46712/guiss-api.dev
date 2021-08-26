@@ -6,9 +6,9 @@ namespace Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration
     public class ParameterStoreConfig
     {
         /// <summary>
-        /// Gets the user attribute api config parameter store path.
+        /// Gets the user attribute api config parameter store name.
         /// </summary>
-        /// <value>The user attribute api config parameter store path.</value>
-        public string UserAttributeApiConfigParameterStorePath { get; set; }
+        /// <value>The user attribute api config parameter store name.</value>
+        public string UserAttributeApiConfigParameterStoreName { get; set; }
     }
 }
