@@ -22,8 +22,10 @@ for VERSION in $GIT_TAG; do
   echo "- name: ${VERSION/\//-}
   jobs:" >> ci/pipeline-deploy.yml
   for ENV in dev qa; do
-    echo "    - deploy-${ENV}-${VERSION/\//-}
-    - destroy-${ENV}-${VERSION/\//-}" >> ci/pipeline-deploy.yml
+    for REGION in $AWS_REGIONS; do
+      echo "    - deploy-${ENV}-${VERSION/\//-}-${REGION:0:2}${REGION:3:1}${REGION: -1}
+    - destroy-${ENV}-${VERSION/\//-}-${REGION:0:2}${REGION:3:1}${REGION: -1}" >> ci/pipeline-deploy.yml
+    done
   done
 done
 

@@ -185,6 +185,7 @@ jobs:
     output_mapping: {output: updated}
     params:
       GIT_SSHKEY: ((vault-kv:secret.rsa_key))
+      AWS_REGIONS: ((AWS_REGIONS))
   - set_pipeline: ((DEPLOY_PIPELINE))
     file: updated/pipeline-deploy.yml
     var_files:
@@ -288,6 +289,7 @@ jobs:
     output_mapping: {output: updated}
     params:
       GIT_SSHKEY: ((vault-kv:secret.rsa_key))
+      AWS_REGIONS: ((AWS_REGIONS))
   - set_pipeline: ((DEPLOY_PIPELINE))
     file: updated/pipeline-deploy.yml
     var_files:
