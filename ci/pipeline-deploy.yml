@@ -7,7 +7,6 @@ parameters: &parameters
   BAMS_PASS: ((vault-kv:secret.bams_pass))
   ARTIFACT_NAME: ((ARTIFACT_NAME))
   TERRAFORM_SUBDIR: ((TERRAFORM_SUBDIR))
-  AWS_REGION: ((AWS_REGION))
   AWS_ACCESS_KEY_ID: ((vault-aws:aws.access_key))
   AWS_SECRET_ACCESS_KEY: ((vault-aws:aws.secret_key))
   AWS_SESSION_TOKEN: ((vault-aws:aws.security_token))

@@ -1,5 +1,5 @@
 ---
-AWS_REGION: "us-east-1"
+AWS_REGIONS: "us-east-1 eu-west-1"
 
 GIT_REPO: "git.sami.int.thomsonreuters.com/aaa-ciam/guiss-api.git"
 GIT_PROD: "master"

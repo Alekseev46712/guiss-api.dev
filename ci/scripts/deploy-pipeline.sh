@@ -31,7 +31,8 @@ done
 echo "jobs:" >> ci/pipeline-deploy.yml
 for ENV in dev qa; do
   for VERSION in $GIT_TAG; do
-  echo "- name: deploy-${ENV}-${VERSION/\//-}
+    for REGION in $AWS_REGIONS; do
+      echo "- name: deploy-${ENV}-${VERSION/\//-}-${REGION:0:2}${REGION:3:1}${REGION: -1}
   plan:
   - get: repo
     resource: gitlab-develop
@@ -41,11 +42,14 @@ for ENV in dev qa; do
     file: repo/ci/tasks/deploy.yml
     input_mapping: {input: repo}
     params:
+      AWS_REGION: $REGION
       ARTIFACT_VERSION: $VERSION
       ENV: $ENV
-      <<: *parameters
+      <<: *parameters" >> ci/pipeline-deploy.yml
+    done
 
-- name: destroy-${ENV}-${VERSION/\//-}
+    for REGION in $AWS_REGIONS; do
+      echo "- name: destroy-${ENV}-${VERSION/\//-}-${REGION:0:2}${REGION:3:1}${REGION: -1}
   plan:
   - get: repo
     resource: gitlab-develop
@@ -55,9 +59,11 @@ for ENV in dev qa; do
     file: repo/ci/tasks/destroy.yml
     input_mapping: {input: repo}
     params:
+      AWS_REGION: $REGION
       ARTIFACT_VERSION: $VERSION
       ENV: $ENV
       <<: *parameters" >> ci/pipeline-deploy.yml
+    done
   done
 done
 
