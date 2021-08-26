@@ -28,7 +28,7 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Middlewares
         }
 
         [Test]
-        public async Task GuissExceptionHandlerMiddleware_ReturnsBadRequest_OnArgumentException()
+        public async Task GuissExceptionHandlerMiddleware_OnArgumentException_ReturnsBadRequest()
         {
             //Arrange
             var excpectedException = new ArgumentException();
@@ -47,7 +47,7 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Middlewares
         }
 
         [Test]
-        public async Task GuissExceptionHandlerMiddleware_ReturnsBadRequest_OnInvalidPaginationTokenException()
+        public async Task GuissExceptionHandlerMiddleware_OnInvalidPaginationTokenException_ReturnsBadRequest()
         {
             //Arrange
             var excpectedException = new InvalidPaginationTokenException();
@@ -66,7 +66,7 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Middlewares
         }
 
         [Test]
-        public async Task GuissExceptionHandlerMiddleware_ReturnsForbidden_OnInvalidHttpResponseExceptionWithStatusCodeForbidden()
+        public async Task GuissExceptionHandlerMiddleware_OnInvalidHttpResponseExceptionWithStatusCodeForbidden_ReturnsForbidden()
         {
             //Arrange
             var testString = "test";
@@ -86,7 +86,7 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Middlewares
         }
 
         [Test]
-        public async Task GuissExceptionHandlerMiddleware_ReturnsInternalServerError_OnInvalidHttpResponseException()
+        public async Task GuissExceptionHandlerMiddleware_OnInvalidHttpResponseException_ReturnsInternalServerError()
         {
             //Arrange
             var testString = "test";
@@ -106,7 +106,7 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Middlewares
         }
 
         [Test]
-        public async Task GuissExceptionHandlerMiddleware_ReturnsBadRequest_OnHttpRequestException()
+        public async Task GuissExceptionHandlerMiddleware_OnHttpRequestException_ReturnsBadRequest()
         {
             //Arrange
             var excpectedException = new HttpRequestException();
@@ -125,7 +125,7 @@ namespace Refinitiv.Aaa.GuissApi.Tests.Middlewares
         }
 
         [Test]
-        public async Task GuissExceptionHandlerMiddleware_ReturnsInternalServerError_OnException()
+        public async Task GuissExceptionHandlerMiddleware_OnException_ReturnsInternalServerError()
         {
             //Arrange
             var excpectedException = new Exception();
