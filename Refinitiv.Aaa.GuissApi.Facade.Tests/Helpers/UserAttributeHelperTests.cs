@@ -180,6 +180,26 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         }
 
         [Test]
+        public async Task DeleteAllUserAttributeAsync_WhenDeletedSuccessfully()
+        {
+            var userUuid = fixture.Create<string>();
+            var attributes = fixture.CreateMany<UserAttributeDb>();
+
+
+            userAttributeRepository.Setup(x =>
+                x.SearchAsync(It.IsAny<UserAttributeFilter>()))
+                .ReturnsAsync(attributes);
+            userAttributeRepository.Setup(x =>  
+                x.DeleteAsync(userUuid, It.IsAny<string>()));
+
+            await userAttributeHelper.DeleteAtributesByNamesListAsync(userUuid);
+            
+            userAttributeRepository.VerifyAll();
+            userAttributeRepository.Verify(v => 
+                v.DeleteAsync(userUuid, It.IsAny<string>()), Times.Exactly(3)); //CreateMany quantity
+        }
+
+        [Test]
         public async Task GetAttributesByUserNamespacesAndUuidAsync_OnNullNamespaces_ShouldThrowArgumentNullException()
         {
             var userUuid = fixture.Create<string>();
