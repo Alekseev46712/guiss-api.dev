@@ -82,10 +82,6 @@ variable "lambda_env_vars" {
   default     = {}
 }
 
-variable "param_path" {
-  type        = string
-}
-
 variable "aws_vpc" {
   type        = string
   default     = ""

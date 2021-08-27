@@ -30,15 +30,13 @@ lambda_env_vars             = {
   "Logging__IdentityPoolId"                                  = "us-east-1:5e737732-975a-4c30-8b4b-1b31da87044d",
   "Logging__Target"                                          = "CloudWatch",
   "Logging__LogLevel__Default"                               = "Debug",
-  "ParameterStore__PaginationParameterStorePath"             = "DataProtection",
-  "ParameterStore__UserAttributeApiConfigParameterStorePath" = "UserAttributeApiConfig",
+  "ParameterStore__UserAttributeApiConfigParameterStoreName" = "UserAttributeApiConfig",
   "Swagger__Endpoint"                                        = "/swagger/v1/swagger.json"
 }
 
 # Parameters
 param_path = "Refinitiv.Aaa.GuissApi"
 params = [
-  "DataProtection",
   "UserAttributeApiConfig"
 ]
 secure_params = []
