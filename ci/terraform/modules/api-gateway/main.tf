@@ -1,6 +1,10 @@
 resource "aws_api_gateway_rest_api" "api_gateway" {
   name        = "${var.prefix}-${var.name}"
   description = "${var.description}"
+  endpoint_configuration {
+     types            = [ "REGIONAL", ]
+  }
+  tags = var.tags
 }
 
 resource "aws_api_gateway_rest_api_policy" "api_gateway" {
@@ -130,17 +134,20 @@ resource "aws_api_gateway_domain_name" "gateway_domain_name" {
   count                           = "${var.api_gateway_custom_domain ? 1 : 0}"
 
   domain_name                     = "${var.api_gateway_hostname}.${var.api_gateway_domain}"
-  certificate_arn                 = data.aws_acm_certificate.issued[0].arn
+  regional_certificate_arn        = data.aws_acm_certificate.issued[0].arn
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
 }
 
 resource "aws_api_gateway_base_path_mapping" "gateway_base_path_mapping" {
   count                           = "${var.api_gateway_custom_domain ? 1 : 0}"
 
   api_id                          = aws_api_gateway_rest_api.api_gateway.id
-  stage_name                      = var.deploy_name
+  stage_name                      = aws_api_gateway_deployment.deployment.stage_name
   domain_name                     = aws_api_gateway_domain_name.gateway_domain_name[0].domain_name
   depends_on                      = [
-        "aws_api_gateway_domain_name.gateway_domain_name"
+        aws_api_gateway_domain_name.gateway_domain_name
     ]
 }
 
