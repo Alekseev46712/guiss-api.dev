@@ -19,11 +19,10 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         Task<JObject> GetAllByUserUuidAsync(string userUuid);
 
         /// <summary>
-        /// Gets all attributes names for user with the specified userUuid.
+        /// Delete attributes for user with the specified userUuid.
         /// </summary>
         /// <param name="userUuid">UserUuid of the item to get.</param>
-        /// <returns>User attributes.</returns>
-        Task<IEnumerable<string>> GetAllAtributesNamesByUserUuidAsync(string userUuid);
+        Task DeleteAtributesByNamesListAsync(string userUuid);
 
         /// <summary>
         /// Get UserAttribute by UserUuid and Name.
