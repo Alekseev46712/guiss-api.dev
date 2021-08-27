@@ -1,8 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration
 {
     /// <summary>
     /// Represents the ParameterStore section of the configuration file.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class ParameterStoreConfig
     {
         /// <summary>

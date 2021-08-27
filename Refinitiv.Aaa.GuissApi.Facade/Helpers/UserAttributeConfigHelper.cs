@@ -42,7 +42,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 
         private async Task GetParameterStoreValueAsync()
         {
-            var parameterStoreName = string.Join("/", awsConfig.BaseUrl,
+            var parameterStoreName = string.Join("/", awsConfig.ParameterStorePath,
                 parameterStoreConfig.UserAttributeApiConfigParameterStoreName);
 
             var jsonParameter = await parameterStoreService.GetParameterAsync(parameterStoreName);
