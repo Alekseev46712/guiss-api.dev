@@ -105,7 +105,7 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
         }
 
         /// <inheritdoc />
-        public async Task DeleteAsync(string userUuid, string name)
+        public Task DeleteAsync(string userUuid, string name)
         {
             if (userUuid == null)
             {
@@ -121,7 +121,7 @@ namespace Refinitiv.Aaa.GuissApi.Data.Repositories
                 throw new ArgumentNullException(nameof(name));
             }
 
-            await PerformDeleteAsync(userUuid, name);
+            return PerformDeleteAsync(userUuid, name);
         }
 
         private async Task<(IEnumerable<UserAttributeDb>, string FirstItemToken, string LastItemToken)> PerformSearchAsync(Cursor<UserAttributeFilter> cursor)

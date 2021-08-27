@@ -119,13 +119,18 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
             return mapper.Map<UserAttributeDb, UserAttribute>(existingFromUsersApi);
         }
 
-        private async Task<IActionResult> InternalValidateUserUuidAsync(string userUuid)
+        private Task<IActionResult> InternalValidateUserUuidAsync(string userUuid)
         {
             if (userUuid == null)
             {
                 throw new ArgumentNullException(nameof(userUuid));
             }
 
+            return InternalValidateIfUserExistsInUsersApiAsync(userUuid);
+        }
+
+        private async Task<IActionResult> InternalValidateIfUserExistsInUsersApiAsync(string userUuid)
+        {
             var existingFromUsersApi = await userHelper.GetUserByUuidAsync(userUuid);
             if (existingFromUsersApi == null)
             {
