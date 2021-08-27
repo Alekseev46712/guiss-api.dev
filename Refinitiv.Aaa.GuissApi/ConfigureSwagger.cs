@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,7 @@ namespace Refinitiv.Aaa.GuissApi
     /// <summary>
     /// Configuration of Swagger.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class ConfigureSwagger
     {
         /// <summary>
