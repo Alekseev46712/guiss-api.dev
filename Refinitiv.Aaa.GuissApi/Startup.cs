@@ -110,7 +110,6 @@ namespace Refinitiv.Aaa.GuissApi
 
             if (environment.IsDevelopment())
             {
-                services.UseRefinitivPagination();
                 services.AddLogging(loggingBuilder => loggingBuilder.AddDebug());
             }
         }
