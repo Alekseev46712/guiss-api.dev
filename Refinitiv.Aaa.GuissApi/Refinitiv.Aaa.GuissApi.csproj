@@ -27,7 +27,6 @@
     <PackageReference Include="Refinitiv.Aaa.Foundation.ApiClient" Version="1.2.8" />
     <PackageReference Include="Refinitiv.Aaa.Logging" Version="0.4.2" />
     <PackageReference Include="Refinitiv.Aaa.MessageBus.Amazon" Version="21.5.2" />
-    <PackageReference Include="Refinitiv.Aaa.Pagination" Version="1.0.0.33" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.1.4" />
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.1.4" />
