@@ -51,7 +51,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         /// <inheritdoc />
         public async Task<IEnumerable<string>> GetDefaultAttributesAsync()
         {
-            var config = await userAttributeConfigHelper.GetUserAttributeApiConfigAsync(apiName);
+            config = await userAttributeConfigHelper.GetUserAttributeApiConfigAsync(apiName);
 
             return config.Attributes.Select(a => a.Name);
         }
