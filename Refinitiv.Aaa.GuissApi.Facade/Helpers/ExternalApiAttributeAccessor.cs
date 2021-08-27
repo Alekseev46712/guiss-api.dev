@@ -18,8 +18,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
     /// <inheritdoc />
     public abstract class ExternalApiAttributeAccessor : IExternalUserAttributeAccessor
     {
-        private UserAttributeApiConfig config;
-
         private readonly string apiName;
         private readonly IUserAttributeConfigHelper userAttributeConfigHelper;
         private readonly IHttpClientFactory httpClientFactory;
@@ -67,10 +65,10 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             {
                 return result;
             }
-
-            config = await userAttributeConfigHelper.GetUserAttributeApiConfigAsync(apiName);
-
-            var response = await cacheService.GetValue(config.ApiName, userUuid, GetApiResponseAsync);
+           
+            var config = await userAttributeConfigHelper.GetUserAttributeApiConfigAsync(apiName);
+            
+            var response = await cacheService.GetValue(config.ApiName, userUuid, (searchKey) => GetApiResponseAsync(searchKey, config));
 
             foreach (var attributeName in attributeNames)
             {
@@ -94,7 +92,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             return result;
         }
 
-        private async Task<JObject> GetApiResponseAsync(string userUuid)
+        private async Task<JObject> GetApiResponseAsync(string userUuid, UserAttributeApiConfig config)
         {
             var client = httpClientFactory.CreateClient(config.ApiName);
             client.AddAaaHeaders(aaaRequestHeaders);
