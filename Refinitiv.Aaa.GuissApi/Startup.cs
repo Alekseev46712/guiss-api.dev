@@ -47,7 +47,6 @@ namespace Refinitiv.Aaa.GuissApi
         private const string ParameterStoreSection = "ParameterStore";
         private const string ParameterStoreCacheSection = "ParameterStore:CacheSettings";
         private const string ElasticacheSection = "AppSettings:Elasticache";
-        private const string PaginationStoreHashPath = "ParameterStore:PaginationParameterStorePath";
         private const string UserApiBaseAddress = "AppSettings:Services:UserApi";
         private const string ElasticacheServerAddress = "AppSettings:Elasticache:Hostname";
         private const string ElasticacheServerPort = "AppSettings:Elasticache:Port";
@@ -113,10 +112,6 @@ namespace Refinitiv.Aaa.GuissApi
             {
                 services.UseRefinitivPagination();
                 services.AddLogging(loggingBuilder => loggingBuilder.AddDebug());
-            }
-            else
-            {
-                services.UseRefinitivPagination(configuration[PaginationStoreHashPath]);
             }
         }
 
