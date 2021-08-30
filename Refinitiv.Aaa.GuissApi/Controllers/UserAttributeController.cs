@@ -202,9 +202,16 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
         /// <returns>IActionResult</returns>
         [HttpDelete("{uuid}")]
         [SwaggerResponse(StatusCodes.Status204NoContent, "Attributes deleted")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "User does not exist")]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal Server Error")]
         public async Task<IActionResult> DeleteUserProfile([FromRoute] string uuid)
         {
+            var userValidationResult = await userAttributeValidator.ValidateUserUuidAsync(uuid);
+            if (!(userValidationResult is AcceptedResult))
+            {
+                return userValidationResult;
+            }
+
             await userAttributeHelper.DeleteAtributesNamesListByUuidAsync(uuid);
 
             return NoContent();
