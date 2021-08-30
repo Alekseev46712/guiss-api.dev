@@ -57,7 +57,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
                 if (!storeResult.Success)
                 {
                     logger.LogError($"{options.Hostname} {options.Port}");
-                    throw new ArgumentException(storeResult.Message);
+                    throw new ArgumentException(storeResult.Message, storeResult.Exception);
                 }
             }
 
