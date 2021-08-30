@@ -2,6 +2,7 @@
 using Enyim.Caching.Configuration;
 using Enyim.Caching.Memcached;
 using Enyim.Caching.Memcached.Results;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
@@ -18,16 +19,19 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
     {
         private readonly IMemcachedResultsClient client;
         private readonly CacheHelperOptions options;
+        private readonly ILogger<CacheHelper> logger;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CacheHelper"/> class.
         /// </summary>
         /// <param name="options">Options with configuration data.</param>
         /// <param name="client">MemcachedClient for connecting node.</param>
-        public CacheHelper(IOptions<CacheHelperOptions> options, IMemcachedResultsClient client)
+        public CacheHelper(IOptions<CacheHelperOptions> options, IMemcachedResultsClient client, ILogger<CacheHelper> logger)
         {
             this.options = options.Value;
             this.client = client;
+            this.logger = logger;
         }
 
         /// <inheritdoc />
@@ -52,6 +56,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
                 var storeResult = client.ExecuteStore(StoreMode.Add, key, JsonConvert.SerializeObject(value), GetValidFor(cacheSeconds));
                 if (!storeResult.Success)
                 {
+                    logger.LogError($"{options.Hostname} {options.Port}");
                     throw new ArgumentException(storeResult.Message);
                 }
             }
