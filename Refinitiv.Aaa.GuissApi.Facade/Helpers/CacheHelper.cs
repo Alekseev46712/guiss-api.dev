@@ -52,7 +52,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
                 var storeResult = client.ExecuteStore(StoreMode.Add, key, JsonConvert.SerializeObject(value), GetValidFor(cacheSeconds));
                 if (!storeResult.Success)
                 {
-                    throw new Exception(storeResult.Message);
+                    throw new ArgumentException(storeResult.Message);
                 }
             }
 
