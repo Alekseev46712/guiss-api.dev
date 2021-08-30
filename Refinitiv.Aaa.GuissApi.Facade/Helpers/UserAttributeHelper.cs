@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Newtonsoft.Json.Linq;
 using Refinitiv.Aaa.Foundation.ApiClient.Helpers;
@@ -11,6 +6,11 @@ using Refinitiv.Aaa.GuissApi.Data.Models;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using Refinitiv.Aaa.Interfaces.Headers;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 {
@@ -66,6 +66,11 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             var atributesNames = 
                 (await userAttributeRepository.SearchAsync(filter))
                 .Select(s => s.Name).ToList();
+
+            if(!atributesNames.Any())
+            {
+                throw new ArgumentException("User does not exist");
+            }
 
             foreach (var name in atributesNames)
             {
