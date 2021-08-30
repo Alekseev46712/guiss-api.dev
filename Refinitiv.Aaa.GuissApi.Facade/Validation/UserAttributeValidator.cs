@@ -133,7 +133,6 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
 
         private async Task<IActionResult> InternalValidateIfUserExistsInUsersApiAsync(string userUuid)
         {
-            var existingFromUsersApi = await userHelper.GetUserByUuidAsync(userUuid);
             var existingFromUsersApi = await cacheHelper.GetValueOrCreateAsync(userUuid, async () => await userHelper.GetUserByUuidAsync(userUuid));
             if (existingFromUsersApi == null)
             {
