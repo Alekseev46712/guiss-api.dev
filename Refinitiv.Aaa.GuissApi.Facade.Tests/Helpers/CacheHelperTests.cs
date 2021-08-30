@@ -157,9 +157,9 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         [Test]
         public async Task GetValueOrCreateAsync_EnabledFalse_ReturnsFuncResult() 
         {
-            async Task<string> TestMethod()
+            Task<string> TestMethod()
             {
-                return "value";
+                return Task.FromResult<string>("value");
             }
 
             Func<Task<string>> act = async () => await TestMethod();
@@ -174,9 +174,9 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         [Test]
         public async Task GetValueOrCreateAsync_EnabledTrue_ReturnsFuncResult()
         {
-            async Task<string> TestMethod()
+            Task<string> TestMethod()
             {
-                return "value";
+                return Task.FromResult<string>("value");
             }
 
             client.Setup(x => x.ExecuteGet(It.IsAny<string>())).Returns(new GetOperationResult { Success = false });

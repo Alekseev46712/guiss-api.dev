@@ -5,7 +5,7 @@ data "aws_kms_key" "parameter" {
 resource "aws_ssm_parameter" "string" {
   for_each = toset(var.params)
 
-  name     = "/a${var.asset_id}/${var.name_suffix}/${each.value}"
+  name     = "/a${var.asset_id}/${var.name_suffix}/${var.param_path}/${each.value}"
   value    = "changeme"
   type     = "String"
   tags     = local.tags
@@ -18,7 +18,7 @@ resource "aws_ssm_parameter" "string" {
 resource "aws_ssm_parameter" "secure_string" {
   for_each = toset(var.secure_params)
 
-  name     = "/a${var.asset_id}/${var.name_suffix}/${each.value}"
+  name     = "/a${var.asset_id}/${var.name_suffix}/${var.param_path}/${each.value}"
   type     = "SecureString"
   value    = "changeme"
   key_id   = data.aws_kms_key.parameter.id
@@ -29,16 +29,6 @@ resource "aws_ssm_parameter" "secure_string" {
   }
 }
 
-resource "aws_ssm_parameter" "user_attribute_api_config" {
-    name      = "/a${var.asset_id}/${var.name_suffix}/Refinitiv.Aaa.GuissApi/UserAttributeApiConfig"
-    value     = "changeme"
-    type      = "String"
-    tags      = local.tags
-	
-	lifecycle {
-		ignore_changes = [ value ]
-  }
-}
 
 # Variables
 variable "kms_alias" {
@@ -50,4 +40,7 @@ variable "params" {
 }
 variable "secure_params" {
   type        = any
+}
+variable "param_path" {
+  type        = string
 }

@@ -2,12 +2,14 @@
 using Refinitiv.Aaa.GuissApi.Data.Constants;
 using Refinitiv.Aaa.GuissApi.Data.Converters;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Refinitiv.Aaa.GuissApi.Data.Models
 {
     /// <summary>
     /// DTO for UserAttribute.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class UserAttributeDb
     {
         /// <summary>

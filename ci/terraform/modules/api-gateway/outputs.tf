@@ -23,6 +23,14 @@ output "targeted_domain_name" {
     value       = "${element(concat(aws_api_gateway_domain_name.gateway_domain_name.*.cloudfront_domain_name, list("")), 0)}"  
 }
 
+output "regional_domain_name" {
+    value       = aws_api_gateway_domain_name.gateway_domain_name[0].regional_domain_name
+}
+
+output "regional_zone_id" {
+    value       = aws_api_gateway_domain_name.gateway_domain_name[0].regional_zone_id 
+}
+
 output "custom_domain_id" {
     description = "The internal id assigned to this domain name by API Gateway"
     value       = "${element(concat(aws_api_gateway_domain_name.gateway_domain_name.*.cloudfront_zone_id, list("")), 0)}"  

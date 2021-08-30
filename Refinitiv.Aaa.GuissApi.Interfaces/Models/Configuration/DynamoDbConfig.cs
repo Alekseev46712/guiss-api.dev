@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Refinitiv.Aaa.GuissApi.Interfaces.Models.Configuration
 {
     /// <summary>
     /// Represents the DynamoDb section of the configuration file.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class DynamoDbConfig
     {
         /// <summary>

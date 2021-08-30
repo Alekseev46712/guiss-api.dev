@@ -1,8 +1,11 @@
-﻿namespace Refinitiv.Aaa.GuissApi.Models
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Refinitiv.Aaa.GuissApi.Models
 {
     /// <summary>
     /// Helper class used to get swagger settings from the configuration file.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class SwaggerConfiguration
     {
         /// <summary>

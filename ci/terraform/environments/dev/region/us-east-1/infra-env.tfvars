@@ -24,19 +24,21 @@ aws_vpc                     = "fr-vpc-1"
 lambda_subnets              = ["aaa-sdlc-preprod-enterprise-us-east-1b"]
 lambda_security_groups      = ["default"]
 lambda_env_vars             = {
-  "AppSettings__DynamoDb__UserAttributeTableName" = "a250395-db-guiss-api-dev-use1",
-  "AppSettings__DynamoDb__DefaultQueryLimit"      = "50",
-  "AppSettings__Services__UserApi"                = "https://aaa-users-dev.aaa-preprod.aws-int.thomsonreuters.com/develop"
-  "Logging__IdentityPoolId"                       = "us-east-1:5e737732-975a-4c30-8b4b-1b31da87044d",
-  "Logging__Target"                               = "CloudWatch",
-  "Logging__LogLevel__Default"                    = "Debug",
-  "ParameterStore__PaginationParameterStorePath"  = "/Refinitiv.Aaa.GuissApi/DataProtection",
-  "Swagger__Endpoint"                             = "/swagger/v1/swagger.json"
+  "AppSettings__DynamoDb__UserAttributeTableName"            = "a250395-db-guiss-api-dev",
+  "AppSettings__DynamoDb__DefaultQueryLimit"                 = "50",
+  "AppSettings__Services__UserApi"                           = "https://aaa-users-dev.aaa-preprod.aws-int.thomsonreuters.com/develop"
+  "Logging__IdentityPoolId"                                  = "us-east-1:5e737732-975a-4c30-8b4b-1b31da87044d",
+  "Logging__Target"                                          = "CloudWatch",
+  "Logging__LogLevel__Default"                               = "Debug",
+  "ParameterStore__UserAttributeApiConfigParameterStoreName" = "UserAttributeApiConfig",
+  "Swagger__Endpoint"                                        = "/swagger/v1/swagger.json"
 }
 
 # Parameters
 param_path = "Refinitiv.Aaa.GuissApi"
-params = []
+params = [
+  "UserAttributeApiConfig"
+]
 secure_params = []
 
 # DynamoDB
@@ -74,10 +76,16 @@ api_gateway_description   = "Automated deployment of Guiss API-Gateway"
 # The list of IP ranges below is copied from the "WebCorp" security group in tr-fr-preprod.
 # 34.234.230.251, 3.214.233.172, 3.214.140.7 - nat gateway ips for aaa-sdlc-preprod in us-east-1
 # 34.251.88.0 54.76.122.132 52.48.210.115 - nat gateway ips of concourse ci/cd
+# 15.177.0.0/18 ...  - route53 healthcheck ips
 api_gateway_whitelist = ["10.0.0.0/8","159.220.0.0/16","159.42.0.0/16","163.231.0.0/16","164.57.0.0/16",
 "167.68.0.0/16","192.165.208.0/20","198.179.137.0/24","198.80.128.0/18","199.224.128.0/17",
 "203.191.132.0/24","206.197.182.88/32","84.18.160.0/19","34.250.63.0/24","52.31.174.229",
-"34.234.230.251","3.214.233.172","3.214.140.7","34.251.88.0","54.76.122.132","52.48.210.115"]
+"34.234.230.251","3.214.233.172","3.214.140.7",
+"34.251.88.0","54.76.122.132","52.48.210.115",
+"15.177.0.0/18","52.80.197.0/25","52.80.197.128/25","52.80.198.0/25","52.83.34.128/25","52.83.35.0/25","52.83.35.128/25",
+"54.248.220.0/26","54.250.253.192/26","54.251.31.128/26","54.255.254.192/26","54.252.254.192/26","54.252.79.128/26",
+"176.34.159.192/26","54.228.16.0/26","177.71.207.128/26","54.232.40.64/26","107.23.255.0/26","54.243.31.192/26",
+"54.183.255.128/26","54.241.32.64/26","54.244.52.192/26","54.245.168.0/26"]
 
 # Alarms
 alarms = {

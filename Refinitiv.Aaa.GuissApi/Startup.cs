@@ -49,7 +49,8 @@ namespace Refinitiv.Aaa.GuissApi
         private const string ElasticacheSection = "AppSettings:Elasticache";
         private const string UserApiBaseAddress = "AppSettings:Services:UserApi";
         private const string ElasticacheServerAddress = "AppSettings:Elasticache:Hostname";
-        private const string ElasticacheServerPort = "AppSettings:Elasticache:Port";    
+        private const string ElasticacheServerPort = "AppSettings:Elasticache:Port";
+        private const string AwsSection = "Aws";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Startup"/> class.
@@ -76,19 +77,21 @@ namespace Refinitiv.Aaa.GuissApi
                     opts.SerializerSettings.Converters.Add(new StringEnumConverter());
                 });
             services.AddSwaggerGenNewtonsoftSupport();
+
             services.UseAaaRequestHeaders();
 
-            services.Configure<CacheHelperOptions>(configuration.GetSection(ElasticacheSection));          
+            services.Configure<CacheHelperOptions>(configuration.GetSection(ElasticacheSection));
             clientConfiguration.AddServer(configuration.GetValue<string>(ElasticacheServerAddress), configuration.GetValue<int>(ElasticacheServerPort));
             services.AddScoped<IMemcachedClient, MemcachedClient>(x => new MemcachedClient(clientConfiguration));
             services.AddScoped<IMemcachedResultsClient, MemcachedClient>(x => new MemcachedClient(clientConfiguration));
-            services.AddScoped<ICacheHelper, CacheHelper>(); 
+            services.AddScoped<ICacheHelper, CacheHelper>();
 
             services.Configure<SwaggerConfiguration>(configuration.GetSection(SwaggerSection));
             services.Configure<LoggingConfiguration>(configuration.GetSection(LoggingSection));
             services.Configure<AppSettingsConfig>(configuration.GetSection(AppSettingsSection));
             services.Configure<ParameterStoreConfig>(configuration.GetSection(ParameterStoreSection));
             services.Configure<CachingOptions>(configuration.GetSection(CacheSection));
+            services.Configure<AwsConfig>(configuration.GetSection(AwsSection));
 
             services.Configure<Ciam.SharedLibrary.Services.Models.CachingOptions>(configuration.GetSection(ParameterStoreCacheSection));
 
@@ -107,7 +110,6 @@ namespace Refinitiv.Aaa.GuissApi
 
             if (environment.IsDevelopment())
             {
-                services.UseRefinitivPagination();
                 services.AddLogging(loggingBuilder => loggingBuilder.AddDebug());
             }
         }

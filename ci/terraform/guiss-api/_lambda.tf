@@ -50,7 +50,6 @@ module "lambda" {
 
   environment_variables           = merge(var.lambda_env_vars, {
      "AWS__ParameterStorePath"                                       = "/${local.prefix}/${var.name_suffix}/${var.param_path}",
-     "ParameterStore__UserAttributeApiConfigParameterStorePath"   	 = aws_ssm_parameter.user_attribute_api_config.name
      "Version"                                                       = var.app_version_number,
                                     })
 
@@ -73,12 +72,13 @@ resource "aws_iam_role_policy" "parameter_store_access" {
       },
       {
         Action = [
-          "ssm:PutParameter",
+          "ssm:GetParameter",
+          "ssm:GetParameters",
           "ssm:GetParametersByPath",
+          "ssm:PutParameter"
         ]
         Effect   = "Allow"
-#        Resource = "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/${local.prefix}/${var.name_suffix}/${var.param_path}/*"
-        Resource = "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/${var.param_path}/*"
+        Resource = "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/${local.prefix}/${var.name_suffix}/${var.param_path}/*"
       },
     ]
   })

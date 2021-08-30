@@ -14,18 +14,22 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
     {
         private IEnumerable<UserAttributeApiConfig> configs;
         private readonly ParameterStoreConfig parameterStoreConfig;
+        private readonly AwsConfig awsConfig;
         private readonly IParameterStoreService parameterStoreService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserAttributeConfigHelper"/> class.
         /// </summary>
         /// <param name="parameterStoreConfig">The parameter store configuration.</param>
+        /// <param name="awsConfig">The aws configuration.</param>
         /// <param name="parameterStoreService">Parameter store service.</param>
         public UserAttributeConfigHelper(
             IOptions<ParameterStoreConfig> parameterStoreConfig,
+            IOptions<AwsConfig> awsConfig,
             IParameterStoreService parameterStoreService)
         {
             this.parameterStoreConfig = parameterStoreConfig.Value;
+            this.awsConfig = awsConfig.Value;
             this.parameterStoreService = parameterStoreService;
         }
 
@@ -38,8 +42,11 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 
         private async Task GetParameterStoreValueAsync()
         {
-            var jsonParameter = await parameterStoreService
-                .GetParameterAsync(parameterStoreConfig.UserAttributeApiConfigParameterStorePath);
+            var parameterStoreName = string.Join("/", awsConfig.ParameterStorePath,
+                parameterStoreConfig.UserAttributeApiConfigParameterStoreName);
+
+            var jsonParameter = await parameterStoreService.GetParameterAsync(parameterStoreName);
+
             configs = JsonConvert.DeserializeObject<IEnumerable<UserAttributeApiConfig>>(jsonParameter);
         }
     }
