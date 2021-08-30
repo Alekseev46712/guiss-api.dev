@@ -56,7 +56,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
                 var storeResult = client.ExecuteStore(StoreMode.Add, key, JsonConvert.SerializeObject(value), GetValidFor(cacheSeconds));
                 if (!storeResult.Success)
                 {
-                    logger.LogError($"{options.Hostname} {options.Port}");
+                    logger.LogError($"Cannot get value from '{options.Hostname}:{options.Port}'");
+                    logger.LogError($"Details: {storeResult.Message}; {storeResult.StatusCode}; {storeResult.Exception?.Message}; {storeResult.InnerResult?.Message}");
                     throw new ArgumentException(storeResult.Message, storeResult.Exception);
                 }
             }
