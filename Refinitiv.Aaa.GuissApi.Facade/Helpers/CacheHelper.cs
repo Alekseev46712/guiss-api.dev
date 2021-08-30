@@ -3,6 +3,7 @@ using Enyim.Caching.Configuration;
 using Enyim.Caching.Memcached;
 using Enyim.Caching.Memcached.Results;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Facade.Models;
 using System;
@@ -41,14 +42,14 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 
             if (result.Success)
             {
-                return (T)result.Value;
+                return InternalDeserialize<T>((string)result.Value);
             }
 
             var value = await generator?.Invoke();
 
             if (value != null)
             {
-                client.ExecuteStore(StoreMode.Add, key, value, GetValidFor(cacheSeconds));
+                client.ExecuteStore(StoreMode.Add, key, JsonConvert.SerializeObject(value), GetValidFor(cacheSeconds));
             }
 
             return value;
@@ -57,7 +58,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         /// <inheritdoc />
         public T Get<T>(string key)
         {
-            return client.ExecuteGet<T>(key).Value;
+            var val = (string)client.ExecuteGet(key).Value;
+            return InternalDeserialize<T>(val);
         }
 
         /// <inheritdoc />
@@ -69,12 +71,12 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 
             if (item.Success)
             {
-                result = client.ExecuteStore(StoreMode.Set, key, value, GetValidFor(cacheSeconds));
+                result = client.ExecuteStore(StoreMode.Set, key, JsonConvert.SerializeObject(value), GetValidFor(cacheSeconds));
 
                 return result.Success;
             }
 
-            result = client.ExecuteStore(StoreMode.Add, key, value, GetValidFor(cacheSeconds));
+            result = client.ExecuteStore(StoreMode.Add, key, JsonConvert.SerializeObject(value), GetValidFor(cacheSeconds));
 
             return result.Success;
         }
@@ -82,14 +84,14 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         /// <inheritdoc />
         public bool Add<T>(string key, T value, int? cacheSeconds = null)
         {
-            IStoreOperationResult result = client.ExecuteStore(StoreMode.Add, key, value, GetValidFor(cacheSeconds));
+            IStoreOperationResult result = client.ExecuteStore(StoreMode.Add, key, JsonConvert.SerializeObject(value), GetValidFor(cacheSeconds));
             return result.Success;
         }
 
         /// <inheritdoc />
         public bool Replace<T>(string key, T value, int? cacheSeconds = null)
         {
-            IStoreOperationResult result = client.ExecuteStore(StoreMode.Set, key, value, GetValidFor(cacheSeconds));
+            IStoreOperationResult result = client.ExecuteStore(StoreMode.Set, key, JsonConvert.SerializeObject(value), GetValidFor(cacheSeconds));
             return result.Success;
         }
 
@@ -103,6 +105,16 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         private TimeSpan GetValidFor(int? cacheSeconds) 
         {
             return TimeSpan.FromSeconds(cacheSeconds ?? options.DefaultExpirationInSeconds);
+        }
+
+        private T InternalDeserialize<T>(string json)
+        {
+            if (typeof(T) == typeof(string))
+            {
+                return (T)Convert.ChangeType(json, typeof(T));
+            }
+
+            return JsonConvert.DeserializeObject<T>(json);
         }
     }
 }

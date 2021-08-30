@@ -146,8 +146,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         [Test]
         public void Get_ReturnsValueOnKey()
         {
-            var val = "customVal";
-            client.Setup(m => m.ExecuteGet<string>(It.IsAny<string>())).Returns(new GetOperationResult<string> { Value = val });
+            var val = "val";
+            client.Setup(m => m.ExecuteGet(It.IsAny<string>())).Returns(new GetOperationResult{ Value = val });
 
             var result = cacheHelper.Get<string>("someKey");
 
