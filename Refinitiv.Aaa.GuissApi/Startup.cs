@@ -134,8 +134,8 @@ namespace Refinitiv.Aaa.GuissApi
             app.UseCorrelationId();
 
             app
-                .UseMiddleware<GuissExceptionHandlerMiddleware>()
-                .UseMiddleware<ExceptionHandlerMiddleware>()
+                //.UseMiddleware<GuissExceptionHandlerMiddleware>()
+                //.UseMiddleware<ExceptionHandlerMiddleware>()
                 .UseMiddleware<RequestLoggingMiddleware>();
 
             var logger = app.ApplicationServices.GetService<IOptions<LoggingConfiguration>>().Value;
