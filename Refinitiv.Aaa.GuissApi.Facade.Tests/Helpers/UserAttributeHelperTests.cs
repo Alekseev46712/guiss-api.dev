@@ -181,11 +181,10 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         }
 
         [Test]
-        public async Task DeleteAllUserAttributeAsync_WhenDeletedSuccessfully()
+        public async Task DeleteAllUserAttributeAsync_OnExistingUuid_DeletedSuccessfully()
         {
             var userUuid = fixture.Create<string>();
             var attributes = fixture.CreateMany<UserAttributeDb>();
-
 
             userAttributeRepository.Setup(x =>
                 x.SearchAsync(It.IsAny<UserAttributeFilter>()))
@@ -193,11 +192,21 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
             userAttributeRepository.Setup(x =>  
                 x.DeleteAsync(userUuid, It.IsAny<string>()));
 
-            await userAttributeHelper.DeleteAtributesByNamesListAsync(userUuid);
+            await userAttributeHelper.DeleteAtributesNamesListByUuidAsync(userUuid);
             
             userAttributeRepository.VerifyAll();
             userAttributeRepository.Verify(v => 
                 v.DeleteAsync(userUuid, It.IsAny<string>()), Times.Exactly(attributes.Count()));
+        }
+
+        [Test]
+        public async Task DeleteAllUserAttributeAsync_OnNullUUID_DeletedAnythingThrowedException()
+        {
+            var userUuid = String.Empty;
+            Func<Task> act = async () => await userAttributeHelper.DeleteAtributesNamesListByUuidAsync(userUuid);
+            await act.Should().ThrowAsync<ArgumentNullException>();
+            userAttributeRepository.Verify(v =>
+                v.DeleteAsync(userUuid, It.IsAny<string>()), Times.Never());
         }
 
         [Test]

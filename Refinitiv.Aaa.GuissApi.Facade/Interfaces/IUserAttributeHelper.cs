@@ -22,7 +22,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Interfaces
         /// Delete attributes for user with the specified userUuid.
         /// </summary>
         /// <param name="userUuid">UserUuid of the item to get.</param>
-        Task DeleteAtributesByNamesListAsync(string userUuid);
+        Task DeleteAtributesNamesListByUuidAsync(string userUuid);
 
         /// <summary>
         /// Get UserAttribute by UserUuid and Name.

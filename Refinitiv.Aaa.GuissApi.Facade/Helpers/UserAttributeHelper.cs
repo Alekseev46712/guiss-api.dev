@@ -51,9 +51,9 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         }
 
         /// <inheritdoc />
-        public async Task DeleteAtributesByNamesListAsync(string userUuid)
+        public async Task DeleteAtributesNamesListByUuidAsync(string userUuid)
         {
-            if (userUuid == null)
+            if (String.IsNullOrWhiteSpace(userUuid))
             {
                 throw new ArgumentNullException(nameof(userUuid));
             }
