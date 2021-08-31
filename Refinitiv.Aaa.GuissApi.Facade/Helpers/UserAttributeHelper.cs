@@ -70,7 +70,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 
             if(!atributesNames.Any())
             {
-                throw new NotFoundException($"User '{userUuid}' or his attributes not found.");
+                throw new NotFoundException($"User '{userUuid}' or Attributes not found.");
             }
 
             foreach (var name in atributesNames)
