@@ -68,6 +68,10 @@ namespace Refinitiv.Aaa.GuissApi.Middlewares
             {
                 await ProcessDefaultErrorAsync(context, ex, FailedToRequestMessage, HttpStatusCode.BadRequest);
             }
+            catch (NotFoundException ex)
+            {
+                await ProcessDefaultErrorAsync(context, ex, ex.Message, HttpStatusCode.NotFound);
+            }
             catch (Exception ex)
             {
                 await ProcessCriticalErrorAsync(context, ex, InternalErrorMessage);

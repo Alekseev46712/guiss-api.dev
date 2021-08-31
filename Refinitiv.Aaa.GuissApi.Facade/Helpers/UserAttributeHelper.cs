@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using Refinitiv.Aaa.Foundation.ApiClient.Helpers;
 using Refinitiv.Aaa.GuissApi.Data.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Models;
+using Refinitiv.Aaa.GuissApi.Facade.Exceptions;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using Refinitiv.Aaa.Interfaces.Headers;
@@ -69,7 +70,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 
             if(!atributesNames.Any())
             {
-                throw new ArgumentException("User does not exist");
+                throw new NotFoundException($"User '{userUuid}' or his attributes not found.");
             }
 
             foreach (var name in atributesNames)
