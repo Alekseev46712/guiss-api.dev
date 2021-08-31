@@ -25,10 +25,12 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         /// <param name="userHelper">User Helper.</param>
         /// <param name="userAttributeRepository">User Attribute Repository.</param>
         /// <param name="mapper">Automapper.</param>
+        /// <param name="cacheHelper">CacheHelper to use ElastiCache.</param>
         public UserAttributeValidator(
             IUserHelper userHelper,
             IUserAttributeRepository userAttributeRepository,
-            IMapper mapper, ICacheHelper cacheHelper)
+            IMapper mapper, 
+            ICacheHelper cacheHelper)
         {
             this.userHelper = userHelper;
             this.userAttributeRepository = userAttributeRepository;

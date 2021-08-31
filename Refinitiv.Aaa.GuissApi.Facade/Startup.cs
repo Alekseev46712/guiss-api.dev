@@ -16,6 +16,10 @@ using Amazon.SimpleSystemsManagement;
 using Refinitiv.Aaa.Ciam.SharedLibrary.Services.Interfaces;
 using Refinitiv.Aaa.Ciam.SharedLibrary.Services.Services;
 using Refinitiv.Aaa.Ciam.SharedLibrary.Services.Extensions;
+using Enyim.Caching.Configuration;
+using Enyim.Caching;
+using Microsoft.Extensions.Logging;
+using Refinitiv.Aaa.GuissApi.Facade.Models;
 
 namespace Refinitiv.Aaa.GuissApi.Facade
 {
@@ -25,6 +29,10 @@ namespace Refinitiv.Aaa.GuissApi.Facade
     [ExcludeFromCodeCoverage]
     public static class Startup
     {
+        private const string ElasticacheServerAddress = "AppSettings:Elasticache:Hostname";
+        private const string ElasticacheServerPort = "AppSettings:Elasticache:Port";
+        private const string ElasticacheSection = "AppSettings:Elasticache";
+
         /// <summary>
         /// Registers the helper services with the dependency injection framework.
         /// </summary>
@@ -63,6 +71,20 @@ namespace Refinitiv.Aaa.GuissApi.Facade
                 .AddMemoryCacheService()
                 .AddScoped<IAmazonSimpleSystemsManagement, AmazonSimpleSystemsManagementClient>((provider) => new AmazonSimpleSystemsManagementClient(new AmazonSimpleSystemsManagementConfig()))
                 .AddScoped<IParameterStoreService, SimpleParameterStoreCachedService>();
+
+            services.AddSingleton<IMemcachedClientConfiguration>(provider =>
+            {
+                var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+                
+                MemcachedClientOptions options = new MemcachedClientOptions();
+                options.AddServer(configuration.GetValue<string>(ElasticacheServerAddress), configuration.GetValue<int>(ElasticacheServerPort));
+
+                return new MemcachedClientConfiguration(loggerFactory, options);
+            });
+            services.AddScoped<IMemcachedResultsClient, MemcachedClient>();
+
+            services.Configure<CacheHelperOptions>(configuration.GetSection(ElasticacheSection));
+            services.AddScoped<ICacheHelper, CacheHelper>();
 
             return services;
         }

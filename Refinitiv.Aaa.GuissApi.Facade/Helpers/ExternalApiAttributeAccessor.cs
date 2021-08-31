@@ -81,7 +81,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
                     throw new InvalidResponsePathException(attributeName, attributeConfig.ResponsePath, config.ApiName);
                 }
 
-                result.Add(new UserAttributeDetails()
+                result.Add(new UserAttributeDetails
                 {
                     UserUuid = userUuid,
                     Name = attributeConfig.Name,

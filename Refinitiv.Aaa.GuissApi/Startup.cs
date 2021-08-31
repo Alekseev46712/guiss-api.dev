@@ -13,7 +13,6 @@ using Refinitiv.Aaa.Api.Common.Middleware;
 using Refinitiv.Aaa.GuissApi.Facade;
 using Refinitiv.Aaa.Logging;
 using Refinitiv.Aaa.Logging.Interfaces;
-using Refinitiv.Aaa.Pagination;
 using Refinitiv.Aaa.GuissApi.Facade.Extensions;
 using Refinitiv.Aaa.GuissApi.Models;
 using Refinitiv.Aaa.Interfaces.Headers;
@@ -23,11 +22,6 @@ using System;
 using Refinitiv.Aaa.Foundation.ApiClient.Core.Models;
 using Refinitiv.Aaa.GuissApi.Middlewares;
 using Refinitiv.Aaa.Foundation.ApiClient.Helpers;
-using Refinitiv.Aaa.GuissApi.Facade.Helpers;
-using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
-using Refinitiv.Aaa.GuissApi.Facade.Models;
-using Enyim.Caching.Configuration;
-using Enyim.Caching;
 
 namespace Refinitiv.Aaa.GuissApi
 {
@@ -39,17 +33,13 @@ namespace Refinitiv.Aaa.GuissApi
     {
         private readonly IWebHostEnvironment environment;
         private readonly IConfiguration configuration;
-        private readonly MemcachedClientConfiguration clientConfiguration = new MemcachedClientConfiguration();
         private const string SwaggerSection = "Swagger";
         private const string LoggingSection = "Logging";
         private const string AppSettingsSection = "AppSettings";
         private const string CacheSection = "AppSettings:Cache";
         private const string ParameterStoreSection = "ParameterStore";
         private const string ParameterStoreCacheSection = "ParameterStore:CacheSettings";
-        private const string ElasticacheSection = "AppSettings:Elasticache";
         private const string UserApiBaseAddress = "AppSettings:Services:UserApi";
-        private const string ElasticacheServerAddress = "AppSettings:Elasticache:Hostname";
-        private const string ElasticacheServerPort = "AppSettings:Elasticache:Port";
         private const string AwsSection = "Aws";
 
         /// <summary>
@@ -80,19 +70,13 @@ namespace Refinitiv.Aaa.GuissApi
 
             services.UseAaaRequestHeaders();
 
-            services.Configure<CacheHelperOptions>(configuration.GetSection(ElasticacheSection));
-            clientConfiguration.AddServer(configuration.GetValue<string>(ElasticacheServerAddress), configuration.GetValue<int>(ElasticacheServerPort));
-            services.AddScoped<IMemcachedClient, MemcachedClient>(x => new MemcachedClient(clientConfiguration));
-            services.AddScoped<IMemcachedResultsClient, MemcachedClient>(x => new MemcachedClient(clientConfiguration));
-            services.AddScoped<ICacheHelper, CacheHelper>();
-
             services.Configure<SwaggerConfiguration>(configuration.GetSection(SwaggerSection));
             services.Configure<LoggingConfiguration>(configuration.GetSection(LoggingSection));
             services.Configure<AppSettingsConfig>(configuration.GetSection(AppSettingsSection));
             services.Configure<ParameterStoreConfig>(configuration.GetSection(ParameterStoreSection));
             services.Configure<CachingOptions>(configuration.GetSection(CacheSection));
             services.Configure<AwsConfig>(configuration.GetSection(AwsSection));
-
+            
             services.Configure<Ciam.SharedLibrary.Services.Models.CachingOptions>(configuration.GetSection(ParameterStoreCacheSection));
 
             services.AddControllers();

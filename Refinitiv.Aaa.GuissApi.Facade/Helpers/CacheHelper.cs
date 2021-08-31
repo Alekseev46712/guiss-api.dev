@@ -1,5 +1,4 @@
 ﻿using Enyim.Caching;
-using Enyim.Caching.Configuration;
 using Enyim.Caching.Memcached;
 using Enyim.Caching.Memcached.Results;
 using Microsoft.Extensions.Logging;
@@ -8,8 +7,6 @@ using Newtonsoft.Json;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Facade.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
@@ -27,8 +24,14 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         /// </summary>
         /// <param name="options">Options with configuration data.</param>
         /// <param name="client">MemcachedClient for connecting node.</param>
+        /// <param name="logger">Logger.</param>
         public CacheHelper(IOptions<CacheHelperOptions> options, IMemcachedResultsClient client, ILogger<CacheHelper> logger)
         {
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+                    
             this.options = options.Value;
             this.client = client;
             this.logger = logger;
@@ -46,6 +49,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 
             if (result.Success)
             {
+                logger.LogDebug($"'{key}' received from memcache");
                 return InternalDeserialize<T>((string)result.Value);
             }
 
@@ -53,13 +57,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 
             if (value != null)
             {
-                var storeResult = client.ExecuteStore(StoreMode.Add, key, JsonConvert.SerializeObject(value), GetValidFor(cacheSeconds));
-                if (!storeResult.Success)
-                {
-                    logger.LogError($"Cannot get value from '{options.Hostname}:{options.Port}'");
-                    logger.LogError($"Details: {storeResult.Message}; {storeResult.StatusCode}; {storeResult.Exception?.Message}; {storeResult.InnerResult?.Message}");
-                    throw new ArgumentException(storeResult.Message, storeResult.Exception);
-                }
+                Add(key, value, cacheSeconds);
+                logger.LogDebug($"'{key}' added to memcache");
             }
 
             return value;
@@ -75,33 +74,35 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         /// <inheritdoc />
         public bool CreateOrReplace<T>(string key, T value, int? cacheSeconds = null)
         {
-            IStoreOperationResult result;
-
             var item = client.ExecuteGet(key);
 
             if (item.Success)
             {
-                result = client.ExecuteStore(StoreMode.Set, key, JsonConvert.SerializeObject(value), GetValidFor(cacheSeconds));
-
-                return result.Success;
+                return Replace(key, value, cacheSeconds);
             }
 
-            result = client.ExecuteStore(StoreMode.Add, key, JsonConvert.SerializeObject(value), GetValidFor(cacheSeconds));
-
-            return result.Success;
+            return Add(key, value, cacheSeconds);
         }
 
         /// <inheritdoc />
         public bool Add<T>(string key, T value, int? cacheSeconds = null)
         {
-            IStoreOperationResult result = client.ExecuteStore(StoreMode.Add, key, JsonConvert.SerializeObject(value), GetValidFor(cacheSeconds));
+            IStoreOperationResult result = client.ExecuteStore(StoreMode.Add, key, InternalSerialize(value), GetValidFor(cacheSeconds));
+            if (!result.Success)
+            {
+                logger.LogCritical($"Cannot add '{key}' to memcache: {result.Message}. Exception: {result.Exception}");
+            }
             return result.Success;
         }
 
         /// <inheritdoc />
         public bool Replace<T>(string key, T value, int? cacheSeconds = null)
         {
-            IStoreOperationResult result = client.ExecuteStore(StoreMode.Set, key, JsonConvert.SerializeObject(value), GetValidFor(cacheSeconds));
+            IStoreOperationResult result = client.ExecuteStore(StoreMode.Set, key, InternalSerialize(value), GetValidFor(cacheSeconds));
+            if (!result.Success)
+            {
+                logger.LogCritical($"Cannot replace '{key}' in memcache: {result.Message}. Exception: {result.Exception}");
+            }
             return result.Success;
         }
 
@@ -109,6 +110,10 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
         public bool Remove(string key)
         {
             IRemoveOperationResult result = client.ExecuteRemove(key);
+            if (!result.Success)
+            {
+                logger.LogCritical($"Cannot remove '{key}' from memcache: {result.Message}. Exception: {result.Exception}");
+            }
             return result.Success;
         }
 
@@ -117,13 +122,13 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             return TimeSpan.FromSeconds(cacheSeconds ?? options.DefaultExpirationInSeconds);
         }
 
-        private T InternalDeserialize<T>(string json)
+        private static string InternalSerialize(object value)
         {
-            if (typeof(T) == typeof(string))
-            {
-                return (T)Convert.ChangeType(json, typeof(T));
-            }
+            return JsonConvert.SerializeObject(value);
+        }
 
+        private static T InternalDeserialize<T>(string json)
+        {
             return JsonConvert.DeserializeObject<T>(json);
         }
     }
