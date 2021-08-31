@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Refinitiv.Aaa.Api.Common;
@@ -10,6 +8,8 @@ using Refinitiv.Aaa.GuissApi.Data.Exceptions;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Controllers
 {
@@ -194,5 +194,22 @@ namespace Refinitiv.Aaa.GuissApi.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Deletes user profile atributes by UserUuid .
+        /// </summary>
+        /// <param name="uuid">The attributes UserUuid to be deleted.</param>
+        /// <returns>IActionResult</returns>
+        [HttpDelete("{uuid}")]
+        [SwaggerResponse(StatusCodes.Status204NoContent, "Attributes deleted")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "User or Attributes not found")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal Server Error")]
+        public async Task<IActionResult> DeleteUserProfile([FromRoute] string uuid)
+        {
+            await userAttributeHelper.DeleteAtributesNamesListByUuidAsync(uuid);
+
+            return NoContent();
+        }
+
     }
 }

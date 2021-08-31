@@ -1,16 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Newtonsoft.Json.Linq;
 using Refinitiv.Aaa.Foundation.ApiClient.Helpers;
 using Refinitiv.Aaa.GuissApi.Data.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Models;
+using Refinitiv.Aaa.GuissApi.Facade.Exceptions;
 using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using Refinitiv.Aaa.Interfaces.Headers;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
 {
@@ -48,6 +49,34 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Helpers
             var result =  GetJsonObject(userAttributes);
 
             return result;
+        }
+
+        /// <inheritdoc />
+        public async Task DeleteAtributesNamesListByUuidAsync(string userUuid)
+        {
+            if (String.IsNullOrWhiteSpace(userUuid))
+            {
+                throw new ArgumentNullException(nameof(userUuid));
+            }
+
+            var filter = new UserAttributeFilter
+            {
+                UserUuid = userUuid,
+                Names = null
+            };
+            var atributesNames = 
+                (await userAttributeRepository.SearchAsync(filter))
+                .Select(s => s.Name).ToList();
+
+            if(!atributesNames.Any())
+            {
+                throw new NotFoundException($"User '{userUuid}' or Attributes not found.");
+            }
+
+            foreach (var name in atributesNames)
+            {
+                await DeleteUserAttributeAsync(userUuid, name);
+            }
         }
 
         /// <inheritdoc />

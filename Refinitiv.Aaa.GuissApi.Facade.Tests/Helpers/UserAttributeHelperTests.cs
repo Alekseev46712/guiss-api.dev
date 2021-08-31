@@ -1,19 +1,20 @@
-﻿using AutoMapper;
+﻿using AutoFixture;
+using AutoMapper;
 using FluentAssertions;
 using Moq;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Refinitiv.Aaa.GuissApi.Data.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Models;
 using Refinitiv.Aaa.GuissApi.Facade.Helpers;
+using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Facade.Mapping;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
 using Refinitiv.Aaa.Interfaces.Headers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using AutoFixture;
-using Newtonsoft.Json.Linq;
-using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 
 namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
 {
@@ -177,6 +178,35 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
             await userAttributeHelper.DeleteUserAttributeAsync(userUuid, name);
 
             userAttributeRepository.VerifyAll();
+        }
+
+        [Test]
+        public async Task DeleteAllUserAttributeAsync_OnExistingUuid_DeletedSuccessfully()
+        {
+            var userUuid = fixture.Create<string>();
+            var attributes = fixture.CreateMany<UserAttributeDb>();
+
+            userAttributeRepository.Setup(x =>
+                x.SearchAsync(It.IsAny<UserAttributeFilter>()))
+                .ReturnsAsync(attributes);
+            userAttributeRepository.Setup(x =>  
+                x.DeleteAsync(userUuid, It.IsAny<string>()));
+
+            await userAttributeHelper.DeleteAtributesNamesListByUuidAsync(userUuid);
+            
+            userAttributeRepository.VerifyAll();
+            userAttributeRepository.Verify(v => 
+                v.DeleteAsync(userUuid, It.IsAny<string>()), Times.Exactly(attributes.Count()));
+        }
+
+        [Test]
+        public async Task DeleteAllUserAttributeAsync_OnNullUUID_DeletedAnythingThrowedException()
+        {
+            var userUuid = String.Empty;
+            Func<Task> act = async () => await userAttributeHelper.DeleteAtributesNamesListByUuidAsync(userUuid);
+            await act.Should().ThrowAsync<ArgumentNullException>();
+            userAttributeRepository.Verify(v =>
+                v.DeleteAsync(userUuid, It.IsAny<string>()), Times.Never());
         }
 
         [Test]
