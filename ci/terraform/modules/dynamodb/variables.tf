@@ -28,3 +28,12 @@ variable "global_secondary_indexes" {
 variable "tags" {
     type      = map
 }
+variable "aws_profile" {
+    type      = string
+}
+variable "db_install" {
+  type        = bool
+}
+variable "db_multiregion" {
+  type        = bool
+}
