@@ -18,5 +18,16 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Models
         /// Flag that represents if caching is enabled 
         /// </summary>
         public bool Enabled { get; set; }
+
+        /// <summary>
+        /// Hostname of node
+        /// </summary>
+        public string Hostname { get; set; }
+
+        /// <summary>
+        /// Port of node
+        /// </summary>
+        public int Port { get; set; }
+
     }
 }

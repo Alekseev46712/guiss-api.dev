@@ -1,9 +1,12 @@
 ﻿using AutoFixture;
 using Enyim.Caching;
+using Enyim.Caching.Configuration;
 using Enyim.Caching.Memcached;
 using Enyim.Caching.Memcached.Results;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using Refinitiv.Aaa.GuissApi.Facade.Helpers;
 using Refinitiv.Aaa.GuissApi.Facade.Models;
@@ -20,6 +23,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         private Mock<IMemcachedResultsClient> client;
         private Mock<IOptions<CacheHelperOptions>> options;
         private Mock<IOptions<CacheHelperOptions>> diabledOptions;
+        private Mock<ILogger<CacheHelper>> logger;
         private CacheHelper cacheHelper;
         private CacheHelper disabledCacheHelper;
         private IFixture fixture;
@@ -28,6 +32,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         public void Setup()
         {
             client = new Mock<IMemcachedResultsClient>();
+            logger = new Mock<ILogger<CacheHelper>>();
 
             options = new Mock<IOptions<CacheHelperOptions>>();
             options.Setup(x => x.Value).Returns(new CacheHelperOptions { DefaultExpirationInSeconds = 300, Enabled = true });
@@ -35,8 +40,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
             diabledOptions = new Mock<IOptions<CacheHelperOptions>>();
             diabledOptions.Setup(x => x.Value).Returns(new CacheHelperOptions { DefaultExpirationInSeconds = 300, Enabled = false });
 
-            cacheHelper = new CacheHelper(options.Object, client.Object);
-            disabledCacheHelper = new CacheHelper(diabledOptions.Object, client.Object);
+            cacheHelper = new CacheHelper(options.Object, client.Object, logger.Object);
+            disabledCacheHelper = new CacheHelper(diabledOptions.Object, client.Object, logger.Object);
 
             fixture = new Fixture();
         }
@@ -146,8 +151,8 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         [Test]
         public void Get_ReturnsValueOnKey()
         {
-            var val = "customVal";
-            client.Setup(m => m.ExecuteGet<string>(It.IsAny<string>())).Returns(new GetOperationResult<string> { Value = val });
+            var val = "val";
+            client.Setup(m => m.ExecuteGet(It.IsAny<string>())).Returns(new GetOperationResult{ Value = JsonConvert.SerializeObject(val) });
 
             var result = cacheHelper.Get<string>("someKey");
 
@@ -199,11 +204,25 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Helpers
         {
             var value = "someValue";
 
-            client.Setup(x => x.ExecuteGet(It.IsAny<string>())).Returns(new GetOperationResult { Success = true, Value = value });
+            client.Setup(x => x.ExecuteGet(It.IsAny<string>())).Returns(new GetOperationResult { Success = true, Value = JsonConvert.SerializeObject(value) });
 
             var result = await cacheHelper.GetValueOrCreateAsync("key", fixture.Create<Func<Task<string>>>());
 
             Assert.AreEqual(value, result);
+        }
+
+        [Test]
+        public void CacheHelper_WhenOptionsIsNull_ThrowsArgumentNullException()
+        {
+            try
+            {
+                new CacheHelper(null, client.Object, logger.Object);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.AreEqual("options", ex.ParamName);
+            }
+            
         }
     }
 }

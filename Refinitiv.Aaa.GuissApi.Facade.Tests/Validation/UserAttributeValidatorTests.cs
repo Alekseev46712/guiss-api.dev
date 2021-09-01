@@ -7,6 +7,7 @@ using Refinitiv.Aaa.Foundation.ApiClient.Core.Models.User;
 using Refinitiv.Aaa.Foundation.ApiClient.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Interfaces;
 using Refinitiv.Aaa.GuissApi.Data.Models;
+using Refinitiv.Aaa.GuissApi.Facade.Interfaces;
 using Refinitiv.Aaa.GuissApi.Facade.Mapping;
 using Refinitiv.Aaa.GuissApi.Facade.Validation;
 using Refinitiv.Aaa.GuissApi.Interfaces.Models.UserAttribute;
@@ -22,6 +23,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
         private Mock<IUserHelper> userHelper;
         private UserAttributeValidator userAttributeValidator;
         private IMapper mapper;
+        private Mock<ICacheHelper> cacheHelper;
 
         [SetUp]
         public void Setup()
@@ -32,14 +34,16 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
             });
 
             mapper = mappingConfig.CreateMapper();
+            cacheHelper = new Mock<ICacheHelper>();
             userAttributeRepository = new Mock<IUserAttributeRepository>();
             userHelper = new Mock<IUserHelper>();
 
             userAttributeValidator = new UserAttributeValidator(
                 userHelper.Object,
                 userAttributeRepository.Object,
-                mapper
-                );
+                mapper,
+                cacheHelper.Object
+                ); 
         }
 
         [Test]
@@ -57,7 +61,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
             var uuid = "test";
             var userResponse = new UserResponse { Uuid = uuid };
 
-            userHelper.Setup(h => h.GetUserByUuidAsync(It.IsAny<string>())).ReturnsAsync(userResponse);
+            cacheHelper.Setup(x => x.GetValueOrCreateAsync(It.IsAny<string>(), It.IsAny<Func<Task<UserResponse>>>(), null)).ReturnsAsync(userResponse);
             var result = await userAttributeValidator.ValidateUserUuidAsync(uuid);
             result.Should().BeOfType<AcceptedResult>();
         }
@@ -112,7 +116,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
         [Test]
         public async Task ValidateAttributeAsyncReturnsAcceptedResultIfUserExist()
         {
-            userHelper.Setup(x => x.GetUserByUuidAsync(It.IsAny<string>())).ReturnsAsync(new UserResponse());
+            cacheHelper.Setup(x => x.GetValueOrCreateAsync(It.IsAny<string>(), It.IsAny<Func<Task<UserResponse>>>(), null)).ReturnsAsync(new UserResponse());
 
             var userAttributeDetails = new UserAttributeDetails() { UserUuid = "UUID of existing user" };
 
@@ -147,12 +151,12 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
         {
             var userUuid = "testUserUuid";
             var name = "testName";
-
+            cacheHelper.Setup(x => x.GetValueOrCreateAsync(It.IsAny<string>(), It.IsAny<Func<Task<UserResponse>>>(), null)).ReturnsAsync((UserResponse)null);
             userHelper.Setup(x => x.GetUserByUuidAsync(userUuid)).ReturnsAsync((UserResponse)null);
 
             var result = await userAttributeValidator.ValidateUserAttributesAsync(userUuid, name);
 
-            userHelper.VerifyAll();
+            cacheHelper.VerifyAll();
 
             result.Should().BeOfType<NotFoundObjectResult>();
         }
@@ -163,13 +167,13 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
             var userUuid = "testUserUuid";
             var name = "testName";
 
-            userHelper.Setup(x => x.GetUserByUuidAsync(userUuid)).ReturnsAsync(new UserResponse());
-            userAttributeRepository.Setup(x => x.FindByUserUuidAndNameAsync(userUuid, name));
+            cacheHelper.Setup(x => x.GetValueOrCreateAsync(It.IsAny<string>(), It.IsAny<Func<Task<UserResponse>>>(), null)).ReturnsAsync(new UserResponse());
+            userAttributeRepository.Setup(x => x.FindByUserUuidAndNameAsync(userUuid, name)).ReturnsAsync((UserAttributeDb)null);
 
             var result = await userAttributeValidator.ValidateUserAttributesAsync(userUuid, name);
 
+            cacheHelper.VerifyAll();
             userAttributeRepository.VerifyAll();
-            userHelper.VerifyAll();
 
             result.Should().BeOfType<NotFoundObjectResult>();
         }
@@ -180,13 +184,13 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Tests.Validation
             var userUuid = "testUserUuid";
             var name = "testName";
 
-            userHelper.Setup(x => x.GetUserByUuidAsync(userUuid)).ReturnsAsync(new UserResponse());
+            cacheHelper.Setup(x => x.GetValueOrCreateAsync(It.IsAny<string>(), It.IsAny<Func<Task<UserResponse>>>(), null)).ReturnsAsync(new UserResponse());
             userAttributeRepository.Setup(x => x.FindByUserUuidAndNameAsync(userUuid, name)).ReturnsAsync(new UserAttributeDb());
 
             var result = await userAttributeValidator.ValidateUserAttributesAsync(userUuid, name);
 
             userAttributeRepository.VerifyAll();
-            userHelper.VerifyAll();
+            cacheHelper.VerifyAll();
 
             result.Should().BeOfType<AcceptedResult>();
         }

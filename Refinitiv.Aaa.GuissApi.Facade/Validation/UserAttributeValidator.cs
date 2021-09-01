@@ -17,6 +17,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         private readonly IUserHelper userHelper;
         private readonly IMapper mapper;
         private readonly IUserAttributeRepository userAttributeRepository;
+        private readonly ICacheHelper cacheHelper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserAttributeValidator"/> class.
@@ -24,14 +25,17 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
         /// <param name="userHelper">User Helper.</param>
         /// <param name="userAttributeRepository">User Attribute Repository.</param>
         /// <param name="mapper">Automapper.</param>
+        /// <param name="cacheHelper">CacheHelper to use ElastiCache.</param>
         public UserAttributeValidator(
             IUserHelper userHelper,
             IUserAttributeRepository userAttributeRepository,
-            IMapper mapper)
+            IMapper mapper, 
+            ICacheHelper cacheHelper)
         {
             this.userHelper = userHelper;
             this.userAttributeRepository = userAttributeRepository;
             this.mapper = mapper;
+            this.cacheHelper = cacheHelper;
         }
 
         /// <inheritdoc />
@@ -131,7 +135,7 @@ namespace Refinitiv.Aaa.GuissApi.Facade.Validation
 
         private async Task<IActionResult> InternalValidateIfUserExistsInUsersApiAsync(string userUuid)
         {
-            var existingFromUsersApi = await userHelper.GetUserByUuidAsync(userUuid);
+            var existingFromUsersApi = await cacheHelper.GetValueOrCreateAsync(userUuid, async () => await userHelper.GetUserByUuidAsync(userUuid));
             if (existingFromUsersApi == null)
             {
                 return new NotFoundObjectResult(new { Message = "The User is not found" });
